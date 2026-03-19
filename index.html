@@ -1649,10 +1649,11 @@ function mKey(iso){const d=new Date(iso);return`${d.getFullYear()}-${String(d.ge
 function escQ(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;')}
 
 // ── Navegación ────────────────────────────────────────────────────
-function goTo(id){
+function _showScreen(id){
+  // Cambio visual puro — sin tocar historial
   const prev=document.querySelector('.screen.active')?.id
+  if(prev===id) return
   if(prev==='screen-registro'&&id!=='screen-registro') clearIngreso()
-  // Cerrar todos los menús/accordeones abiertos al cambiar pantalla
   document.querySelectorAll('.ac-list').forEach(l=>l.classList.remove('open'))
   document.querySelectorAll('.mcard.open').forEach(m=>m.classList.remove('open'))
   document.querySelectorAll('.week-detail.open').forEach(w=>w.classList.remove('open'))
@@ -1663,10 +1664,47 @@ function goTo(id){
   const fp=document.getElementById('font-panel'); if(fp) fp.style.display='none'
   const pf=document.getElementById('pass-form'); if(pf) pf.style.display='none'
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
-  document.getElementById(id).classList.add('active')
+  document.getElementById(id)?.classList.add('active')
   rerenderActive()
   if(_queue.length) flushQueue()
 }
+function goTo(id){
+  const prev=document.querySelector('.screen.active')?.id
+  if(prev===id) return
+  // Agregar entrada al historial del navegador
+  // Las pantallas "raíz" (home, login) reemplazan — las demás apilan
+  const roots=['screen-login','screen-home','screen-home-cliente']
+  if(roots.includes(id)){
+    history.replaceState({screen:id},'','')
+  } else {
+    history.pushState({screen:id},'','')
+  }
+  _showScreen(id)
+}
+// Manejar gesto de atrás (swipe izquierda en móvil, dos dedos en Mac, botón atrás)
+window.addEventListener('popstate',e=>{
+  const target=e.state?.screen
+  // Si no hay sesión activa, siempre ir a login (seguridad post-logout)
+  if(!_session){
+    history.replaceState({screen:'screen-login'},'','')
+    _showScreen('screen-login')
+    return
+  }
+  if(target){
+    // No permitir volver a login si hay sesión activa
+    if(target==='screen-login'){
+      const dest=isCliente()?'screen-home-cliente':'screen-home'
+      history.replaceState({screen:dest},'','')
+      _showScreen(dest)
+    } else {
+      _showScreen(target)
+    }
+  } else {
+    const dest=isCliente()?'screen-home-cliente':'screen-home'
+    history.replaceState({screen:dest},'','')
+    _showScreen(dest)
+  }
+})
 function clearIngreso(){
   selCid=null
   ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})
@@ -3007,12 +3045,14 @@ async function doLogin(){
 function logout(){
   _session=null
   localStorage.removeItem(LS_SESSION)
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
-  document.getElementById('screen-login').classList.add('active')
   document.getElementById('login-user').value=''
   document.getElementById('login-pass').value=''
   document.getElementById('login-error').style.display='none'
   showLoginTab('login')
+  // Ir al login y bloquear atrás: interceptar popstate temporalmente
+  _showScreen('screen-login')
+  // Reemplazar con login — el listener de popstate redirigirá al login si no hay sesión
+  history.replaceState({screen:'screen-login'},'','')
 }
 function enterApp(){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
@@ -3021,9 +3061,11 @@ function enterApp(){
     applyConfig()
     renderClienteActivo()
     document.getElementById('screen-home-cliente').classList.add('active')
+    history.replaceState({screen:'screen-home-cliente'},'','')
   } else {
     applyRoleUI()
-    goTo('screen-home')
+    history.replaceState({screen:'screen-home'},'','')
+    _showScreen('screen-home')
   }
 }
 function applyRoleUI(){
@@ -3592,6 +3634,8 @@ function updateKMenu(){
   if(kmUser&&_session) kmUser.textContent=_session.nombre||''
 }
 // ── Arranque — carga localStorage primero, luego Sheet ───────────
+// Inicializar historial con estado actual
+if(!history.state) history.replaceState({screen:'screen-login'},'','')
 const hasCached=lsLoad()
 // Recuperar sesión guardada
 const savedSession=localStorage.getItem(LS_SESSION)
