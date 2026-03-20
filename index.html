@@ -1714,22 +1714,30 @@ function goTo(id){
 // Manejar gesto de atrás (swipe izquierda en móvil, dos dedos en Mac, botón atrás)
 window.addEventListener('popstate',e=>{
   const target=e.state?.screen
+  // Sin sesión: ir a login
   if(!_session){
     history.replaceState({screen:'screen-login'},'','')
     _showScreen('screen-login')
     return
   }
-  const homeScreen=isCliente()?'screen-home-cliente':'screen-home'
-  const activeNow=document.querySelector('.screen.active')?.id
-  const goHome=()=>{
-    if(activeNow!==homeScreen) _showScreen(homeScreen)
+  const homeScreen=(_session&&_session.rol==='cliente')?'screen-home-cliente':'screen-home'
+  const activeNow=document.querySelector('.screen.active')?.id||''
+  // Caso 1: target es una pantalla secundaria real → navegar ahí
+  const secondaries=['screen-clientes','screen-registro','screen-mensual','screen-admin',
+    'screen-apariencia','screen-tabla','screen-historial','screen-db-clientes',
+    'screen-db-reparaciones','screen-db-cierre','screen-usuarios','screen-clientes-emp']
+  if(target&&secondaries.includes(target)&&activeNow!==homeScreen){
+    _showScreen(target)
+    // Reconstruir siempre: dummy→home→target
     history.replaceState({screen:'__dummy'},'','')
     history.pushState({screen:homeScreen},'','')
+    history.pushState({screen:target},'','')
+    return
   }
-  if(!target||target==='__dummy'||target==='screen-login'||target===homeScreen){
-    goHome(); return
-  }
-  _showScreen(target)
+  // Todos los demás casos: ir a home y reconstruir stack
+  if(activeNow!==homeScreen) _showScreen(homeScreen)
+  history.replaceState({screen:'__dummy'},'','')
+  history.pushState({screen:homeScreen},'','')
 })
 function clearIngreso(){
   selCid=null
