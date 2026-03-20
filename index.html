@@ -3059,6 +3059,8 @@ function logout(){
   showLoginTab('login')
   _showScreen('screen-login')
   history.replaceState({screen:'screen-login'},'','')
+  // Reponer dummies para que el login tampoco cierre la app
+  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
 }
 function enterApp(){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
@@ -3076,9 +3078,8 @@ function enterApp(){
     applyRoleUI()
     _showScreen('screen-home')
   }
-  // Inyectar dummies para que atrás desde home dispare popstate (cierre sesión)
-  // en lugar de cerrar la app — funciona tanto desde login como desde caché
-  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
+  // Solo marcar la pantalla actual — los 50 dummies del inicio del script
+  // ya están en el stack y persisten durante toda la sesión
   history.pushState({screen:homeScreen},'','')
 }
 function applyRoleUI(){
