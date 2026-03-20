@@ -3076,7 +3076,10 @@ function enterApp(){
     applyRoleUI()
     _showScreen('screen-home')
   }
-  history.replaceState({screen:homeScreen},'','')
+  // Inyectar dummies para que atrás desde home dispare popstate (cierre sesión)
+  // en lugar de cerrar la app — funciona tanto desde login como desde caché
+  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
+  history.pushState({screen:homeScreen},'','')
 }
 function applyRoleUI(){
   const homeAdmin=document.getElementById('home-admin-btns')
