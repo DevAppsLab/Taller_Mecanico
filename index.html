@@ -1679,10 +1679,14 @@ function goTo(id){
   if(prev===id) return
   const roots=['screen-login','screen-home','screen-home-cliente']
   if(roots.includes(id)){
-    // Al ir al home: asegurar que siempre haya dummy debajo
     history.replaceState({screen:'__dummy'},'','')
     history.pushState({screen:id},'','')
   } else {
+    // Pantalla secundaria: siempre asegurar que debajo haya dummy+home
+    // Así al dar atrás 2 veces siempre llega al home con stack intacto
+    const homeScreen=isCliente()?'screen-home-cliente':'screen-home'
+    history.replaceState({screen:'__dummy'},'','')
+    history.pushState({screen:homeScreen},'','')
     history.pushState({screen:id},'','')
   }
   _showScreen(id)
@@ -1710,8 +1714,6 @@ function goTo(id){
 // Manejar gesto de atrás (swipe izquierda en móvil, dos dedos en Mac, botón atrás)
 window.addEventListener('popstate',e=>{
   const target=e.state?.screen
-  showToast('↩ popstate: '+(target||'null'),'success')
-  // Sin sesión: siempre login
   if(!_session){
     history.replaceState({screen:'screen-login'},'','')
     _showScreen('screen-login')
@@ -1719,25 +1721,15 @@ window.addEventListener('popstate',e=>{
   }
   const homeScreen=isCliente()?'screen-home-cliente':'screen-home'
   const activeNow=document.querySelector('.screen.active')?.id
-  // Dummy o en home: siempre re-inyectar dummy+home para que nunca se agote el stack
-  if(target==='__dummy'||target===homeScreen||activeNow===homeScreen){
+  const goHome=()=>{
+    if(activeNow!==homeScreen) _showScreen(homeScreen)
     history.replaceState({screen:'__dummy'},'','')
     history.pushState({screen:homeScreen},'','')
-    if(activeNow!==homeScreen) _showScreen(homeScreen)
-    return
   }
-  if(target){
-    if(target==='screen-login'){
-      // No permitir volver a login con sesión activa
-      history.replaceState({screen:homeScreen},'','')
-      _showScreen(homeScreen)
-    } else {
-      _showScreen(target)
-    }
-  } else {
-    history.replaceState({screen:homeScreen},'','')
-    _showScreen(homeScreen)
+  if(!target||target==='__dummy'||target==='screen-login'||target===homeScreen){
+    goHome(); return
   }
+  _showScreen(target)
 })
 function clearIngreso(){
   selCid=null
