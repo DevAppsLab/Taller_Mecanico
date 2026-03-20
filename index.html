@@ -3109,9 +3109,8 @@ function enterApp(){
     applyRoleUI()
     _showScreen('screen-home')
   }
-  // Inyectar 30 dummies para que nunca se agote el stack con gestos atrás
-  history.replaceState({screen:'__dummy'},'','')
-  for(let _i=0;_i<29;_i++) history.pushState({screen:'__dummy'},'','')
+  // Inyectar 50 dummies — nunca se agota el stack sin importar cuántos gestos atrás
+  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
   history.pushState({screen:homeScreen},'','')
 }
 function applyRoleUI(){
