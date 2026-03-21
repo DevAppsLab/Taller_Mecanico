@@ -1286,15 +1286,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 <div class="toast" id="toast"></div>
 <script>
 window.onerror=function(msg,src,line,col,err){
-  document.body.innerHTML='<div style="padding:20px;color:#ff6b6b;font-family:monospace;background:#0f1117;min-height:100vh;font-size:13px">'
-    +'<h2 style="color:#ff6b6b">Error de JavaScript</h2>'
-    +'<p><b>Mensaje:</b> '+msg+'</p>'
-    +'<p><b>Línea:</b> '+line+' Col: '+col+'</p>'
-    +'<p><b>Fuente:</b> '+(src||'inline')+'</p>'
-    +'<pre style="background:#1a1a1a;padding:10px;border-radius:8px;overflow:auto;font-size:11px;white-space:pre-wrap">'+(err?.stack||err||'sin stack')+'</pre>'
-    +'<p style="color:#888">crypto.subtle disponible: '+(typeof crypto!=='undefined'&&!!crypto.subtle)+'</p>'
-    +'<p style="color:#888">HTTPS: '+(location.protocol==='https:')+'</p>'
-    +'</div>'
+  document.body.innerHTML='<div style="padding:20px;color:#ff6b6b;font-family:monospace;background:#0f1117;min-height:100vh"><h2>Error de JavaScript</h2><p>'+msg+'</p><p>Línea: '+line+'</p><p>'+(err?.stack||'')+'</p></div>'
   return false
 }
 window.addEventListener('unhandledrejection',function(e){
@@ -2669,7 +2661,7 @@ async function getCfgContact(){
     dir: dirEnc?await aesDecrypt(dirEnc):''
   }
 }
-async // ── INVENTARIO ────────────────────────────────────────────────────
+// ── INVENTARIO ────────────────────────────────────────────────────
 function renderInventario(){
   const list=document.getElementById('inv-list'); if(!list)return
   const items=DB[SH_INV]||[]
