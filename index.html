@@ -629,7 +629,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.2</span>
+            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.3</span>
             <div class="km-btn" onclick="openKMenu()">⋮</div>
             <div class="sync-chip" style="border:none;background:transparent;padding:0">
               <div class="sync-dot pending" id="sd-home"></div>
@@ -2002,7 +2002,6 @@ function _showScreen(id){
   const pf=document.getElementById('pass-form'); if(pf) pf.style.display='none'
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
   document.getElementById(id)?.classList.add('active')
-  if(typeof window._updateFab==='function') window._updateFab(id)
   rerenderActive()
   if(_queue.length) flushQueue()
 }
@@ -2042,27 +2041,6 @@ function _goBack(){
   const parent=_parentScreen[activeNow]||homeScreen
   _showScreen(parent)
 }
-
-// MÉTODO 1 — botón flotante ‹
-;(()=>{
-  const btn=document.createElement('div')
-  btn.id='fab-back'
-  btn.textContent='‹'
-  btn.style.cssText='position:fixed;top:12px;left:12px;z-index:999;width:38px;height:38px;'+
-    'border-radius:50%;background:rgba(15,17,23,0.72);backdrop-filter:blur(8px);'+
-    '-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);'+
-    'color:#f0f2f8;font-size:1.5rem;line-height:1;display:none;align-items:center;'+
-    'justify-content:center;cursor:pointer;user-select:none;-webkit-user-select:none;'+
-    'transition:opacity .2s;box-shadow:0 2px 12px rgba(0,0,0,.5)'
-  btn.addEventListener('click',()=>_goBack())
-  btn.addEventListener('touchend',e=>{ e.preventDefault(); _goBack() })
-  document.body.appendChild(btn)
-  window._updateFab=function(screenId){
-    const hide=['screen-login','screen-home','screen-home-cliente']
-    const show=!hide.includes(screenId)&&!!_session
-    btn.style.display=show?'flex':'none'
-  }
-})()
 
 // MÉTODO 2 — doble tap en topbar/home-header
 ;(()=>{
@@ -3211,10 +3189,17 @@ function renderCotizaciones(){
     items.innerHTML='<div class="empty"><div class="ei">📄</div><div class="et">Sin cotizaciones</div><div class="es">Crea la primera cotización</div></div>'
     return
   }
+  // Normalizar reps: puede venir como string JSON desde Sheets
+  const parseReps=c=>{
+    if(!c.reps) return []
+    if(Array.isArray(c.reps)) return c.reps
+    try{ return JSON.parse(c.reps) }catch(e){ return [] }
+  }
   const statusLabel={pending:'⏳ Pendiente',accepted:'✅ Aceptada',rejected:'❌ Rechazada'}
   const statusClass={pending:'pend',accepted:'acep',rejected:'rech'}
   items.innerHTML=cots.map(c=>{
-    const total=c.reps?c.reps.reduce((s,r)=>s+(parseFloat(r.total)||0),0):0
+    const reps=parseReps(c)
+    const total=reps.reduce((s,r)=>s+(parseFloat(r.total)||0),0)
     return `<div class="cot-card" id="cot-${c.id}">
       <div class="cot-header">
         <div>
@@ -3228,7 +3213,7 @@ function renderCotizaciones(){
           <button onclick="delCot('${c.id}')" style="background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-weight:700">🗑</button>
         </div>
       </div>
-      ${(c.reps||[]).map(r=>`
+      ${reps.map(r=>`
         <div class="cot-rep-row">
           <span style="color:var(--text2)">${r.desc}</span>
           <span style="font-weight:700">${f$(r.total)}</span>
@@ -3250,7 +3235,8 @@ function openNuevaCot(){
 }
 function editCot(id){
   _cotActual=DB[SH_COT].find(c=>c.id===id); if(!_cotActual)return
-  _cotActual={..._cotActual,reps:_cotActual.reps?JSON.parse(JSON.stringify(_cotActual.reps)):[]}
+  const reps=_parseReps(_cotActual)
+  _cotActual={..._cotActual,reps:JSON.parse(JSON.stringify(reps))}
   showCotModal()
 }
 function showCotModal(){
@@ -3307,21 +3293,23 @@ function delCot(id){
   renderCotizaciones()
   showToast('🗑 Cotización eliminada','error')
 }
+function _parseReps(c){
+  if(!c||!c.reps) return []
+  if(Array.isArray(c.reps)) return c.reps
+  try{ return JSON.parse(c.reps) }catch(e){ return [] }
+}
 function convertCotToRep(id){
   const c=DB[SH_COT].find(x=>x.id===id); if(!c)return
-  // Buscar o crear cliente
   let cli=DB[SH_CLI].find(x=>x.nombre.toLowerCase()===c.cliente.toLowerCase()&&x.activeSession)
   if(!cli){
     const sid=gid()
     cli={id:gid(),nombre:c.cliente,vehiculo:c.vehiculo||'',activeSession:sid,status:'pending'}
     gsAppendBg(SH_CLI,cli)
-    // Agregar reparaciones de la cotización
-    ;(c.reps||[]).forEach(r=>{
+    _parseReps(c).forEach(r=>{
       gsAppendBg(SH_SES,{id:gid(),clientId:cli.id,sessionId:sid,reparacion:r.desc,
         manoObra:r.total,material:0,total:r.total,fecha:new Date().toISOString().slice(0,10)})
     })
   }
-  // Marcar cotización como aceptada
   gsUpdateBg(SH_COT,{...c,status:'accepted'})
   renderCotizaciones()
   showToast('✅ Convertida a reparación activa','success')
@@ -3338,13 +3326,14 @@ function renderCliCotizaciones(){
   if(!cots.length){ banner.style.display='none'; return }
   banner.style.display='block'
   list.innerHTML=cots.map(c=>{
-    const total=c.reps?c.reps.reduce((s,r)=>s+(parseFloat(r.total)||0),0):0
+    const reps=_parseReps(c)
+    const total=reps.reduce((s,r)=>s+(parseFloat(r.total)||0),0)
     return `<div style="background:var(--card);border-radius:var(--r-sm);padding:10px 12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <div style="font-size:0.82rem;font-weight:700">${c.vehiculo||'Vehículo'}</div>
         <div style="font-size:0.82rem;font-weight:800;color:var(--orange)">${f$(total)}</div>
       </div>
-      ${(c.reps||[]).map(r=>`<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);padding:2px 0"><span>${r.desc}</span><span>${f$(r.total)}</span></div>`).join('')}
+      ${reps.map(r=>`<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);padding:2px 0"><span>${r.desc}</span><span>${f$(r.total)}</span></div>`).join('')}
       <div style="display:flex;gap:8px;margin-top:8px">
         <button onclick="clienteAceptarCot('${c.id}')" style="flex:1;padding:8px;background:var(--green);color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.78rem">✅ Aceptar</button>
         <button onclick="clienteRechazarCot('${c.id}')" style="padding:8px 12px;background:var(--surface);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:6px;font-weight:700;cursor:pointer;font-size:0.78rem">✕ Rechazar</button>
@@ -3373,7 +3362,8 @@ async function generarPDFCot(id){
   const contact=await getCfgContact()
   const nombre=cfgGet('app_name','Taller Mecánico')
   const logo=cfgGet('app_logo','')
-  const total=(c.reps||[]).reduce((s,r)=>s+(parseFloat(r.total)||0),0)
+  const reps=_parseReps(c)
+  const total=reps.reduce((s,r)=>s+(parseFloat(r.total)||0),0)
   const fecha=new Date(c.fecha).toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'})
   // Generar HTML del PDF
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
@@ -3417,7 +3407,7 @@ async function generarPDFCot(id){
   <table>
     <thead><tr><th>Descripción</th><th style="text-align:right;width:120px">Total</th></tr></thead>
     <tbody>
-      ${(c.reps||[]).map(r=>`<tr><td>${r.desc}</td><td style="text-align:right;font-weight:700">${f$(r.total)}</td></tr>`).join('')}
+      ${reps.map(r=>`<tr><td>${r.desc}</td><td style="text-align:right;font-weight:700">${f$(r.total)}</td></tr>`).join('')}
       <tr class="total-row"><td>TOTAL</td><td style="text-align:right">${f$(total)}</td></tr>
     </tbody>
   </table>
