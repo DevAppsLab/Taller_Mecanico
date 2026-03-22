@@ -1989,7 +1989,7 @@ function _showScreen(id){
 function goTo(id){
   const prev=document.querySelector('.screen.active')?.id
   if(prev===id) return
-  history.pushState({screen:id},'','')
+  _pushDouble(id)
   _showScreen(id)
 }
 // Mapa de pantalla → menú padre
@@ -2009,26 +2009,30 @@ const _parentScreen={
   'screen-db-reparaciones':'screen-admin',
   'screen-db-cierre':      'screen-admin',
 }
-// Manejar gesto de atras (swipe izquierda en movil, dos dedos en Mac, boton atras)
-// Estrategia: siempre hacer pushState despues de cada popstate
-// Asi el stack nunca se vacia y la app nunca se cierra sin importar cuantos backs reciba
+// Manejar gesto de atras
+// Estrategia: al navegar al padre siempre empujar 2 estados (seguridad + actual)
+// asi el stack nunca se agota sin importar cuantos backs reciba el usuario
+function _pushDouble(screen){
+  history.pushState({screen:'__guard'},'','')
+  history.pushState({screen},'','')
+}
 window.addEventListener('popstate',e=>{
   const activeNow=document.querySelector('.screen.active')?.id||''
-  // Sin sesion o en login: reponer estado y no hacer nada mas
+  // Sin sesion o en login
   if(!_session||activeNow==='screen-login'){
-    history.pushState({screen:'screen-login'},'','')
+    _pushDouble('screen-login')
     return
   }
   const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
-  // En home: logout, y reponer estado para que el stack no quede vacio
+  // En home: logout
   if(activeNow===homeScreen){
-    history.pushState({screen:homeScreen},'','')
+    _pushDouble(homeScreen)
     logout()
     return
   }
-  // En pantalla secundaria: ir al padre y reponer estado
+  // En pantalla secundaria: ir al padre
   const parent=_parentScreen[activeNow]||homeScreen
-  history.pushState({screen:parent},'','')
+  _pushDouble(parent)
   _showScreen(parent)
 })
 function clearIngreso(){
@@ -3768,9 +3772,7 @@ function logout(){
   document.getElementById('login-error').style.display='none'
   showLoginTab('login')
   _showScreen('screen-login')
-  history.replaceState({screen:'screen-login'},'','')
-  // Reponer dummies para que el login tampoco cierre la app
-  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
+  _pushDouble('screen-login')
 }
 function enterApp(){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
@@ -3788,9 +3790,7 @@ function enterApp(){
     applyRoleUI()
     _showScreen('screen-home')
   }
-  // Inyectar dummies para que el home siempre mande al login aunque se cierre la app
-  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
-  history.pushState({screen:homeScreen},'','')
+  _pushDouble(homeScreen)
 }
 function applyRoleUI(){
   const homeAdmin=document.getElementById('home-admin-btns')
@@ -4445,7 +4445,9 @@ function updateKMenu(){
 // Asegurar que siempre haya un estado en el stack al arrancar
 // El popstate handler se encarga de reponer el estado despues de cada back
 // asi la app nunca se cierra sin importar cuantas veces se presione atras
-history.replaceState({screen:'screen-login'},'','')
+history.replaceState({screen:'__guard'},'','')
+history.pushState({screen:'screen-login'},'','')
+history.pushState({screen:'__guard'},'','')
 history.pushState({screen:'screen-login'},'','')
 const hasCached=lsLoad()
 // Recuperar sesión guardada
