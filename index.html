@@ -1090,11 +1090,11 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     <!-- Ver Datos -->
     <div id="datos-vista-tabla" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
       <div style="padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
-        <a id="btn-open-sheet" href="#" target="taller-sheet"
+        <button id="btn-open-sheet" onclick="window.open('https://docs.google.com/spreadsheets/d/1EcAw_xr37TSj0RJdA46RLQmn6x_Be0eZMPvQUWqkx3E/edit?usp=sharing','taller-sheet')"
           style="display:flex;align-items:center;gap:5px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r-sm);
-          padding:6px 10px;text-decoration:none;color:var(--text2);font-size:0.75rem;font-weight:600;white-space:nowrap;flex-shrink:0">
+          padding:6px 10px;color:var(--text2);font-size:0.75rem;font-weight:600;white-space:nowrap;flex-shrink:0;cursor:pointer;font-family:var(--font)">
           <span>📋</span> Sheet
-        </a>
+        </button>
         <div class="si-wrap" style="flex:1">
           <span class="si-ico">🔍</span>
           <input type="text" id="tabla-search" placeholder="Filtrar…" autocomplete="off"
@@ -3696,7 +3696,7 @@ function _invalidateRenderCache(){ _cacheHistorial.hash=''; _cacheTabla.hash='';
 function renderTabla(){
   // Apuntar el botón al spreadsheet (extraer el ID del URL del Apps Script si es posible)
   const btn=$id('btn-open-sheet')
-  if(btn) btn.href='https://docs.google.com/spreadsheets/d/1EcAw_xr37TSj0RJdA46RLQmn6x_Be0eZMPvQUWqkx3E/edit?usp=sharing'
+  // btn-open-sheet ya tiene la URL en su onclick
   const q=($id('tabla-search')?.value||'').toLowerCase()
   const cmap=Object.fromEntries(DB[SH_CLI].map(c=>[c.id,c]))
   // Combinar activos + cierre
