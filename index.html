@@ -2026,8 +2026,17 @@ const _parentScreen={
 // Manejar gesto de atras (swipe izquierda en movil, dos dedos en Mac, boton atras)
 window.addEventListener('popstate',e=>{
   const activeNow=document.querySelector('.screen.active')?.id||''
-  // Sin sesion o en login: no hacer nada
-  if(!_session||activeNow==='screen-login') return
+  const isDummy=!e.state?.screen||e.state?.screen==='__dummy'
+  // En login (o sin sesion): reponer dummy para no cerrar la app
+  if(!_session||activeNow==='screen-login'){
+    history.pushState({screen:'__dummy'},'','')
+    return
+  }
+  // Si se consumio un dummy del stack de proteccion, reponer y no navegar
+  if(isDummy){
+    history.pushState({screen:'__dummy'},'','')
+    return
+  }
   const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
   // En home: cerrar sesion
   if(activeNow===homeScreen){
