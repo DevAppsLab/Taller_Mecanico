@@ -2006,21 +2006,39 @@ function goTo(id){
   history.pushState({screen:id},'','')
   _showScreen(id)
 }
-// Manejar gesto de atrás (swipe izquierda en móvil, dos dedos en Mac, botón atrás)
+// Mapa de pantalla → menú padre
+const _parentScreen={
+  'screen-registro':       'screen-home',
+  'screen-clientes':       'screen-home',
+  'screen-mensual':        'screen-home',
+  'screen-historial':      'screen-home',
+  'screen-tabla':          'screen-home',
+  'screen-admin':          'screen-home',
+  'screen-cotizaciones':   'screen-home',
+  'screen-clientes-emp':   'screen-home',
+  'screen-apariencia':     'screen-admin',
+  'screen-usuarios':       'screen-admin',
+  'screen-inventario':     'screen-admin',
+  'screen-db-clientes':    'screen-admin',
+  'screen-db-reparaciones':'screen-admin',
+  'screen-db-cierre':      'screen-admin',
+}
+// Manejar gesto de atras (swipe izquierda en movil, dos dedos en Mac, boton atras)
 window.addEventListener('popstate',e=>{
-  const target=e.state?.screen
   const activeNow=document.querySelector('.screen.active')?.id||''
-  // Sin sesión o en login: no hacer nada
+  // Sin sesion o en login: no hacer nada
   if(!_session||activeNow==='screen-login') return
   const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
-  // En home: cerrar sesión
+  // En home: cerrar sesion
   if(activeNow===homeScreen){
+    history.pushState({screen:homeScreen},'','')
     logout()
     return
   }
-  // En pantalla secundaria: navegar a donde apunta el historial
-  if(target&&target!=='screen-login'&&target!=='__dummy') _showScreen(target)
-  else _showScreen(homeScreen)
+  // Navegar al menu padre definido, o al home si no hay padre definido
+  const parent=_parentScreen[activeNow]||homeScreen
+  history.pushState({screen:parent},'','')
+  _showScreen(parent)
 })
 function clearIngreso(){
   selCid=null
@@ -2973,6 +2991,7 @@ function renderCotizaciones(){
         </div>
         <div style="display:flex;align-items:center;gap:6px">
           <span class="cot-badge ${statusClass[c.status]||'pend'}">${statusLabel[c.status]||'⏳ Pendiente'}</span>
+          <button onclick="generarPDFCot('${c.id}')" style="background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-weight:700">📄</button>
           ${c.status==='pending'?`<button onclick="editCot('${c.id}')" style="background:var(--og);color:var(--orange);border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-weight:700">✏️</button>`:''}
         </div>
       </div>
