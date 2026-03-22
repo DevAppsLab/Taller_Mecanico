@@ -516,6 +516,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .cc-rep-count{flex-shrink:0;font-size:0.65rem;color:var(--text3);white-space:nowrap}
 .cc-saldo-wrap{flex-shrink:0;margin-left:auto}
 .entregar-wrap{padding:0 0 10px}
+.corte-detail{display:block}
 /* TOAST */
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(72px);
   background:var(--card);border:1px solid var(--border2);border-radius:11px;padding:11px 18px;
@@ -628,7 +629,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.0.1</span>
+            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.0</span>
             <div class="km-btn" onclick="openKMenu()">⋮</div>
             <div class="sync-chip" style="border:none;background:transparent;padding:0">
               <div class="sync-dot pending" id="sd-home"></div>
@@ -642,9 +643,9 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="stat"><div class="sv" id="s-cli">0</div><div class="sl">Clientes</div></div>
       <div class="stat" id="stat-rep"><div class="sv" id="s-rep">0</div><div class="sl">Reparaciones</div></div>
       <div class="stat"><div class="sv" id="s-pend">0</div><div class="sl">Pendientes</div></div>
-      <div class="stat" id="stat-sem"><div class="sv" id="s-sem">$0</div><div class="sl" id="sl-sem">Semana</div></div>
-      <div class="stat" id="stat-mes"><div class="sv" id="s-mes">$0</div><div class="sl" id="sl-mes">Mes</div></div>
-      <div class="stat" id="stat-dia"><div class="sv" id="s-dia">$0</div><div class="sl">Hoy</div></div>
+      <div class="stat" id="stat-dia" onclick="goTo('screen-cortes');showCortesTab('dia')" style="cursor:pointer"><div class="sv" id="s-dia">$0</div><div class="sl">Hoy</div></div>
+      <div class="stat" id="stat-sem" onclick="goTo('screen-cortes');showCortesTab('sem')" style="cursor:pointer"><div class="sv" id="s-sem">$0</div><div class="sl" id="sl-sem">Semana</div></div>
+      <div class="stat" id="stat-mes" onclick="goTo('screen-cortes');showCortesTab('mes')" style="cursor:pointer"><div class="sv" id="s-mes">$0</div><div class="sl" id="sl-mes">Mes</div></div>
     </div>
     <div class="home-menu">
       <!-- Siempre visible -->
@@ -660,14 +661,9 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           <div class="mc-info"><div class="mc-title">Clientes</div><div class="mc-desc">Ver historial y reparaciones por cliente</div></div>
           <div class="mc-arr">›</div>
         </div>
-        <div class="mc" onclick="goTo('screen-corte')">
+        <div class="mc" onclick="goTo('screen-cortes')">
           <div class="mc-icon">📊</div>
-          <div class="mc-info"><div class="mc-title">Corte del día</div><div class="mc-desc">Resumen de reparaciones de hoy</div></div>
-          <div class="mc-arr">›</div>
-        </div>
-        <div class="mc" onclick="goTo('screen-mensual')">
-          <div class="mc-icon">📅</div>
-          <div class="mc-info"><div class="mc-title">Cierre Mensual</div><div class="mc-desc">Clientes liquidados agrupados por mes</div></div>
+          <div class="mc-info"><div class="mc-title">Cortes</div><div class="mc-desc">Resumen diario, semanal y mensual</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-cotizaciones')">
@@ -860,19 +856,35 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="clients-list" id="clients-list"></div>
   </div>
 
-  <!-- ══ MENSUAL ══ -->
-  <div id="screen-mensual" class="screen">
+  <!-- ══ CORTES ══ -->
+  <div id="screen-cortes" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
-      <div class="tb-title">Cierre Mensual</div>
-      <div class="tb-badge" id="badge-mes">0</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+      <div class="tb-title">Cortes</div>
+      <div class="tb-badge" id="badge-cortes">0</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-mensual"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-cortes"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
       </div>
     </div>
-    <div class="month-list" id="month-list"></div>
+    <!-- Tabs día/semana/mes -->
+    <div class="tabs-row" style="margin:8px 12px 0;flex-shrink:0">
+      <button class="tab-btn active" id="cortes-tab-dia"  onclick="showCortesTab('dia')">📅 Día</button>
+      <button class="tab-btn"        id="cortes-tab-sem"  onclick="showCortesTab('sem')">📆 Semana</button>
+      <button class="tab-btn"        id="cortes-tab-mes"  onclick="showCortesTab('mes')">🗓 Mes</button>
+    </div>
+    <!-- Total dinámico -->
+    <div style="background:var(--og);border:1px solid var(--icon-border);margin:0 12px 8px;padding:7px 14px;display:flex;justify-content:space-between;align-items:center;border-radius:var(--r-sm);flex-shrink:0">
+      <span id="cortes-periodo-label" style="font-size:0.68rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Hoy</span>
+      <span id="cortes-total" style="font-size:1.05rem;font-weight:800;color:var(--orange)">$0.00</span>
+    </div>
+    <!-- Contenido -->
+    <div id="cortes-vista-dia" style="flex:1;overflow-y:auto;padding:0 12px 40px;display:block"></div>
+    <div id="cortes-vista-sem" style="flex:1;overflow-y:auto;padding:0 12px 40px;display:none"></div>
+    <div id="cortes-vista-mes" style="flex:1;overflow-y:auto;padding:0 12px 40px;display:none"></div>
   </div>
+
+</div><!-- /app -->
 
   <!-- ══ HISTORIAL — accesible desde Admin ══ -->
   <div id="screen-historial" class="screen">
@@ -1239,49 +1251,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="scrollbody" id="db-cierre-list" style="padding-top:12px"></div>
   </div>
 
-  <!-- ══ CORTE DEL DÍA ══ -->
-  <div id="screen-corte" class="screen">
-    <div class="topbar">
-      <div class="tb-back" onclick="goTo('screen-home')">‹</div>
-      <div class="tb-title">Corte del Día</div>
-      <div class="tb-badge" id="badge-corte">0</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-        <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot ok" id="sd-corte"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
-      </div>
-    </div>
-    <!-- Tabs -->
-    <div class="tabs-row" style="margin:10px 16px 0;margin-bottom:0;border-radius:11px 11px 0 0">
-      <button class="tab-btn active" id="corte-tab-tabla" onclick="showCorteTab('tabla')">📊 Tabla</button>
-      <button class="tab-btn" id="corte-tab-hist" onclick="showCorteTab('hist')">📋 Historial</button>
-    </div>
-    <!-- Total del día -->
-    <div style="background:var(--og);border:1px solid var(--icon-border);border-top:none;margin:0 16px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-radius:0 0 var(--r-sm) var(--r-sm);flex-shrink:0">
-      <span style="font-size:0.72rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Total del día</span>
-      <span id="corte-total" style="font-size:1.1rem;font-weight:800;color:var(--orange)">$0.00</span>
-    </div>
-    <!-- Vista tabla -->
-    <div id="corte-vista-tabla" class="form-sec active" style="flex:1;overflow:auto;display:block">
-      <table style="width:100%;border-collapse:collapse;font-size:clamp(0.65rem,1.2vw,0.82rem)">
-        <thead>
-          <tr style="background:var(--surface);position:sticky;top:0;z-index:1">
-            <th style="padding:8px 6px;text-align:center;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap;font-size:0.7rem">Est.</th>
-            <th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap">Cliente</th>
-            <th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap">Vehículo</th>
-            <th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border)">Reparación</th>
-            <th style="padding:8px 10px;text-align:right;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap">MO</th>
-            <th style="padding:8px 10px;text-align:right;font-weight:700;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap">Mat</th>
-            <th style="padding:8px 10px;text-align:right;font-weight:700;color:var(--orange);border-bottom:1px solid var(--border);white-space:nowrap">Total</th>
-          </tr>
-        </thead>
-        <tbody id="corte-tabla-body"></tbody>
-      </table>
-    </div>
-    <!-- Vista historial -->
-    <div id="corte-vista-hist" class="form-sec" style="flex:1;overflow-y:auto;padding:12px 16px 40px;display:none">
-      <div id="corte-hist-list"></div>
-    </div>
-  </div>
 
 </div><!-- /app -->
 
@@ -1974,7 +1943,7 @@ function startAutoSync(){
 }
 
 // ── Indicadores ───────────────────────────────────────────────────
-const DOT_IDS=['sd-home','sd-home-cli','sd-registro','sd-clientes','sd-clientes-emp','sd-mensual','sd-historial','sd-admin','sd-apariencia','sd-tabla','sd-usuarios','sd-db-clientes','sd-db-reparaciones','sd-db-cierre','sd-inventario','sd-cotizaciones']
+const DOT_IDS=['sd-home','sd-home-cli','sd-registro','sd-clientes','sd-clientes-emp','sd-historial','sd-admin','sd-apariencia','sd-tabla','sd-usuarios','sd-db-clientes','sd-db-reparaciones','sd-db-cierre','sd-inventario','sd-cotizaciones','sd-cortes']
 function setDot(status,label=''){
   DOT_IDS.forEach(id=>{ const el=document.getElementById(id); if(el) el.className='sync-dot '+status })
   // Actualizar label en home
@@ -2044,9 +2013,8 @@ function goTo(id){
 }
 // Mapa de pantalla → menú padre
 const _parentScreen={
-  'screen-corte':          'screen-home',
+  'screen-cortes':         'screen-home',
   'screen-clientes':       'screen-home',
-  'screen-mensual':        'screen-home',
   'screen-historial':      'screen-admin',
   'screen-tabla':          'screen-admin',
   'screen-admin':          'screen-home',
@@ -2166,14 +2134,13 @@ function rerenderActive(){
     if(id==='screen-clientes')       renderClientes()
     if(id==='screen-clientes-emp')   renderClientesEmp()
     if(id==='screen-usuarios')       renderUsuarios()
-    if(id==='screen-mensual')        renderMensual()
     if(id==='screen-historial')      renderHistorial()
     if(id==='screen-db-clientes')    renderDbClientes()
     if(id==='screen-db-reparaciones')renderDbReparaciones()
     if(id==='screen-db-cierre')      renderDbCierre()
     if(id==='screen-tabla')          renderTabla()
     if(id==='screen-inventario')     renderInventario()
-    if(id==='screen-corte')          renderCorte()
+    if(id==='screen-cortes')          renderCortes()
     if(id==='screen-apariencia')     openApariencia()
   }catch(err){
     console.error('rerenderActive error in '+id+':', err)
@@ -2682,124 +2649,258 @@ function getWeekNum(dateStr){
   if(day<=7)return 1;if(day<=14)return 2;if(day<=21)return 3;return 4
 }
 function weekLabel(n){return['','Semana 1 (1–7)','Semana 2 (8–14)','Semana 3 (15–21)','Semana 4 (22–31)'][n]}
-function renderMensual(){
-  try{
-  const rows=DB[SH_CIE],list=document.getElementById('month-list')
-  if(!rows.length){
-    document.getElementById('badge-mes').textContent='0'
-    list.innerHTML=`<div class="empty"><div class="ei">📅</div><div class="et">Sin cierres aún</div>
-      <div class="es">Aparece cuando un cliente esté completado y liquidado</div></div>`
-    return
-  }
-  // Agrupar: mes → día → cliente
-  const byMonth={}
+// ── Helpers compartidos de cortes ────────────────────────────────
+function togCli(id){document.getElementById(id)?.classList.toggle('open')}
+// Genera tabla de clientes para un conjunto de reparaciones
+// rows: [{nombre,vehiculo,reparacion,manoObra,material,total,_activo,_liquidado,fecha}]
+// showFecha: mostrar columna de fecha (semana/mes) o no (día)
+function _corteTablaHTML(rows, showFecha=false){
+  if(!rows.length) return `<div class="empty"><div class="ei">📊</div><div class="et">Sin registros</div></div>`
+  // Agrupar por cliente
+  const groups={}
   rows.forEach(r=>{
-    const mk=mKey(r.closedAt)
-    if(!byMonth[mk])byMonth[mk]={key:mk,label:fMes(r.closedAt),days:{}}
-    const dk=String(r.closedAt||'').slice(0,10) // YYYY-MM-DD
-    if(!byMonth[mk].days[dk])byMonth[mk].days[dk]={key:dk,clients:{}}
-    const ck=`${r.nombre}__${r.vehiculo}__${mk}`
-    if(!byMonth[mk].days[dk].clients[ck])
-      byMonth[mk].days[dk].clients[ck]={nombre:r.nombre,vehiculo:r.vehiculo,repairs:[]}
-    byMonth[mk].days[dk].clients[ck].repairs.push(r)
+    const k=r.nombre+'|'+r.vehiculo
+    if(!groups[k]) groups[k]={nombre:r.nombre,vehiculo:r.vehiculo,repairs:[],_liquidado:r._liquidado}
+    groups[k].repairs.push(r)
   })
-  const months=Object.values(byMonth).sort((a,b)=>b.key.localeCompare(a.key))
-  document.getElementById('badge-mes').textContent=months.length
-  list.innerHTML=months.map((m,mi)=>{
-    const allClients=Object.values(m.days).flatMap(d=>Object.values(d.clients))
-    const totalMes=allClients.reduce((s,c)=>s+c.repairs.reduce((ss,r)=>ss+numF(r.total),0),0)
-    const totalReps=allClients.reduce((s,c)=>s+c.repairs.length,0)
-
-    // Tarjetas de días — ordenadas de más reciente a más antiguo
-    const daysHTML=Object.values(m.days).sort((a,b)=>b.key.localeCompare(a.key)).map((d,di)=>{
-      const did=`d-${m.key}-${di}`
-      const dTotal=Object.values(d.clients).reduce((s,c)=>s+c.repairs.reduce((ss,r)=>ss+numF(r.total),0),0)
-      const dCount=Object.values(d.clients).reduce((s,c)=>s+c.repairs.length,0)
-      // Formatear fecha legible: "Lun 3" o "Lun 3 ene"
-      const dDate=new Date(d.key+'T12:00:00')
-      const dLabel=dDate.toLocaleDateString('es-MX',{weekday:'short',day:'numeric'})
-        .replace(/^\w/,ch=>ch.toUpperCase())
-
-      const clientsHTML=Object.values(d.clients).map((c,ci)=>{
-        const cid=`c-${m.key}-${di}-${ci}`
-        const tot=c.repairs.reduce((s,r)=>s+numF(r.total),0)
-        const repsHTML=c.repairs.map(r=>`
-          <div class="rep-row">
-            <div class="rep-row-info">
-              <div class="rep-row-desc">${r.reparacion}</div>
-              <div class="rep-row-sub">MO: ${f$(r.manoObra)} · Mat: ${f$(r.material)}</div>
-            </div>
-            <div class="rep-row-total">${f$(r.total)}</div>
-          </div>`).join('')
-        return `<div class="cli-block" id="${cid}">
-          <div class="cli-head" onclick="togCli('${cid}')">
-            <div class="cli-info" style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow:hidden">
-              <div class="cli-nm" style="flex-shrink:0">🧑 ${c.nombre}</div>
-              <div class="cli-car" style="margin-top:0;flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🚗 ${c.vehiculo}</div>
-            </div>
-            <div class="cli-right">
-              <div style="font-size:0.65rem;color:var(--text3);white-space:nowrap">${c.repairs.length} rep.</div>
-              <div class="cli-tot">${f$(tot)}</div>
-            </div>
+  const bs='border-bottom:1px solid var(--border)'
+  return Object.values(groups).map((g,i)=>{
+    const tot=g.repairs.reduce((s,r)=>s+numF(r.total),0)
+    const moTot=g.repairs.reduce((s,r)=>s+numF(r.manoObra),0)
+    const matTot=g.repairs.reduce((s,r)=>s+numF(r.material),0)
+    // Verde = liquidado (en cierre), rojo = aún activo/pendiente
+    const liq=g._liquidado
+    const rowBg=liq?'rgba(34,197,94,.06)':'rgba(239,68,68,.06)'
+    const badgeColor=liq?'var(--green)':'var(--red)'
+    const badgeBg=liq?'rgba(34,197,94,.15)':'rgba(239,68,68,.12)'
+    const badge=liq?'✅ Liquidado':'🔴 Pendiente'
+    const cid=`cg-${i}-${g.nombre.replace(/\s/g,'')}`
+    const repRows=g.repairs.map(r=>`<tr style="${bs}">
+      <td style="padding:5px 8px;font-size:0.75rem;color:var(--text)">${r.reparacion}</td>
+      ${showFecha?`<td style="padding:5px 8px;font-size:0.72rem;color:var(--text3);white-space:nowrap">${fD(r.fecha)}</td>`:''}
+      <td style="padding:5px 8px;font-size:0.75rem;color:var(--text2);white-space:nowrap;text-align:right">${f$(r.manoObra)}</td>
+      <td style="padding:5px 8px;font-size:0.75rem;color:var(--text2);white-space:nowrap;text-align:right">${f$(r.material)}</td>
+      <td style="padding:5px 8px;font-size:0.8rem;font-weight:700;color:var(--orange);white-space:nowrap;text-align:right">${f$(r.total)}</td>
+    </tr>`).join('')
+    return `<div class="ccard ani" style="margin-bottom:8px;background:${rowBg}" id="${cid}">
+      <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="togCli('${cid}')">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span style="font-size:0.85rem;font-weight:700">${g.nombre}</span>
+            <span style="font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:20px;background:${badgeBg};color:${badgeColor}">${badge}</span>
           </div>
-          <div class="cli-body">${repsHTML}</div>
-        </div>`
-      }).join('')
-
-      return `<div class="week-block has-data" id="${did}" onclick="togDayTab('${did}')">
-        <div class="week-head">
-          <span class="week-label">${dLabel}</span>
-          <span style="font-size:0.6rem;color:var(--text3)">${dCount} rep.</span>
-          <span class="week-amount" style="color:var(--orange)">${f$(dTotal)}</span>
+          <div style="font-size:0.68rem;color:var(--text2);margin-top:2px">🚗 ${g.vehiculo} · ${g.repairs.length} rep.</div>
         </div>
-        <div class="week-detail" id="wd-${did}" style="display:none">
-          ${clientsHTML}
-        </div>
-      </div>`
-    }).join('')
-
-    return `<div class="mcard ani" style="animation-delay:${mi*.05}s" id="mc-${m.key}">
-      <div class="mcard-head" onclick="togMonth('${m.key}')">
-        <div class="mcard-ico">📅</div>
-        <div class="mcard-info">
-          <div class="mcard-name">${m.label}</div>
-          <div class="mcard-sub">${allClients.length} cliente${allClients.length!==1?'s':''} · ${totalReps} reparaciones</div>
-        </div>
-        <div class="mcard-right">
-          <div class="mcard-total">${f$(totalMes)}</div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:0.9rem;font-weight:800;color:var(--orange)">${f$(tot)}</div>
+          <div style="font-size:0.6rem;color:var(--text3)">MO ${f$(moTot)} · Mat ${f$(matTot)}</div>
         </div>
       </div>
-      <div class="mcard-body">
-        <div style="display:flex;flex-direction:column;gap:6px;padding:6px 0">${daysHTML}</div>
+      <div class="cli-body" style="border-top:1px solid var(--border)">
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse">
+            <thead><tr style="background:var(--surface)">
+              <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);text-align:left">Reparación</th>
+              ${showFecha?'<th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);white-space:nowrap">Fecha</th>':''}
+              <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);text-align:right;white-space:nowrap">M.O.</th>
+              <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);text-align:right;white-space:nowrap">Mat.</th>
+              <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--orange);text-align:right;white-space:nowrap">Total</th>
+            </tr></thead>
+            <tbody>${repRows}</tbody>
+          </table>
+        </div>
       </div>
     </div>`
   }).join('')
-  }catch(err){console.error("renderMensual:",err);showToast("❌ Error en renderMensual: "+err.message,"error")}
 }
-function togMonth(k){
-  const card=document.getElementById('mc-'+k); if(!card)return
-  const wasOpen=card.classList.contains('open')
-  if(wasOpen){
-    card.querySelectorAll('.week-detail').forEach(w=>w.style.display='none')
-    card.querySelectorAll('.cli-block.open').forEach(c=>c.classList.remove('open'))
+
+// Construye filas de reparaciones para un rango de fechas
+function _rowsForRange(desde, hasta){
+  const cmap=Object.fromEntries(DB[SH_CLI].map(c=>[c.id,c]))
+  const rows=[]
+  DB[SH_SES].forEach(r=>{
+    const f=String(r.fecha||'').slice(0,10)
+    if(f<desde||f>hasta) return
+    const cli=cmap[r.clientId]
+    rows.push({nombre:cli?.nombre||'—',vehiculo:cli?.vehiculo||'—',reparacion:r.reparacion,
+      manoObra:r.manoObra,material:r.material,total:r.total,fecha:r.fecha,_activo:true,_liquidado:false})
+  })
+  DB[SH_CIE].forEach(r=>{
+    const f=String(r.fechaRep||r.closedAt||'').slice(0,10)
+    if(f<desde||f>hasta) return
+    rows.push({nombre:r.nombre,vehiculo:r.vehiculo,reparacion:r.reparacion,
+      manoObra:r.manoObra,material:r.material,total:r.total,fecha:r.fechaRep||r.closedAt,_activo:false,_liquidado:true})
+  })
+  return rows
+}
+
+// ── renderCortes — función principal ─────────────────────────────
+let _cortesTab='dia'
+function showCortesTab(tab){
+  _cortesTab=tab
+  ;['dia','sem','mes'].forEach(t=>{
+    document.getElementById('cortes-vista-'+t).style.display=t===tab?'block':'none'
+    document.getElementById('cortes-tab-'+t).classList.toggle('active',t===tab)
+  })
+  renderCortes()
+}
+function renderCortes(){
+  try{
+  const tab=_cortesTab
+  const now=new Date()
+  const hoy=_hoyKey()
+
+  if(tab==='dia'){
+    _renderCortesDia(now, hoy)
+  } else if(tab==='sem'){
+    _renderCortesSem(now, hoy)
+  } else {
+    _renderCortesMes(now, hoy)
   }
-  card.classList.toggle('open')
+  }catch(e){console.error('renderCortes:',e);showToast('❌ Error en cortes: '+e.message,'error')}
 }
-function togDayTab(did){
-  const detail=document.getElementById('wd-'+did)
-  const tab=document.getElementById(did)
-  if(!detail) return
-  const isOpen=detail.style.display==='block'
-  // Cerrar todos los días del mismo mes
-  const mc=tab?.closest('.mcard')
-  mc?.querySelectorAll('.week-detail').forEach(d=>{ if(d.id!=='wd-'+did) d.style.display='none' })
-  mc?.querySelectorAll('.week-block').forEach(t=>{ if(t.id!==did) t.classList.remove('active-week') })
-  detail.style.display=isOpen?'none':'block'
-  tab?.classList.toggle('active-week',!isOpen)
+
+function _renderCortesDia(now, hoy){
+  const cont=document.getElementById('cortes-vista-dia')
+  // Días del mes actual
+  const year=now.getFullYear(), month=now.getMonth()
+  const daysInMonth=new Date(year,month+1,0).getDate()
+  // Construir todos los días del mes
+  const dias=[]
+  for(let d=daysInMonth;d>=1;d--){
+    const key=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+    const rows=_rowsForRange(key,key)
+    const total=rows.reduce((s,r)=>s+numF(r.total),0)
+    const label=new Date(key+'T12:00:00').toLocaleDateString('es-MX',{weekday:'short',day:'numeric'})
+      .replace(/^\w/,ch=>ch.toUpperCase())
+    dias.push({key,label,rows,total,esHoy:key===hoy})
+  }
+  const totalHoy=dias.find(d=>d.esHoy)?.total||0
+  _setCortesTotal(totalHoy,'Hoy')
+  document.getElementById('badge-cortes').textContent=dias.filter(d=>d.rows.length).length
+
+  cont.innerHTML=dias.map((d,i)=>{
+    const id=`cd-${d.key}`
+    const hasData=d.rows.length>0
+    const openClass=d.esHoy?'open':''
+    return `<div class="ccard" style="margin-bottom:6px" id="${id}">
+      <div style="display:flex;align-items:center;padding:9px 14px;cursor:${hasData?'pointer':'default'};gap:10px"
+        onclick="${hasData?`togCorteCard('${id}')`:''}">
+        <div style="flex:1;display:flex;align-items:center;gap:8px">
+          <span style="font-size:0.85rem;font-weight:${d.esHoy?'800':'600'};color:${d.esHoy?'var(--orange)':'var(--text)'}">${d.label}</span>
+          ${d.esHoy?'<span style="font-size:0.6rem;background:var(--og);color:var(--orange);border:1px solid var(--icon-border);border-radius:20px;padding:1px 7px;font-weight:700">Hoy</span>':''}
+          ${hasData?`<span style="font-size:0.62rem;color:var(--text3)">${d.rows.length} rep.</span>`:'<span style="font-size:0.62rem;color:var(--text3)">Sin registros</span>'}
+        </div>
+        ${hasData?`<span style="font-size:0.88rem;font-weight:800;color:var(--orange)">${f$(d.total)}</span>`:''}
+      </div>
+      <div class="corte-detail ${openClass}" id="det-${id}" style="${d.esHoy&&hasData?'':'display:none'}">
+        <div style="padding:0 8px 10px">${_corteTablaHTML(d.rows,false)}</div>
+      </div>
+    </div>`
+  }).join('')
 }
-function togWeekTab(mKey,wn){} // kept for compatibility
-function togWeek(id){} // kept for compatibility
-function togCli(id){document.getElementById(id)?.classList.toggle('open')}
+
+function _renderCortesSem(now, hoy){
+  const cont=document.getElementById('cortes-vista-sem')
+  const year=now.getFullYear(), month=now.getMonth()
+  // 4 semanas del mes, semana = lunes a domingo
+  // Calcular semanas del mes actual
+  const firstDay=new Date(year,month,1)
+  const lastDay=new Date(year,month+1,0)
+  // Generar semanas: grupos de 7 días empezando el lunes de la primera semana
+  const semanas=[]
+  let cur=new Date(firstDay)
+  // Retroceder al lunes anterior si no empieza en lunes
+  cur.setDate(cur.getDate()-((cur.getDay()+6)%7))
+  let semNum=1
+  while(cur<=lastDay){
+    const desde=cur.toISOString().slice(0,10)
+    const hastaDate=new Date(cur); hastaDate.setDate(hastaDate.getDate()+6)
+    const hasta=hastaDate.toISOString().slice(0,10)
+    const rows=_rowsForRange(desde,hasta)
+    const total=rows.reduce((s,r)=>s+numF(r.total),0)
+    const esSemActual=hoy>=desde&&hoy<=hasta
+    semanas.push({semNum,desde,hasta,rows,total,esSemActual})
+    cur.setDate(cur.getDate()+7)
+    semNum++
+  }
+  const totalSem=semanas.find(s=>s.esSemActual)?.total||0
+  _setCortesTotal(totalSem,'Esta semana')
+  document.getElementById('badge-cortes').textContent=semanas.filter(s=>s.rows.length).length
+
+  cont.innerHTML=semanas.map((s,i)=>{
+    const id=`cs-${s.desde}`
+    const hasData=s.rows.length>0
+    const desdeFmt=new Date(s.desde+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})
+    const hastaFmt=new Date(s.hasta+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})
+    return `<div class="ccard" style="margin-bottom:6px" id="${id}">
+      <div style="display:flex;align-items:center;padding:9px 14px;cursor:${hasData?'pointer':'default'};gap:10px"
+        onclick="${hasData?`togCorteCard('${id}')`:''}">
+        <div style="flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:0.85rem;font-weight:${s.esSemActual?'800':'600'};color:${s.esSemActual?'var(--orange)':'var(--text)'}">Sem ${s.semNum}</span>
+          <span style="font-size:0.68rem;color:var(--text3)">${desdeFmt} – ${hastaFmt}</span>
+          ${s.esSemActual?'<span style="font-size:0.6rem;background:var(--og);color:var(--orange);border:1px solid var(--icon-border);border-radius:20px;padding:1px 7px;font-weight:700">Actual</span>':''}
+          ${hasData?`<span style="font-size:0.62rem;color:var(--text3)">${s.rows.length} rep.</span>`:'<span style="font-size:0.62rem;color:var(--text3)">Sin registros</span>'}
+        </div>
+        ${hasData?`<span style="font-size:0.88rem;font-weight:800;color:var(--orange)">${f$(s.total)}</span>`:''}
+      </div>
+      <div class="corte-detail" id="det-${id}" style="${s.esSemActual&&hasData?'':'display:none'}">
+        <div style="padding:0 8px 10px">${_corteTablaHTML(s.rows,true)}</div>
+      </div>
+    </div>`
+  }).join('')
+}
+
+function _renderCortesMes(now, hoy){
+  const cont=document.getElementById('cortes-vista-mes')
+  const year=now.getFullYear()
+  const mesActual=now.getMonth() // 0-11
+  const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+  const totalMesActual_rows=_rowsForRange(`${year}-${String(mesActual+1).padStart(2,'0')}-01`,
+    `${year}-${String(mesActual+1).padStart(2,'0')}-31`)
+  const totalMesActual=totalMesActual_rows.reduce((s,r)=>s+numF(r.total),0)
+  _setCortesTotal(totalMesActual, meses[mesActual])
+  document.getElementById('badge-cortes').textContent=12
+
+  // Mostrar los 12 meses del año actual, del más reciente al más antiguo
+  const mesesHTML=Array.from({length:12},(_,i)=>11-i).map(m=>{
+    const desde=`${year}-${String(m+1).padStart(2,'0')}-01`
+    const hasta=`${year}-${String(m+1).padStart(2,'0')}-31`
+    const rows=_rowsForRange(desde,hasta)
+    const total=rows.reduce((s,r)=>s+numF(r.total),0)
+    const esMesActual=m===mesActual
+    const id=`cm-${year}-${m}`
+    const hasData=rows.length>0
+    return `<div class="ccard" style="margin-bottom:6px" id="${id}">
+      <div style="display:flex;align-items:center;padding:9px 14px;cursor:${hasData?'pointer':'default'};gap:10px"
+        onclick="${hasData?`togCorteCard('${id}')`:''}">
+        <div style="flex:1;display:flex;align-items:center;gap:8px">
+          <span style="font-size:0.85rem;font-weight:${esMesActual?'800':'600'};color:${esMesActual?'var(--orange)':'var(--text)'}">${meses[m]}</span>
+          ${esMesActual?'<span style="font-size:0.6rem;background:var(--og);color:var(--orange);border:1px solid var(--icon-border);border-radius:20px;padding:1px 7px;font-weight:700">Actual</span>':''}
+          ${hasData?`<span style="font-size:0.62rem;color:var(--text3)">${rows.length} rep.</span>`:'<span style="font-size:0.62rem;color:var(--text3)">Sin registros</span>'}
+        </div>
+        ${hasData?`<span style="font-size:0.88rem;font-weight:800;color:var(--orange)">${f$(total)}</span>`:''}
+      </div>
+      <div class="corte-detail" id="det-${id}" style="${esMesActual&&hasData?'':'display:none'}">
+        <div style="padding:0 8px 10px">${_corteTablaHTML(rows,true)}</div>
+      </div>
+    </div>`
+  }).join('')
+  cont.innerHTML=mesesHTML
+}
+
+function _setCortesTotal(total, label){
+  const el=document.getElementById('cortes-total')
+  const lbl=document.getElementById('cortes-periodo-label')
+  if(el) el.textContent=f$(total)
+  if(lbl) lbl.textContent=label
+}
+function togCorteCard(id){
+  const card=document.getElementById(id); if(!card) return
+  const det=document.getElementById('det-'+id); if(!det) return
+  const open=det.style.display!=='none'
+  det.style.display=open?'none':'block'
+}
 
 // ── Historial ─────────────────────────────────────────────────────
 function renderHistorial(){
@@ -3613,119 +3714,6 @@ function _esHoy(fecha){
   if(!fecha) return false
   return String(fecha).slice(0,10)===_hoyKey()
 }
-function showCorteTab(tab){
-  document.getElementById('corte-vista-tabla').style.display=tab==='tabla'?'block':'none'
-  document.getElementById('corte-vista-hist').style.display=tab==='hist'?'block':'none'
-  document.getElementById('corte-tab-tabla').classList.toggle('active',tab==='tabla')
-  document.getElementById('corte-tab-hist').classList.toggle('active',tab==='hist')
-}
-function renderCorte(){
-  const cmap=Object.fromEntries(DB[SH_CLI].map(c=>[c.id,c]))
-  // Filas de hoy: activos + cierre
-  const rows=[
-    ...DB[SH_SES].filter(r=>_esHoy(r.fecha)).map(r=>({
-      nombre:cmap[r.clientId]?.nombre||'—',
-      vehiculo:cmap[r.clientId]?.vehiculo||'—',
-      reparacion:r.reparacion,
-      manoObra:r.manoObra,
-      material:r.material,
-      total:r.total,
-      clientId:r.clientId,
-      _activo:true
-    })),
-    ...DB[SH_CIE].filter(r=>_esHoy(r.fechaRep||r.closedAt)).map(r=>({
-      nombre:r.nombre,
-      vehiculo:r.vehiculo,
-      reparacion:r.reparacion,
-      manoObra:r.manoObra,
-      material:r.material,
-      total:r.total,
-      _activo:false
-    }))
-  ]
-  // Total
-  const totalHoy=rows.reduce((s,r)=>s+numF(r.total),0)
-  const el=document.getElementById('corte-total')
-  if(el) el.textContent=f$(totalHoy)
-  document.getElementById('badge-corte').textContent=rows.length
-  // ── Vista tabla ──
-  const tbody=document.getElementById('corte-tabla-body')
-  if(tbody){
-    if(!rows.length){
-      tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)">Sin registros hoy</td></tr>`
-    } else {
-      const bs='border-bottom:1px solid var(--border)'
-      const td=(v,right=false,color='')=>`<td style="padding:7px 10px;${right?'text-align:right;':''}${color?'color:'+color+';':''}${bs}">${v}</td>`
-      tbody.innerHTML=rows.map(r=>{
-        const ico=r._activo?'🔧':'✅'
-        const col=r._activo?'var(--orange)':'var(--green)'
-        return `<tr style="background:${r._activo?'transparent':'rgba(34,197,94,.04)'}">
-          <td style="padding:7px 6px;text-align:center;${bs};font-size:0.8rem"><span style="color:${col}">${ico}</span></td>
-          ${td(r.nombre)}${td(r.vehiculo)}${td(r.reparacion)}
-          ${td(f$(r.manoObra),true)}${td(f$(r.material),true)}
-          ${td(f$(r.total),true,'var(--orange)')}
-        </tr>`
-      }).join('')
-    }
-  }
-  // ── Vista historial ──
-  const hlist=document.getElementById('corte-hist-list')
-  if(!hlist) return
-  if(!rows.length){ hlist.innerHTML=`<div class="empty"><div class="ei">📊</div><div class="et">Sin registros hoy</div></div>`; return }
-  // Agrupar por cliente
-  const groups={}
-  rows.forEach(r=>{
-    const k=r.nombre+'|'+r.vehiculo
-    if(!groups[k]) groups[k]={nombre:r.nombre,vehiculo:r.vehiculo,repairs:[]}
-    groups[k].repairs.push(r)
-  })
-  hlist.innerHTML=Object.values(groups).map((g,i)=>{
-    const tot=g.repairs.reduce((s,r)=>s+numF(r.total),0)
-    const hasActive=g.repairs.some(r=>r._activo)
-    const dot=hasActive?'var(--orange)':'var(--green)'
-    const tableRows=g.repairs.map(r=>{
-      const ico=r._activo?'🔧':'✅'
-      const col=r._activo?'var(--orange)':'var(--green)'
-      return `<tr style="border-bottom:1px solid var(--border)">
-        <td style="padding:6px 8px;text-align:center;font-size:0.8rem"><span style="color:${col}">${ico}</span></td>
-        <td style="padding:6px 8px;font-size:0.78rem;color:var(--text)">${r.reparacion}</td>
-        <td style="padding:6px 8px;font-size:0.78rem;color:var(--text2);white-space:nowrap">${f$(r.manoObra)}</td>
-        <td style="padding:6px 8px;font-size:0.78rem;color:var(--text2);white-space:nowrap">${f$(r.material)}</td>
-        <td style="padding:6px 8px;font-size:0.82rem;font-weight:700;color:var(--orange);white-space:nowrap;text-align:right">${f$(r.total)}</td>
-      </tr>`}).join('')
-    return `<div class="ccard ani" style="animation-delay:${i*.03}s;margin-bottom:10px" id="cg-${i}">
-      <div style="height:3px;background:${dot};width:100%"></div>
-      <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="togCorteHist('cg-${i}')">
-        <div style="width:34px;height:34px;border-radius:9px;background:var(--og);border:1px solid rgba(255,107,43,.2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🧑</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:0.85rem;font-weight:700">${g.nombre}</div>
-          <div style="font-size:0.68rem;color:var(--text2)">🚗 ${g.vehiculo} · ${g.repairs.length} rep.</div>
-        </div>
-        <div style="font-size:0.9rem;font-weight:800;color:var(--orange);flex-shrink:0">${f$(tot)}</div>
-      </div>
-      <div class="hist-body" style="display:none;border-top:1px solid var(--border)">
-        <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse">
-            <thead><tr style="background:var(--surface)">
-              <th style="padding:6px 8px;font-size:0.65rem;font-weight:700;color:var(--text3);text-align:center">Est.</th>
-              <th style="padding:6px 8px;font-size:0.65rem;font-weight:700;color:var(--text3);text-align:left">Reparación</th>
-              <th style="padding:6px 8px;font-size:0.65rem;font-weight:700;color:var(--text3)">M.O.</th>
-              <th style="padding:6px 8px;font-size:0.65rem;font-weight:700;color:var(--text3)">Mat.</th>
-              <th style="padding:6px 8px;font-size:0.65rem;font-weight:700;color:var(--orange);text-align:right">Total</th>
-            </tr></thead>
-            <tbody>${tableRows}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>`
-  }).join('')
-}
-function togCorteHist(id){
-  const card=document.getElementById(id); if(!card) return
-  const body=card.querySelector('.hist-body')
-  body.style.display=body.style.display==='block'?'none':'block'
-}
-
 // ── Modales ───────────────────────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
