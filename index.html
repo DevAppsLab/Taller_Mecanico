@@ -63,13 +63,10 @@
 html{font-size:clamp(19px, 2.3vw, 23px)}
 :root{--font-offset:0px;--icon-border:rgba(255,107,43,0.25)}
 /* Íconos/emojis: fondo suave del acento (og) — visible y con carácter */
-.logo-icon{background:var(--orange)}
 .mc-icon,.cc-av,.db-item-ico,.mci-av,.arb-ico{background:var(--og);border:1px solid var(--icon-border)}
 /* Badges/etiquetas: fondo og, texto acento */
 .tb-badge,.cc-count{background:var(--og);color:var(--orange);border:1px solid var(--icon-border)}
-.sec-lbl{color:var(--orange)}
 /* Totales */
-.ctotal{background:var(--og);border:1px solid var(--icon-border);color:var(--orange)}
 /* Stat números */
 .stat .sv{color:var(--orange)}
 html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(--text);
@@ -483,7 +480,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .km-lbl{font-size:0.82rem;font-weight:600;color:var(--text);flex:1}
 .km-sub{font-size:0.65rem;color:var(--text3);margin-top:1px}
 .km-sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-/* ── Inventario ─────────────────────────────────────── */
 .inv-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .inv-item.low-stock{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.06)}
 .inv-badge{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:20px;flex-shrink:0}
@@ -491,7 +487,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .inv-badge.low{background:rgba(239,68,68,.15);color:var(--red)}
 .inv-adj{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .inv-adj button{width:26px;height:26px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);cursor:pointer;font-size:0.9rem;font-weight:700;display:flex;align-items:center;justify-content:center}
-/* ── Cotizaciones ────────────────────────────────────── */
 .cot-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
 .cot-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .cot-badge{font-size:0.62rem;font-weight:700;padding:3px 8px;border-radius:20px}
@@ -500,7 +495,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .cot-badge.rech{background:rgba(239,68,68,.15);color:var(--red)}
 .cot-rep-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:0.8rem}
 .cot-total{display:flex;justify-content:space-between;padding:8px 0 0;font-weight:800;font-size:0.9rem;color:var(--orange)}
-/* ── Clases plantilla buildClientCard ───────────────── */
 .ri-top{display:flex;align-items:center;gap:8px;min-width:0}
 .ri-desc{flex:1;min-width:0}
 .ri-actions{flex-shrink:0;display:flex;gap:4px}
@@ -527,19 +521,21 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .toast.error{border-color:rgba(239,68,68,.4);color:var(--red)}
 @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .ani{animation:fadein .28s ease both}
+
+.tb-sync-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.sync-chip-bare{display:flex;align-items:center;gap:4px;border:none;background:transparent;padding:0}
+.sync-chip-label{font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)}
+.mc-title-sm{font-size:clamp(0.72rem,1.2vw,0.85rem)}
 </style>
 </head>
 <body>
 <div id="app">
-
-  <!-- ══ LOGIN ══ -->
   <div id="screen-login" class="screen active" style="justify-content:center;align-items:center;background:var(--bg)">
     <div style="width:100%;max-width:340px;padding:clamp(20px,5vw,40px);display:flex;flex-direction:column;align-items:center;gap:14px">
       <div id="login-logo" style="width:72px;height:72px;background:var(--orange);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 6px 20px var(--shadow-orange);margin-bottom:4px">🔧</div>
       <div style="text-align:center;margin-bottom:4px">
         <div id="login-title" class="logo-text" style="font-size:clamp(1.6rem,5vw,2.4rem)">Taller Mecánico</div>
       </div>
-      <!-- Tabs login/register -->
       <div style="display:flex;width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:3px">
         <button id="tab-login" onclick="showLoginTab('login')"
           style="flex:1;padding:8px;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-size:0.8rem;transition:all .2s;background:var(--orange);color:#fff">
@@ -586,25 +582,22 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div id="login-loading" style="display:none;font-size:0.75rem;color:var(--text3)">🔄 Verificando...</div>
     </div>
   </div>
-
-  <!-- ══ HOME CLIENTE ══ -->
   <div id="screen-home-cliente" class="screen">
     <div class="home-header">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0">
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+          <div class="tb-sync-wrap">
             <div class="km-btn" onclick="openKMenu()">⋮</div>
-            <div class="sync-chip" style="border:none;background:transparent;padding:0">
+            <div class="sync-chip-bare">
               <div class="sync-dot pending" id="sd-home-cli"></div>
-              <span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Cargando...</span>
+              <span class="sync-chip-label" >Cargando...</span>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div style="padding:10px 20px 4px;font-size:0.75rem;color:var(--text3)" id="cli-bienvenida"></div>
-    <!-- Tabs -->
     <div style="display:flex;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0">
       <button id="ctab-activo" onclick="showClienteTab('activo')"
         style="flex:1;padding:12px;border:none;background:transparent;font-weight:700;font-size:0.82rem;cursor:pointer;border-bottom:2px solid var(--orange);color:var(--orange)">
@@ -621,19 +614,17 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div id="cli-cot-list" style="display:flex;flex-direction:column;gap:6px"></div>
     </div>
   </div>
-
-  <!-- ══ HOME ══ -->
   <div id="screen-home" class="screen">
     <div class="home-header">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0">
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.5</span>
+          <div class="tb-sync-wrap">
+            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.8</span>
             <div class="km-btn" onclick="openKMenu()">⋮</div>
-            <div class="sync-chip" style="border:none;background:transparent;padding:0">
+            <div class="sync-chip-bare">
               <div class="sync-dot pending" id="sd-home"></div>
-              <span id="sync-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Cargando...</span>
+              <span id="sync-label" >Cargando...</span>
             </div>
           </div>
         </div>
@@ -648,13 +639,11 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="stat" id="stat-mes" onclick="goTo('screen-cortes');showCortesTab('mes')" style="cursor:pointer"><div class="sv" id="s-mes">$0</div><div class="sl" id="sl-mes">Mes</div></div>
     </div>
     <div class="home-menu">
-      <!-- Siempre visible -->
       <div class="mc primary" onclick="goTo('screen-registro')">
         <div class="mc-icon">➕</div>
         <div class="mc-info"><div class="mc-title">Nuevo Ingreso</div><div class="mc-desc">Registrar cliente o agregar reparación</div></div>
         <div class="mc-arr">›</div>
       </div>
-      <!-- Admin: clientes completo -->
       <div id="home-admin-btns" style="display:flex;flex-direction:column;gap:12px">
         <div class="mc" onclick="goTo('screen-clientes')">
           <div class="mc-icon">👥</div>
@@ -677,7 +666,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           <div class="mc-arr">›</div>
         </div>
       </div>
-      <!-- Empleado: clientes simplificado -->
       <div id="home-emp-btns" style="display:none;flex-direction:column;gap:12px">
         <div class="mc" onclick="goTo('screen-clientes-emp')">
           <div class="mc-icon">👥</div>
@@ -687,19 +675,16 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </div>
     </div>
   </div>
-
-  <!-- ══ INGRESO UNIFICADO ══ -->
   <div id="screen-registro" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
       <div class="tb-title">Nuevo Ingreso</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-registro"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-registro"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" style="padding-bottom:20px">
-      <!-- Selector tipo ingreso -->
       <div class="sec-card" style="padding:10px 12px">
         <div style="display:flex;gap:8px">
           <button id="tipo-rep-btn" onclick="setTipoIngreso('rep')"
@@ -708,7 +693,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
             style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:transparent;color:var(--text3);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">📄 Cotización</button>
         </div>
       </div>
-      <!-- Formulario cotización inline (oculto por defecto) -->
       <div id="ing-cot-section" style="display:none">
         <div class="sec-card">
           <div class="sec-lbl" style="color:var(--purple)">🧑 Cliente</div>
@@ -758,7 +742,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           </div>
         </div>
       </div>
-      <!-- Formulario reparación (visible por defecto) -->
       <div id="ing-rep-section">
       <div class="sec-card">
         <div class="sec-lbl">🧑 Cliente</div>
@@ -815,16 +798,14 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </div><!-- /ing-rep-section -->
     </div>
   </div>
-
-  <!-- ══ CLIENTES EMPLEADO (sin costos) ══ -->
   <div id="screen-clientes-emp" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
       <div class="tb-title">Clientes</div>
       <div class="tb-badge" id="badge-cli-emp">0</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+      <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-clientes-emp"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-clientes-emp"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="search-bar">
@@ -835,16 +816,14 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div class="scrollbody" id="clients-list-emp" style="padding-left:20px;padding-right:20px"></div>
   </div>
-
-  <!-- ══ CLIENTES ══ -->
   <div id="screen-clientes" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
       <div class="tb-title">Clientes</div>
       <div class="tb-badge" id="badge-cli">0</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-clientes"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-clientes"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="search-bar">
@@ -855,71 +834,60 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div class="clients-list" id="clients-list"></div>
   </div>
-
-  <!-- ══ CORTES ══ -->
   <div id="screen-cortes" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
       <div class="tb-title">Cortes</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+      <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-cortes"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-cortes"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
-    <!-- Tabs día/semana/mes -->
     <div class="tabs-row" style="margin:8px 12px 0;flex-shrink:0">
       <button class="tab-btn active" id="cortes-tab-dia"  onclick="showCortesTab('dia')">📅 Día</button>
       <button class="tab-btn"        id="cortes-tab-sem"  onclick="showCortesTab('sem')">📆 Semana</button>
       <button class="tab-btn"        id="cortes-tab-mes"  onclick="showCortesTab('mes')">🗓 Mes</button>
     </div>
-    <!-- Total dinámico -->
     <div style="background:var(--og);border:1px solid var(--icon-border);margin:0 12px 8px;padding:7px 14px;display:flex;justify-content:space-between;align-items:center;border-radius:var(--r-sm);flex-shrink:0">
       <span id="cortes-periodo-label" style="font-size:0.68rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Hoy</span>
       <span id="cortes-total" style="font-size:1.05rem;font-weight:800;color:var(--orange)">$0.00</span>
     </div>
-    <!-- Contenido -->
     <div id="cortes-vista-dia" style="flex:1;overflow-y:auto;padding:0 12px 40px;display:block"></div>
     <div id="cortes-vista-sem" style="flex:1;overflow-y:auto;padding:0 12px 40px;display:none"></div>
     <div id="cortes-vista-mes" style="flex:1;overflow-y:auto;padding:0 12px 40px;display:none"></div>
   </div>
-
-  <!-- ══ HISTORIAL — accesible desde Admin ══ -->
   <div id="screen-historial" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Historial</div>
       <div class="tb-badge" id="badge-hist">0</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-historial"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-historial"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" id="hist-list" style="padding-top:12px"></div>
   </div>
-
-  <!-- ══ ADMIN ══ -->
   <div id="screen-admin" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
       <div class="tb-title">Administración</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-admin"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-admin"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" style="padding:12px 20px 40px;display:flex;flex-direction:column;gap:10px">
       <div class="admin-section-title">Apariencia</div>
-      <!-- Todo en un solo flex container para altura uniforme -->
       <div style="display:flex;flex-direction:column;flex:1;gap:clamp(3px,0.5vw,7px)">
-        <!-- Fila apariencia: 2 columnas, misma altura que los demás -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(3px,0.5vw,7px);flex:1">
           <div class="mc" onclick="goTo('screen-apariencia')" style="align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
             <div class="mc-icon">🎨</div>
-            <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Personalizar</div></div>
+            <div class="mc-info"><div class="mc-title" class="mc-title-sm">Personalizar</div></div>
           </div>
           <div class="mc" style="align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px);cursor:default;pointer-events:none">
             <div class="mc-icon">🌓</div>
-            <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Tema</div></div>
+            <div class="mc-info"><div class="mc-title" class="mc-title-sm">Tema</div></div>
             <label style="position:relative;display:inline-block;width:38px;height:22px;flex-shrink:0;pointer-events:all;margin-left:auto">
               <input type="checkbox" class="theme-toggle-input" onchange="toggleTheme()" style="opacity:0;width:0;height:0">
               <span style="position:absolute;inset:0;background:var(--border2);border-radius:22px;cursor:pointer;transition:.3s;display:flex;align-items:center;padding:2px">
@@ -931,32 +899,32 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="admin-section-title" style="flex-shrink:0">Bases de datos</div>
         <div class="mc" onclick="goTo('screen-tabla')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
           <div class="mc-icon">📊</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Ver Datos</div></div>
+          <div class="mc-info"><div class="mc-title" class="mc-title-sm">Ver Datos</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-historial')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
           <div class="mc-icon">📋</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Historial</div></div>
+          <div class="mc-info"><div class="mc-title" class="mc-title-sm">Historial</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-db-clientes')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
           <div class="mc-icon">👥</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Base de Clientes</div></div>
+          <div class="mc-info"><div class="mc-title" class="mc-title-sm">Base de Clientes</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-db-reparaciones')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
           <div class="mc-icon">🔩</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Base de Reparaciones</div></div>
+          <div class="mc-info"><div class="mc-title" class="mc-title-sm">Base de Reparaciones</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-db-cierre')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
           <div class="mc-icon">📦</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Cierre Mensual</div></div>
+          <div class="mc-info"><div class="mc-title" class="mc-title-sm">Cierre Mensual</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-inventario')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
           <div class="mc-icon">📦</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem)">Inventario</div></div>
+          <div class="mc-info"><div class="mc-title" class="mc-title-sm">Inventario</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="openDeleteAll()" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px);border-color:rgba(239,68,68,.3)">
@@ -967,18 +935,15 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </div>
     </div>
   </div>
-
-    <!-- ══ INVENTARIO ══ -->
   <div id="screen-inventario" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Inventario</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+      <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-inventario"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-inventario"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
-    <!-- Formulario agregar pieza -->
     <div class="sec-card" style="margin:12px 16px 0;flex-shrink:0">
       <div class="sec-lbl">➕ Nueva pieza</div>
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -997,15 +962,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     <!-- Lista de piezas -->
     <div class="scrollbody" id="inv-list" style="padding:12px 16px 80px"></div>
   </div>
-
-  <!-- ══ COTIZACIONES ══ -->
   <div id="screen-cotizaciones" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-home')">‹</div>
       <div class="tb-title">Cotizaciones</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+      <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-cotizaciones"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-cotizaciones"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" id="cot-list" style="padding:12px 16px 80px">
@@ -1015,15 +978,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div id="cot-items"></div>
     </div>
   </div>
-
-    <!-- ══ APARIENCIA ══ -->
   <div id="screen-apariencia" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Personalizar App</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-apariencia"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-apariencia"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" style="padding-bottom:40px">
@@ -1056,10 +1017,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           <span style="color:var(--text3)">›</span>
         </div>
       </div>
-      <!-- Logo + Fondo en una fila -->
       <div class="sec-card">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <!-- Logo -->
           <div style="display:flex;flex-direction:column;gap:6px">
             <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)">🖼 Logo</span>
             <div style="display:flex;align-items:center;gap:6px">
@@ -1071,7 +1030,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
               <button onclick="removeLogo()" style="width:34px;height:34px;background:var(--surface);color:var(--text3);border:1px solid var(--border);border-radius:var(--r-sm);padding:0;cursor:pointer;font-size:0.8rem;flex-shrink:0">🗑</button>
             </div>
           </div>
-          <!-- Fondo -->
           <div style="display:flex;flex-direction:column;gap:6px">
             <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)">🌅 Fondo</span>
             <div style="display:flex;align-items:center;gap:6px">
@@ -1084,12 +1042,10 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           </div>
         </div>
       </div>
-      <!-- Paleta de colores -->
       <div class="sec-card">
         <div class="sec-lbl">🎨 Color de acento</div>
         <div class="palette-grid" id="palette-grid"></div>
       </div>
-      <!-- Tipografía acordeón -->
       <div class="sec-card" style="padding:0;overflow:hidden">
         <div style="display:flex;align-items:center;padding:11px 12px;cursor:pointer" onclick="togFontPanel()">
           <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);flex:1">🔤 Tipografía</span>
@@ -1113,7 +1069,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           </div>
         </div>
       </div>
-      <!-- Contraseña — acordeón -->
       <div class="sec-card" style="padding:0;overflow:hidden">
         <div style="display:flex;align-items:center;padding:11px 12px;cursor:pointer" onclick="togPassForm()">
           <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);flex:1">🔑 Contraseña de borrado</span>
@@ -1134,15 +1089,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </div>
     </div>
   </div>
-
-  <!-- ══ TABLA DE DATOS ══ -->
   <div id="screen-tabla" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Ver Datos</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-tabla"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-tabla"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div style="padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
@@ -1175,16 +1128,14 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </table>
     </div>
   </div>
-
-  <!-- ══ USUARIOS ══ -->
   <div id="screen-usuarios" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-apariencia')">‹</div>
       <div class="tb-title">Usuarios</div>
       <div class="tb-badge" id="badge-usr">0</div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+      <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-usuarios"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-usuarios"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody">
@@ -1205,49 +1156,42 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div id="usr-list"></div>
     </div>
   </div>
-
-  <!-- ══ DB CLIENTES ══ -->
   <div id="screen-db-clientes" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Base de Clientes</div>
       <div class="tb-badge" id="badge-dbc">0</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-db-clientes"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-db-clientes"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" id="dbc-list" style="padding-top:12px"></div>
   </div>
-
-  <!-- ══ DB REPARACIONES ══ -->
   <div id="screen-db-reparaciones" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Base de Reparaciones</div>
       <div class="tb-badge" id="badge-dbr">0</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-db-reparaciones"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-db-reparaciones"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" id="dbr-list" style="padding-top:12px"></div>
   </div>
-
-  <!-- ══ DB CIERRE MENSUAL ══ -->
   <div id="screen-db-cierre" class="screen">
     <div class="topbar">
       <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
       <div class="tb-title">Cierre Mensual DB</div>
       <div class="tb-badge" id="badge-db-cierre">0</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
-        <div class="sync-chip" style="border:none;background:transparent;padding:0"><div class="sync-dot pending" id="sd-db-cierre"></div><span class="sync-chip-label" style="font-size:clamp(0.45rem,0.8vw,0.58rem);color:var(--text3)">Sincronizado</span></div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-db-cierre"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" id="db-cierre-list" style="padding-top:12px"></div>
   </div>
-
 
 </div><!-- /app -->
 
@@ -1363,6 +1307,14 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 
 <div class="toast" id="toast"></div>
 <script>
+// ── Helpers globales ─────────────────────────────────────────────
+const $id=id=>document.getElementById(id)
+const $qs=(sel,ctx=document)=>ctx.querySelector(sel)
+const $all=(sel,ctx=document)=>ctx.querySelectorAll(sel)
+function $set(id,val){const el=$id(id);if(el)el.textContent=val}
+function $show(id,show=true){const el=$id(id);if(el)el.style.display=show?'':'none'}
+const $clsRm=(sel,cls)=>$all(sel).forEach(el=>el.classList.remove(cls))
+const $clsAdd=(sel,cls)=>$all(sel).forEach(el=>el.classList.add(cls))
 window.onerror=function(msg,src,line,col,err){
   console.error('JS Error:',msg,'línea:',line,err?.stack||'')
   if(typeof showToast==='function') showToast('❌ '+String(msg).slice(0,60),'error')
@@ -1428,30 +1380,30 @@ function cfgSet(key,val){
 }
 function applyConfig(){
   const name=cfgGet('app_name','Taller Mecánico')
-  document.querySelectorAll('.logo-text').forEach(el=>{ el.innerHTML=name })
+  $all('.logo-text').forEach(el=>{ el.innerHTML=name })
   document.title=name
   // Login screen name
-  const lt=document.getElementById('login-title'); if(lt) lt.textContent=name
-  const ll=document.getElementById('login-logo')
+  const lt=$id('login-title'); if(lt) lt.textContent=name
+  const ll=$id('login-logo')
   const logo=cfgGet('app_logo','')
   if(ll&&logo) ll.innerHTML=`<img src="${logo}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`
   else if(ll) ll.innerHTML='🔧'
   // Logo en topbar
-  document.querySelectorAll('.logo-icon').forEach(el=>{
+  $all('.logo-icon').forEach(el=>{
     el.innerHTML=logo?`<img src="${logo}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`:'🔧'
   })
   // Fondo del header — aplica a home-header y topbar
   const bg=cfgGet('app_bg','')
   const bgPos=cfgGet('app_bg_pos','center')
   const logoPos=cfgGet('app_logo_pos','center')
-  document.querySelectorAll('.home-header,.topbar').forEach(el=>{
+  $all('.home-header,.topbar').forEach(el=>{
     el.style.backgroundImage=bg?`url(${bg})`:'none'
     el.style.backgroundSize='cover'
     el.style.backgroundPosition=bgPos
     if(bg) el.style.backgroundBlendMode='overlay'
   })
   // Logo position
-  document.querySelectorAll('.logo-icon img').forEach(img=>{
+  $all('.logo-icon img').forEach(img=>{
     img.style.objectPosition=logoPos
   })
   // Tema: admin usa config del Sheet, empleado/cliente usa localStorage local
@@ -1746,14 +1698,14 @@ async function autoSync(){
 }
 
 function smartUpdate(prev){
-  const screen=document.querySelector('.screen.active')?.id
+  const screen=$qs('.screen.active')?.id
 
   // Config: comparar hash en lugar de JSON completo
   if(prev.cfg!==_sheetHash(SH_CFG)) applyConfig()
 
   // Cliente — refrescar su vista
   if(isCliente()){
-    const active=document.getElementById('screen-home-cliente')?.classList.contains('active')
+    const active=$id('screen-home-cliente')?.classList.contains('active')
     if(active){ renderClienteActivo(); renderClienteHist() }
     return
   }
@@ -1782,10 +1734,10 @@ function smartUpdate(prev){
 let _cotIngPartidas = []
 function setTipoIngreso(tipo){
   const isRep = tipo === 'rep'
-  const repBtn = document.getElementById('tipo-rep-btn')
-  const cotBtn = document.getElementById('tipo-cot-btn')
-  const repSec = document.getElementById('ing-rep-section')
-  const cotSec = document.getElementById('ing-cot-section')
+  const repBtn = $id('tipo-rep-btn')
+  const cotBtn = $id('tipo-cot-btn')
+  const repSec = $id('ing-rep-section')
+  const cotSec = $id('ing-cot-section')
   if(repBtn){
     repBtn.style.borderColor = isRep ? 'var(--orange)' : 'var(--border)'
     repBtn.style.background  = isRep ? 'var(--og)' : 'transparent'
@@ -1804,7 +1756,7 @@ function setTipoIngreso(tipo){
 // Autocomplete cliente en formulario cotización de ingreso
 function acCotIng(el){
   const q = el.value.trim().toLowerCase()
-  const list = document.getElementById('ac-cot-ing')
+  const list = $id('ac-cot-ing')
   const cl = DB[SH_CLI]
   if(!cl.length){ list.classList.remove('open'); return }
   const fil = q
@@ -1822,15 +1774,15 @@ function acCotIng(el){
   list.classList.add('open')
 }
 function selCotIngCli(id, nombre, vehiculo){
-  document.getElementById('cot-ing-nombre').value = nombre
-  document.getElementById('cot-ing-vehiculo').value = vehiculo
-  document.getElementById('ac-cot-ing').classList.remove('open')
+  $id('cot-ing-nombre').value = nombre
+  $id('cot-ing-vehiculo').value = vehiculo
+  $id('ac-cot-ing').classList.remove('open')
 }
 
 // Autocomplete reparaciones en formulario cotización de ingreso
 function acCotIngRep(el){
   const q = el.value.trim().toLowerCase()
-  const list = document.getElementById('ac-cot-r')
+  const list = $id('ac-cot-r')
   const raw = DB[SH_CAT_REP]
   const fil = (q ? raw.filter(i => i.reparacion && i.reparacion.toLowerCase().includes(q)) : raw.slice(-8).reverse()).slice(0,8)
   if(!fil.length){ list.classList.remove('open'); return }
@@ -1845,26 +1797,26 @@ function acCotIngRep(el){
   list.classList.add('open')
 }
 function selCotIngRep(desc, mo, mat){
-  document.getElementById('cot-ing-desc').value = desc
-  document.getElementById('cot-ing-mo').value   = mo||''
-  document.getElementById('cot-ing-mat').value  = mat||''
-  document.getElementById('ac-cot-r').classList.remove('open')
+  $id('cot-ing-desc').value = desc
+  $id('cot-ing-mo').value   = mo||''
+  $id('cot-ing-mat').value  = mat||''
+  $id('ac-cot-r').classList.remove('open')
   calcTCot()
 }
 function calcTCot(){
-  const mo  = parseFloat(document.getElementById('cot-ing-mo')?.value)||0
-  const mat = parseFloat(document.getElementById('cot-ing-mat')?.value)||0
-  const el  = document.getElementById('t-total-cot')
+  const mo  = parseFloat($id('cot-ing-mo')?.value)||0
+  const mat = parseFloat($id('cot-ing-mat')?.value)||0
+  const el  = $id('t-total-cot')
   if(el) el.textContent = f$(mo+mat)
 }
 
 // Guardar cotización desde pantalla de ingreso
 function regCotIngreso(){
-  const nombre   = toTitle(document.getElementById('cot-ing-nombre').value.trim())
-  const vehiculo = toTitle(document.getElementById('cot-ing-vehiculo').value.trim())
-  const desc     = document.getElementById('cot-ing-desc').value.trim()
-  const mo       = parseFloat(document.getElementById('cot-ing-mo').value)||0
-  const mat      = parseFloat(document.getElementById('cot-ing-mat').value)||0
+  const nombre   = toTitle($id('cot-ing-nombre').value.trim())
+  const vehiculo = toTitle($id('cot-ing-vehiculo').value.trim())
+  const desc     = $id('cot-ing-desc').value.trim()
+  const mo       = parseFloat($id('cot-ing-mo').value)||0
+  const mat      = parseFloat($id('cot-ing-mat').value)||0
   const total    = mo + mat
   if(!nombre)  { showToast('⚠️ Ingresa el nombre del cliente','error'); return }
   if(!vehiculo){ showToast('⚠️ Ingresa el vehículo','error'); return }
@@ -1874,11 +1826,11 @@ function regCotIngreso(){
   gsAppendBg(SH_COT, cot)
   sAC('db-nombres', nombre, vehiculo)
   // limpiar
-  document.getElementById('cot-ing-nombre').value  = ''
-  document.getElementById('cot-ing-vehiculo').value = ''
-  document.getElementById('cot-ing-desc').value     = ''
-  document.getElementById('cot-ing-mo').value       = ''
-  document.getElementById('cot-ing-mat').value      = ''
+  $id('cot-ing-nombre').value  = ''
+  $id('cot-ing-vehiculo').value = ''
+  $id('cot-ing-desc').value     = ''
+  $id('cot-ing-mo').value       = ''
+  $id('cot-ing-mat').value      = ''
   calcTCot()
   setTipoIngreso('rep')
   showToast('📄 Cotización guardada','success')
@@ -1888,7 +1840,7 @@ function regCotIngreso(){
 // Autocomplete cliente en MODAL de cotizaciones (screen-cotizaciones)
 function acModalCotCli(el){
   const q    = el.value.trim().toLowerCase()
-  const list = document.getElementById('ac-mcot-cli')
+  const list = $id('ac-mcot-cli')
   const cl   = DB[SH_CLI]
   if(!cl.length){ list.classList.remove('open'); return }
   const fil = q
@@ -1906,15 +1858,15 @@ function acModalCotCli(el){
   list.classList.add('open')
 }
 function selModalCotCli(nombre, vehiculo){
-  document.getElementById('cot-cli-nombre').value   = nombre
-  document.getElementById('cot-cli-vehiculo').value = vehiculo
-  document.getElementById('ac-mcot-cli').classList.remove('open')
+  $id('cot-cli-nombre').value   = nombre
+  $id('cot-cli-vehiculo').value = vehiculo
+  $id('ac-mcot-cli').classList.remove('open')
 }
 
 // Autocomplete reparaciones en MODAL de cotizaciones
 function acModalCotRep(el){
   const q    = el.value.trim().toLowerCase()
-  const list = document.getElementById('ac-mcot-r')
+  const list = $id('ac-mcot-r')
   const raw  = DB[SH_CAT_REP]
   const fil  = (q ? raw.filter(i => i.reparacion && i.reparacion.toLowerCase().includes(q)) : raw.slice(-8).reverse()).slice(0,8)
   if(!fil.length){ list.classList.remove('open'); return }
@@ -1929,9 +1881,9 @@ function acModalCotRep(el){
   list.classList.add('open')
 }
 function selModalCotRep(desc, precio){
-  document.getElementById('cot-rep-desc').value  = desc
-  document.getElementById('cot-rep-total').value = precio
-  document.getElementById('ac-mcot-r').classList.remove('open')
+  $id('cot-rep-desc').value  = desc
+  $id('cot-rep-total').value = precio
+  $id('ac-mcot-r').classList.remove('open')
 }
 
 function startAutoSync(){
@@ -1942,11 +1894,11 @@ function startAutoSync(){
 // ── Indicadores ───────────────────────────────────────────────────
 const DOT_IDS=['sd-home','sd-home-cli','sd-registro','sd-clientes','sd-clientes-emp','sd-historial','sd-admin','sd-apariencia','sd-tabla','sd-usuarios','sd-db-clientes','sd-db-reparaciones','sd-db-cierre','sd-inventario','sd-cotizaciones','sd-cortes']
 function setDot(status,label=''){
-  DOT_IDS.forEach(id=>{ const el=document.getElementById(id); if(el) el.className='sync-dot '+status })
+  DOT_IDS.forEach(id=>{ const el=$id(id); if(el) el.className='sync-dot '+status })
   // Actualizar label en home
-  const lbl=document.getElementById('sync-label'); if(lbl) lbl.textContent=label
+  const lbl=$id('sync-label'); if(lbl) lbl.textContent=label
   // Actualizar labels en todas las pestañas
-  document.querySelectorAll('.sync-chip-label').forEach(el=>el.textContent=label)
+  $all('.sync-chip-label').forEach(el=>el.textContent=label)
 }
 
 // ── Sync manual ───────────────────────────────────────────────────
@@ -1985,25 +1937,25 @@ function escQ(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;')}
 // ── Navegación ────────────────────────────────────────────────────
 function _showScreen(id){
   // Cambio visual puro — sin tocar historial
-  const prev=document.querySelector('.screen.active')?.id
+  const prev=$qs('.screen.active')?.id
   if(prev===id) return
   if(prev==='screen-registro'&&id!=='screen-registro') clearIngreso()
-  document.querySelectorAll('.ac-list').forEach(l=>l.classList.remove('open'))
-  document.querySelectorAll('.mcard.open').forEach(m=>m.classList.remove('open'))
-  document.querySelectorAll('.week-detail.open').forEach(w=>w.classList.remove('open'))
-  document.querySelectorAll('.week-block.active-week').forEach(w=>w.classList.remove('active-week'))
-  document.querySelectorAll('.cli-block.open').forEach(c=>c.classList.remove('open'))
-  document.querySelectorAll('.hist-body[style*="block"]').forEach(h=>h.style.display='none')
-  document.querySelectorAll('.ccard.expanded').forEach(c=>c.classList.remove('expanded'))
-  const fp=document.getElementById('font-panel'); if(fp) fp.style.display='none'
-  const pf=document.getElementById('pass-form'); if(pf) pf.style.display='none'
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
-  document.getElementById(id)?.classList.add('active')
+  $clsRm('.ac-list','open')
+  $all('.mcard.open').forEach(m=>m.classList.remove('open'))
+  $all('.week-detail.open').forEach(w=>w.classList.remove('open'))
+  $all('.week-block.active-week').forEach(w=>w.classList.remove('active-week'))
+  $all('.cli-block.open').forEach(c=>c.classList.remove('open'))
+  $all('.hist-body[style*="block"]').forEach(h=>h.style.display='none')
+  $all('.ccard.expanded').forEach(c=>c.classList.remove('expanded'))
+  const fp=$id('font-panel'); if(fp) fp.style.display='none'
+  const pf=$id('pass-form'); if(pf) pf.style.display='none'
+  $clsRm('.screen','active')
+  $id(id)?.classList.add('active')
   rerenderActive()
   if(_queue.length) flushQueue()
 }
 function goTo(id){
-  const prev=document.querySelector('.screen.active')?.id
+  const prev=$qs('.screen.active')?.id
   if(prev===id) return
   _showScreen(id)
 }
@@ -2031,7 +1983,7 @@ function _resetNavState(){
   }catch(e){}
 }
 function _goBack(){
-  const activeNow=document.querySelector('.screen.active')?.id||''
+  const activeNow=$qs('.screen.active')?.id||''
   if(!_session||activeNow==='screen-login') return
   const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
   if(activeNow===homeScreen||activeNow===''){ logout(); return }
@@ -2070,7 +2022,7 @@ function _goBack(){
       const tag=e.target.tagName
       if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return
       // No disparar si hay un modal abierto
-      if(document.querySelector('.modal-ov.open,.cropper-modal.open')) return
+      if($qs('.modal-ov.open,.cropper-modal.open')) return
       _locked=true
       _goBack()
       setTimeout(()=>{ _locked=false },COOLDOWN)
@@ -2085,11 +2037,11 @@ window.addEventListener('popstate',()=>{
 })
 function clearIngreso(){
   selCid=null
-  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})
+  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat'].forEach(id=>{const el=$id(id);if(el)el.value=''})
   calcT()
-  document.getElementById('campo-vehiculo').style.display='block'
-  const selV=document.getElementById('campo-vehiculo-sel');if(selV)selV.style.display='none'
-  document.getElementById('ac-ing')?.classList.remove('open')
+  $show('campo-vehiculo')
+  const selV=$id('campo-vehiculo-sel');if(selV)selV.style.display='none'
+  $id('ac-ing')?.classList.remove('open')
 }// Render con debounce — acumula cambios y hace un solo re-render
 let _renderTimeout=null
 function scheduleRender(){
@@ -2098,12 +2050,12 @@ function scheduleRender(){
 }
 
 function rerenderActive(){
-  const id=document.querySelector('.screen.active')?.id
-  const openMonths=new Set([...document.querySelectorAll('.mcard.open')].map(el=>el.id))
-  const openCards=new Set([...document.querySelectorAll('.ccard.expanded')].map(el=>el.id))
-  const openWeeks=new Set([...document.querySelectorAll('.week-block.open')].map(el=>el.id))
-  const openClis=new Set([...document.querySelectorAll('.cli-block.open')].map(el=>el.id))
-  const openHist=new Set([...document.querySelectorAll('.hist-body[style*="block"]')].map(el=>el.closest('[id^="hg-"]')?.id).filter(Boolean))
+  const id=$qs('.screen.active')?.id
+  const openMonths=new Set([...$all('.mcard.open')].map(el=>el.id))
+  const openCards=new Set([...$all('.ccard.expanded')].map(el=>el.id))
+  const openWeeks=new Set([...$all('.week-block.open')].map(el=>el.id))
+  const openClis=new Set([...$all('.cli-block.open')].map(el=>el.id))
+  const openHist=new Set([...$all('.hist-body[style*="block"]')].map(el=>el.closest('[id^="hg-"]')?.id).filter(Boolean))
   try{
     if(id==='screen-home')           updateStats()
     if(id==='screen-clientes')       renderClientes()
@@ -2119,24 +2071,15 @@ function rerenderActive(){
     if(id==='screen-cortes')         renderCortes()
     if(id==='screen-apariencia')     openApariencia()
   }catch(err){
-    console.error('rerenderActive error in '+id+':', err)
-    // Mostrar error visible en la pantalla activa
-    const scr=document.getElementById(id)
-    if(scr){
-      const errDiv=scr.querySelector('.scrollbody,.fit-screen,[style*="overflow"]')
-      if(errDiv) errDiv.innerHTML=`<div style="padding:20px;color:var(--red);font-size:0.8rem;font-weight:600;background:rgba(239,68,68,.08);border-radius:var(--r);margin:12px">
-        ❌ <strong>Error en ${id}:</strong><br>${err.message}<br><br>
-        <span style="color:var(--text3);font-weight:400">${err.stack?.split('\n').slice(0,3).join('<br>')||''}</span>
-      </div>`
-    }
+    console.error('rerenderActive:',id,err)
     showToast('❌ '+err.message,'error')
   }
-  openMonths.forEach(id=>document.getElementById(id)?.classList.add('open'))
-  openCards.forEach(id=>document.getElementById(id)?.classList.add('expanded'))
-  openWeeks.forEach(id=>document.getElementById(id)?.classList.add('open'))
-  openClis.forEach(id=>document.getElementById(id)?.classList.add('open'))
+  openMonths.forEach(id=>$id(id)?.classList.add('open'))
+  openCards.forEach(id=>$id(id)?.classList.add('expanded'))
+  openWeeks.forEach(id=>$id(id)?.classList.add('open'))
+  openClis.forEach(id=>$id(id)?.classList.add('open'))
   openHist.forEach(id=>{
-    const card=document.getElementById(id);if(!card)return
+    const card=$id(id);if(!card)return
     const body=card.querySelector('.hist-body')
     const i=id.replace('hg-','')
     const chev=card.querySelector('.hist-chev-'+i)
@@ -2148,36 +2091,36 @@ function rerenderActive(){
 // ── Stats ─────────────────────────────────────────────────────────
 function updateStats(){
   const active=DB[SH_CLI].filter(c=>c.activeSession&&c.activeSession!=='')
-  document.getElementById('s-cli').textContent=active.length
-  document.getElementById('s-pend').textContent=active.filter(c=>!c.status||c.status==='pending').length
+  $set('s-cli',active.length)
+  $set('s-pend',active.filter(c=>!c.status||c.status==='pending').length)
   if(isAdmin()){
-    document.getElementById('s-rep').textContent=DB[SH_SES].length
+    $set('s-rep',DB[SH_SES].length)
     const now=new Date(),mk=mKey(now.toISOString()),wn=getWeekNum(now.toISOString())
     // Mes
     const activeMes=DB[SH_SES].filter(r=>{const d=new Date(r.fecha);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).reduce((s,r)=>s+numF(r.total),0)
     const closedMes=DB[SH_CIE].filter(c=>mKey(c.closedAt)===mk).reduce((s,c)=>s+numF(c.total),0)
     const mes=activeMes+closedMes
-    document.getElementById('s-mes').textContent=mes>=1000?'$'+(mes/1000).toFixed(1)+'k':f$(mes)
+    $set('s-mes',mes>=1000?'$'+(mes/1000).toFixed(1)+'k':f$(mes))
     // Semana
     const activeSem=DB[SH_SES].filter(r=>{const d=new Date(r.fecha);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()&&getWeekNum(r.fecha)===wn}).reduce((s,r)=>s+numF(r.total),0)
     const closedSem=DB[SH_CIE].filter(c=>mKey(c.closedAt)===mk&&getWeekNum(c.closedAt)===wn).reduce((s,c)=>s+numF(c.total),0)
     const sem=activeSem+closedSem
-    document.getElementById('s-sem').textContent=sem>=1000?'$'+(sem/1000).toFixed(1)+'k':f$(sem)
+    $set('s-sem',sem>=1000?'$'+(sem/1000).toFixed(1)+'k':f$(sem))
     // Día
     const hoy=_hoyKey()
     const activeDia=DB[SH_SES].filter(r=>_localDateKey(r.fecha)===hoy).reduce((s,r)=>s+numF(r.total),0)
     const closedDia=DB[SH_CIE].filter(r=>_localDateKey(r.fechaRep||r.closedAt)===hoy).reduce((s,r)=>s+numF(r.total),0)
     const dia=activeDia+closedDia
-    document.getElementById('s-dia').textContent=dia>=1000?'$'+(dia/1000).toFixed(1)+'k':f$(dia)
+    $set('s-dia',dia>=1000?'$'+(dia/1000).toFixed(1)+'k':f$(dia))
     // Labels dinámicos
     const mesLabel=now.toLocaleDateString('es-MX',{month:'long'}).replace(/^\w/,ch=>ch.toUpperCase())
-    const slMes=document.getElementById('sl-mes');if(slMes)slMes.textContent=mesLabel
-    const slSem=document.getElementById('sl-sem');if(slSem)slSem.textContent='Semana '+wn
+    const slMes=$id('sl-mes');if(slMes)slMes.textContent=mesLabel
+    const slSem=$id('sl-sem');if(slSem)slSem.textContent='Semana '+wn
   }
-  const repStat=document.getElementById('stat-rep')
-  const mesStat=document.getElementById('stat-mes')
-  const semStat=document.getElementById('stat-sem')
-  const diaStat=document.getElementById('stat-dia')
+  const repStat=$id('stat-rep')
+  const mesStat=$id('stat-mes')
+  const semStat=$id('stat-sem')
+  const diaStat=$id('stat-dia')
   if(repStat) repStat.style.display=isAdmin()?'':'none'
   if(mesStat) mesStat.style.display=isAdmin()?'':'none'
   if(semStat) semStat.style.display=isAdmin()?'':'none'
@@ -2187,7 +2130,7 @@ function updateStats(){
 // ── Autocomplete ──────────────────────────────────────────────────
 let selCid=null
 function acI(el,lid,dbk){
-  const q=el.value.trim().toLowerCase(),list=document.getElementById(lid)
+  const q=el.value.trim().toLowerCase(),list=$id(lid)
   let fil=[],html=''
   if(dbk==='db-nombres'){
     const raw=DB[SH_CAT_CLI]
@@ -2218,25 +2161,25 @@ function acI(el,lid,dbk){
   list.innerHTML=html;list.classList.add('open')
 }
 function acSN(eid,lid,nombre,vehiculo){
-  document.getElementById(eid).value=nombre
-  const v=document.getElementById('inp-vehiculo');if(v)v.value=vehiculo
-  document.getElementById(lid).classList.remove('open')
+  $id(eid).value=nombre
+  const v=$id('inp-vehiculo');if(v)v.value=vehiculo
+  $id(lid).classList.remove('open')
 }
 function acSR(eid,lid,rep,mo,mat){
-  document.getElementById(eid).value=rep
-  document.getElementById(lid).classList.remove('open')
+  $id(eid).value=rep
+  $id(lid).classList.remove('open')
   let mi,ti
   if(eid==='inp-rep'){mi='inp-mo';ti='inp-mat'}
   else if(eid==='inp-rep2'){mi='inp-mo2';ti='inp-mat2'}
   else if(eid==='inp-mrep'){mi='inp-mmo';ti='inp-mmat'}
-  if(mi&&document.getElementById(mi)){
-    document.getElementById(mi).value=mo;document.getElementById(ti).value=mat
+  if(mi&&$id(mi)){
+    $id(mi).value=mo;$id(ti).value=mat
     calcT();calcT2();calcTM()
   }
 }
-function acS(eid,lid,val){document.getElementById(eid).value=val;document.getElementById(lid).classList.remove('open')}
+function acS(eid,lid,val){$id(eid).value=val;$id(lid).classList.remove('open')}
 function acK(e,lid){
-  const list=document.getElementById(lid);if(!list.classList.contains('open'))return
+  const list=$id(lid);if(!list.classList.contains('open'))return
   const items=list.querySelectorAll('.ac-item'),foc=list.querySelector('.focused')
   let idx=foc?parseInt(foc.dataset.i):-1
   if(e.key==='ArrowDown')idx=Math.min(idx+1,items.length-1)
@@ -2257,27 +2200,27 @@ function sAC(dbk,val,mo,mat){
   }
 }
 document.addEventListener('click',e=>{
-  if(!e.target.closest('.ac-wrap'))document.querySelectorAll('.ac-list').forEach(l=>l.classList.remove('open'))
+  if(!e.target.closest('.ac-wrap'))$clsRm('.ac-list','open')
 })
 // Cerrar otros autocompletes al abrir uno nuevo
 function closeOtherAC(exceptId){
-  document.querySelectorAll('.ac-list').forEach(l=>{ if(l.id!==exceptId) l.classList.remove('open') })
+  $all('.ac-list').forEach(l=>{ if(l.id!==exceptId) l.classList.remove('open') })
 }
 
 // ── Totales ───────────────────────────────────────────────────────
 function calcT(){
-  const mo=numF(document.getElementById('inp-mo').value),mat=numF(document.getElementById('inp-mat').value)
-  document.getElementById('t-total').textContent=f$(mo+mat)
+  const mo=numF($id('inp-mo').value),mat=numF($id('inp-mat').value)
+  $set('t-total',f$(mo+mat))
 }
 function calcT2(){
   // inp-mo2/inp-mat2 removed — kept for compatibility only
-  const mo=numF(document.getElementById('inp-mo2')?.value||0)
-  const mat=numF(document.getElementById('inp-mat2')?.value||0)
-  const el=document.getElementById('t-total2'); if(el) el.textContent=f$(mo+mat)
+  const mo=numF($id('inp-mo2')?.value||0)
+  const mat=numF($id('inp-mat2')?.value||0)
+  const el=$id('t-total2'); if(el) el.textContent=f$(mo+mat)
 }
 function calcTM(){
-  const mo=numF(document.getElementById('inp-mmo').value),mat=numF(document.getElementById('inp-mmat').value)
-  document.getElementById('t-modal').textContent=f$(mo+mat)
+  const mo=numF($id('inp-mmo').value),mat=numF($id('inp-mmat').value)
+  $set('t-modal',f$(mo+mat))
 }
 
 // ── Registro unificado ───────────────────────────────────────────
@@ -2287,12 +2230,12 @@ function calcTM(){
 // selCid = null → cliente nuevo, selCid = id → cliente existente
 function acIngreso(el){
   const q=el.value.trim().toLowerCase()
-  const list=document.getElementById('ac-ing')
+  const list=$id('ac-ing')
   if(!el.value.trim()&&selCid){
     selCid=null
-    document.getElementById('campo-vehiculo').style.display='block'
-    document.getElementById('campo-vehiculo-sel').style.display='none'
-    document.getElementById('inp-vehiculo').value=''
+    $show('campo-vehiculo')
+    $show('campo-vehiculo-sel',false)
+    $id('inp-vehiculo').value=''
   }
   const cl=DB[SH_CLI]
   if(!cl.length){list.classList.remove('open');return}
@@ -2312,18 +2255,18 @@ function acIngreso(el){
 }
 function selClientIngreso(id,nombre,vehiculo){
   selCid=id
-  document.getElementById('inp-nombre').value=nombre
-  document.getElementById('ac-ing').classList.remove('open')
-  document.getElementById('campo-vehiculo').style.display='none'
-  const selV=document.getElementById('campo-vehiculo-sel')
-  const selVInp=document.getElementById('inp-vehiculo-sel')
+  $id('inp-nombre').value=nombre
+  $id('ac-ing').classList.remove('open')
+  $show('campo-vehiculo',false)
+  const selV=$id('campo-vehiculo-sel')
+  const selVInp=$id('inp-vehiculo-sel')
   if(selV){ selV.style.display='block'; selVInp.value=vehiculo }
 }
 function regIngreso(){
-  const nombre=toTitle(document.getElementById('inp-nombre').value.trim())
-  const rep=toTitle(document.getElementById('inp-rep').value.trim())
-  const mo=numF(document.getElementById('inp-mo').value)
-  const mat=numF(document.getElementById('inp-mat').value)
+  const nombre=toTitle($id('inp-nombre').value.trim())
+  const rep=toTitle($id('inp-rep').value.trim())
+  const mo=numF($id('inp-mo').value)
+  const mat=numF($id('inp-mat').value)
   if(!nombre){showToast('⚠️ Ingresa el nombre','error');return}
   if(!rep){showToast('⚠️ Describe la reparación','error');return}
   const now=new Date().toISOString()
@@ -2339,7 +2282,7 @@ function regIngreso(){
     showToast('✅ Reparación agregada','success')
   } else {
     // ── Cliente nuevo ──
-    const vehiculo=toTitle(document.getElementById('inp-vehiculo').value.trim())
+    const vehiculo=toTitle($id('inp-vehiculo').value.trim())
     if(!vehiculo){showToast('⚠️ Ingresa el vehículo','error');return}
     const cid=gid(),sid=gid()
     gsAppendBg(SH_CLI,{id:cid,nombre,vehiculo,status:'pending',activeSession:sid,createdAt:now})
@@ -2350,10 +2293,10 @@ function regIngreso(){
   }
   // Limpiar formulario
   selCid=null
-  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value='' })
+  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat'].forEach(id=>{ const el=$id(id); if(el) el.value='' })
   calcT()
-  document.getElementById('campo-vehiculo').style.display='block'
-  const selV=document.getElementById('campo-vehiculo-sel'); if(selV) selV.style.display='none'
+  $show('campo-vehiculo')
+  const selV=$id('campo-vehiculo-sel'); if(selV) selV.style.display='none'
   goTo('screen-clientes')
 }
 // Mantener compatibilidad con código que llame a regNuevo/regExistente
@@ -2367,7 +2310,7 @@ function setStatus(cid,status,e){
   DB[SH_CLI][ci]={...DB[SH_CLI][ci],status}
   gsUpdateBg(SH_CLI,DB[SH_CLI][ci])
   // Actualizar solo la tarjeta afectada — sin re-renderizar toda la lista
-  const card=document.getElementById('cc-'+cid)
+  const card=$id('cc-'+cid)
   if(card){
     const ss=card.querySelector('.ss'); if(ss) ss.className='ss '+status
     card.querySelectorAll('.s-btn').forEach(btn=>{
@@ -2398,13 +2341,13 @@ function setStatus(cid,status,e){
 // ── Abono ─────────────────────────────────────────────────────────
 function doAbono(cid,e){
   e&&e.stopPropagation()
-  const inp=document.getElementById('abo-inp-'+cid)
+  const inp=$id('abo-inp-'+cid)
   const monto=numF(inp.value)
   if(monto<=0){showToast('⚠️ Ingresa un monto válido','error');return}
   gsAppendBg(SH_ABO,{id:gid(),clientId:cid,monto,nota:'',fecha:new Date().toISOString()})
   inp.value=''
   showToast('💵 Abono registrado','success')
-  const _abCard=document.getElementById('cc-'+cid)
+  const _abCard=$id('cc-'+cid)
   if(_abCard){
     const _abCi=DB[SH_CLI].findIndex(c=>c.id===cid)
     if(_abCi!==-1&&DB[SH_CLI][_abCi].status==='done'){
@@ -2425,7 +2368,7 @@ function doAbono(cid,e){
     }
   }
   scheduleRender()
-  setTimeout(()=>document.getElementById('cc-'+cid)?.classList.add('expanded'),50)
+  setTimeout(()=>$id('cc-'+cid)?.classList.add('expanded'),50)
 }
 
 // ── Cierre ────────────────────────────────────────────────────────
@@ -2557,11 +2500,11 @@ function buildClientCard(c,i){
 
 function renderClientes(){
   try{
-  const q=(document.getElementById('inp-search')?.value||'').trim().toLowerCase()
+  const q=($id('inp-search')?.value||'').trim().toLowerCase()
   const active=DB[SH_CLI].filter(c=>c.activeSession&&c.activeSession!=='')
   const fil=q?active.filter(c=>c.nombre.toLowerCase().includes(q)||c.vehiculo.toLowerCase().includes(q)):active
-  document.getElementById('badge-cli').textContent=active.length
-  const list=document.getElementById('clients-list')
+  $set('badge-cli',active.length)
+  const list=$id('clients-list')
   if(!fil.length){
     list.innerHTML=`<div class="empty"><div class="ei">${q?'🔍':'🔧'}</div>
       <div class="et">${q?'Sin resultados':'Sin clientes activos'}</div>
@@ -2571,49 +2514,49 @@ function renderClientes(){
   list.innerHTML=fil.map((c,i)=>buildClientCard(c,i)).join('')
   }catch(err){console.error("renderClientes:",err);showToast("❌ Error en renderClientes: "+err.message,"error")}
 }
-function togCard(id){document.getElementById('cc-'+id)?.classList.toggle('expanded')}
+function togCard(id){$id('cc-'+id)?.classList.toggle('expanded')}
 function togEdit(rid){
-  const row=document.getElementById('rer-'+rid)
+  const row=$id('rer-'+rid)
   if(!row)return
   const open=row.style.display==='flex'
   row.style.display=open?'none':'flex'
 }
 function saveEdit(rid,cid){
-  const mo=numF(document.getElementById('emo-'+rid).value)
-  const mat=numF(document.getElementById('emat-'+rid).value)
+  const mo=numF($id('emo-'+rid).value)
+  const mat=numF($id('emat-'+rid).value)
   const ri=DB[SH_SES].findIndex(r=>r.id===rid);if(ri===-1)return
   DB[SH_SES][ri]={...DB[SH_SES][ri],manoObra:mo,material:mat,total:mo+mat}
   gsUpdateBg(SH_SES,DB[SH_SES][ri])
   sAC('db-reparaciones',DB[SH_SES][ri].reparacion,mo,mat)
   showToast('✅ Costos actualizados','success')
   scheduleRender()
-  setTimeout(()=>document.getElementById('cc-'+cid)?.classList.add('expanded'),50)
+  setTimeout(()=>$id('cc-'+cid)?.classList.add('expanded'),50)
 }
 function delRep(rid,cid){
   if(!confirm('¿Eliminar esta reparación?'))return
   gsDeleteBg(SH_SES,rid)
   scheduleRender();showToast('🗑 Eliminada','error')
-  setTimeout(()=>document.getElementById('cc-'+cid)?.classList.add('expanded'),50)
+  setTimeout(()=>$id('cc-'+cid)?.classList.add('expanded'),50)
 }
 function delAbo(aid,cid){
   if(!confirm('¿Eliminar este abono?'))return
   gsDeleteBg(SH_ABO,aid)
   scheduleRender();showToast('🗑 Abono eliminado','error')
-  setTimeout(()=>document.getElementById('cc-'+cid)?.classList.add('expanded'),50)
+  setTimeout(()=>$id('cc-'+cid)?.classList.add('expanded'),50)
 }
 
 // ── Modal nueva rep ───────────────────────────────────────────────
 function openRepModal(cid,nombre,vehiculo){
-  document.getElementById('modal-cid').value=cid
-  document.getElementById('modal-rep-title').textContent=`${nombre} · ${vehiculo}`
-  ;['inp-mrep','inp-mmo','inp-mmat'].forEach(id=>document.getElementById(id).value='')
+  $id('modal-cid').value=cid
+  $set('modal-rep-title',`${nombre} · ${vehiculo}`)
+  ;['inp-mrep','inp-mmo','inp-mmat'].forEach(id=>$id(id).value='')
   calcTM();openModal('modal-rep')
 }
 function regDesdeModal(){
-  const cid=document.getElementById('modal-cid').value
-  const rep=toTitle(document.getElementById('inp-mrep').value.trim())
-  const mo=numF(document.getElementById('inp-mmo').value)
-  const mat=numF(document.getElementById('inp-mmat').value)
+  const cid=$id('modal-cid').value
+  const rep=toTitle($id('inp-mrep').value.trim())
+  const mo=numF($id('inp-mmo').value)
+  const mat=numF($id('inp-mmat').value)
   if(!rep){showToast('⚠️ Describe la reparación','error');return}
   const ci=DB[SH_CLI].findIndex(c=>c.id===cid);if(ci===-1)return
   let sid=DB[SH_CLI][ci].activeSession
@@ -2625,7 +2568,7 @@ function regDesdeModal(){
   sAC('db-reparaciones',rep,mo,mat)
   closeModal('modal-rep');scheduleRender()
   showToast('✅ Reparación guardada','success')
-  setTimeout(()=>document.getElementById('cc-'+cid)?.classList.add('expanded'),50)
+  setTimeout(()=>$id('cc-'+cid)?.classList.add('expanded'),50)
 }
 
 // ── Cierre Mensual ────────────────────────────────────────────────
@@ -2635,39 +2578,36 @@ function getWeekNum(dateStr){
 }
 function weekLabel(n){return['','Semana 1 (1–7)','Semana 2 (8–14)','Semana 3 (15–21)','Semana 4 (22–31)'][n]}
 // ── Helpers compartidos de cortes ────────────────────────────────
-function togCli(id){document.getElementById(id)?.classList.toggle('open')}
+function togCli(id){$id(id)?.classList.toggle('open')}
 // Genera tabla de clientes para un conjunto de reparaciones
 // rows: [{nombre,vehiculo,reparacion,manoObra,material,total,_activo,_liquidado,fecha}]
 // showFecha: mostrar columna de fecha (semana/mes) o no (día)
 function _corteTablaHTML(rows, showFecha=false){
   if(!rows.length) return `<div class="empty"><div class="ei">📊</div><div class="et">Sin registros</div></div>`
-  // Agrupar por cliente
   const groups={}
   rows.forEach(r=>{
     const k=r.nombre+'|'+r.vehiculo
     if(!groups[k]) groups[k]={nombre:r.nombre,vehiculo:r.vehiculo,repairs:[],_liquidado:r._liquidado}
     groups[k].repairs.push(r)
   })
-  const bs='border-bottom:1px solid var(--border)'
   return Object.values(groups).map((g,i)=>{
     const tot=g.repairs.reduce((s,r)=>s+numF(r.total),0)
     const moTot=g.repairs.reduce((s,r)=>s+numF(r.manoObra),0)
     const matTot=g.repairs.reduce((s,r)=>s+numF(r.material),0)
-    // Verde = liquidado (en cierre), rojo = aún activo/pendiente
     const liq=g._liquidado
     const rowBg=liq?'rgba(34,197,94,.06)':'rgba(239,68,68,.06)'
     const badgeColor=liq?'var(--green)':'var(--red)'
     const badgeBg=liq?'rgba(34,197,94,.15)':'rgba(239,68,68,.12)'
     const badge=liq?'✅ Liquidado':'🔴 Pendiente'
     const cid=`cg-${i}-${g.nombre.replace(/\s/g,'')}`
-    const repRows=g.repairs.map(r=>`<tr style="${bs}">
+    const repRows=g.repairs.map(r=>`<tr style="border-bottom:1px solid var(--border)">
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text)">${r.reparacion}</td>
       ${showFecha?`<td style="padding:5px 8px;font-size:0.68rem;color:var(--text3);white-space:nowrap">${fD(r.fecha)}</td>`:''}
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text2);white-space:nowrap;text-align:right">${f$(r.manoObra)}</td>
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text2);white-space:nowrap;text-align:right">${f$(r.material)}</td>
       <td style="padding:5px 8px;font-size:0.8rem;font-weight:700;color:var(--orange);white-space:nowrap;text-align:right">${f$(r.total)}</td>
     </tr>`).join('')
-    return `<div class="ccard ani" style="margin-bottom:8px;background:${rowBg}" id="${cid}">
+    return `<div class="cli-block ani" style="margin-bottom:8px;background:${rowBg};border-radius:var(--r-sm);border:1px solid var(--border);overflow:hidden" id="${cid}">
       <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="togCli('${cid}')">
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -2730,8 +2670,8 @@ let _cortesTab='dia'
 function showCortesTab(tab){
   _cortesTab=tab
   ;['dia','sem','mes'].forEach(t=>{
-    document.getElementById('cortes-vista-'+t).style.display=t===tab?'block':'none'
-    document.getElementById('cortes-tab-'+t).classList.toggle('active',t===tab)
+    $id('cortes-vista-'+t).style.display=t===tab?'block':'none'
+    $id('cortes-tab-'+t).classList.toggle('active',t===tab)
   })
   renderCortes()
 }
@@ -2752,13 +2692,13 @@ function renderCortes(){
 }
 
 function _renderCortesDia(now, hoy){
-  const cont=document.getElementById('cortes-vista-dia')
+  const cont=$id('cortes-vista-dia')
   const year=now.getFullYear(), month=now.getMonth()
   const daysInMonth=new Date(year,month+1,0).getDate()
   // Total hoy
   const rowsHoy=_rowsForRange(hoy,hoy)
   _setCortesTotal(rowsHoy.reduce((s,r)=>s+numF(r.total),0),'Hoy')
-  document.getElementById('badge-cortes').textContent=rowsHoy.length
+  $set('badge-cortes',rowsHoy.length)
   // Calcular primer domingo de la cuadrícula
   const firstDay=new Date(year,month,1)
   let calStart=new Date(firstDay)
@@ -2805,7 +2745,7 @@ function _renderCortesDia(now, hoy){
   window.calDiaClick=function(key){
     const rows=_rowsForRange(key,key)
     if(!rows.length) return
-    const det=document.getElementById('cal-dia-det')
+    const det=$id('cal-dia-det')
     if(det) det.innerHTML=_corteTablaHTML(rows,false)
     _setCortesTotal(rows.reduce((s,r)=>s+numF(r.total),0),
       new Date(key+'T12:00:00').toLocaleDateString('es-MX',{weekday:'short',day:'numeric',month:'short'}))
@@ -2813,7 +2753,7 @@ function _renderCortesDia(now, hoy){
 }
 
 function _renderCortesSem(now, hoy){
-  const cont=document.getElementById('cortes-vista-sem')
+  const cont=$id('cortes-vista-sem')
   const year=now.getFullYear(), month=now.getMonth()
   const firstDay=new Date(year,month,1)
   const lastDay=new Date(year,month+1,0)
@@ -2836,7 +2776,7 @@ function _renderCortesSem(now, hoy){
   }
   const semActual=semanas.find(s=>s.esSemActual)
   _setCortesTotal(semActual?.total||0,'Esta semana')
-  document.getElementById('badge-cortes').textContent=semanas.filter(s=>s.hasData).length
+  $set('badge-cortes',semanas.filter(s=>s.hasData).length)
   cont.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(${semanas.length},1fr);gap:4px;margin-bottom:8px">
       ${semanas.map(s=>{
@@ -2857,14 +2797,14 @@ function _renderCortesSem(now, hoy){
   window.calSemClick=function(desde){
     const s=semanas.find(x=>x.desde===desde)
     if(!s||!s.hasData) return
-    const det=document.getElementById('cal-sem-det')
+    const det=$id('cal-sem-det')
     if(det) det.innerHTML=_corteTablaHTML(s.rows,true)
     _setCortesTotal(s.total,`Sem ${s.semNum}: ${s.dFmt} – ${s.hFmt}`)
   }
 }
 
 function _renderCortesMes(now, hoy){
-  const cont=document.getElementById('cortes-vista-mes')
+  const cont=$id('cortes-vista-mes')
   const year=now.getFullYear(), mesActual=now.getMonth()
   const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
   const meses=Array.from({length:12},(_,m)=>{
@@ -2873,7 +2813,7 @@ function _renderCortesMes(now, hoy){
   })
   const actual=meses[mesActual]
   _setCortesTotal(actual.total,MESES[mesActual])
-  document.getElementById('badge-cortes').textContent=meses.filter(x=>x.hasData).length
+  $set('badge-cortes',meses.filter(x=>x.hasData).length)
   cont.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px">
       ${meses.map(m=>{
@@ -2892,20 +2832,20 @@ function _renderCortesMes(now, hoy){
   window.calMesClick=function(m){
     const mes=meses[m]
     if(!mes||!mes.hasData) return
-    document.getElementById('cal-mes-det').innerHTML=_corteTablaHTML(mes.rows,true)
+    $id('cal-mes-det').innerHTML=_corteTablaHTML(mes.rows,true)
     _setCortesTotal(mes.total,MESES[m])
   }
 }
 
 function _setCortesTotal(total, label){
-  const el=document.getElementById('cortes-total')
-  const lbl=document.getElementById('cortes-periodo-label')
+  const el=$id('cortes-total')
+  const lbl=$id('cortes-periodo-label')
   if(el) el.textContent=f$(total)
   if(lbl) lbl.textContent=label
 }
 function togCorteCard(id){
-  const card=document.getElementById(id); if(!card) return
-  const det=document.getElementById('det-'+id); if(!det) return
+  const card=$id(id); if(!card) return
+  const det=$id('det-'+id); if(!det) return
   const open=det.style.display!=='none'
   det.style.display=open?'none':'block'
 }
@@ -2915,10 +2855,10 @@ function renderHistorial(){
   try{
   // Caché: si los datos no cambiaron, reusar HTML anterior
   const hHash=_quickHash([SH_CLI,SH_SES,SH_CIE])
-  const list=document.getElementById('hist-list')
+  const list=$id('hist-list')
   if(_cacheHistorial.hash===hHash&&_cacheHistorial.html){
     if(list&&list.innerHTML!==_cacheHistorial.html) list.innerHTML=_cacheHistorial.html
-    document.getElementById('badge-hist').textContent=list?.querySelectorAll('.ccard').length||0
+    $set('badge-hist',list?.querySelectorAll('.ccard').length||0)
     return
   }
   const cmap=Object.fromEntries(DB[SH_CLI].map(c=>[c.id,c]))
@@ -2940,7 +2880,7 @@ function renderHistorial(){
   const sorted=Object.values(groups)
     .map(g=>({...g,repairs:g.repairs.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))}))
     .sort((a,b)=>new Date(b.repairs[0]?.fecha||0)-new Date(a.repairs[0]?.fecha||0))
-  document.getElementById('badge-hist').textContent=sorted.length
+  $set('badge-hist',sorted.length)
   // list ya declarado arriba en el bloque de caché
   if(!sorted.length){list.innerHTML=`<div class="empty"><div class="ei">📋</div><div class="et">Sin registros</div></div>`;return}
   list.innerHTML=sorted.map((g,i)=>{
@@ -2998,7 +2938,7 @@ function renderHistorial(){
   }catch(err){console.error("renderHistorial:",err);showToast("❌ Error en renderHistorial: "+err.message,"error")}
 }
 function togHist(id){
-  const card=document.getElementById(id);if(!card)return
+  const card=$id(id);if(!card)return
   const body=card.querySelector('.hist-body')
   const open=body.style.display==='block'
   body.style.display=open?'none':'block'
@@ -3009,14 +2949,14 @@ function togHist(id){
 
 // ── Borrar todo ───────────────────────────────────────────────────
 function openDeleteAll(){
-  document.getElementById('inp-pass').value=''
-  document.getElementById('pass-error').style.display='none'
+  $id('inp-pass').value=''
+  $show('pass-error',false)
   openModal('modal-deleteall')
-  setTimeout(()=>document.getElementById('inp-pass').focus(),350)
+  setTimeout(()=>$id('inp-pass').focus(),350)
 }
 async function confirmDeleteAll(){
-  const pass=document.getElementById('inp-pass')
-  const errEl=document.getElementById('pass-error')
+  const pass=$id('inp-pass')
+  const errEl=$id('pass-error')
   const currentPass=String(cfgGet('delete_pass','1505')).trim()
   const inputHash=await sha256(pass.value.trim())
   // Soportar contraseña en texto plano o hash (compatibilidad)
@@ -3024,7 +2964,7 @@ async function confirmDeleteAll(){
     errEl.style.display='block';pass.value='';pass.focus();return
   }
   errEl.style.display='none'
-  const btn=document.querySelector('#modal-deleteall .btn-danger')
+  const btn=$qs('#modal-deleteall .btn-danger')
   if(btn){btn.disabled=true;btn.textContent='⏳ Borrando...'}
   setDot('syncing','Borrando...')
   _polling=true // bloquear autoSync mientras borramos
@@ -3056,65 +2996,65 @@ async function confirmDeleteAll(){
 // ── Admin DB Clientes ─────────────────────────────────────────────
 // ── Apariencia ────────────────────────────────────────────────────
 function togPassForm(){
-  const form=document.getElementById('pass-form')
-  const chev=document.getElementById('pass-chev')
+  const form=$id('pass-form')
+  const chev=$id('pass-chev')
   if(!form)return
   const open=form.style.display==='flex'
   form.style.display=open?'none':'flex'
   if(chev) chev.style.transform=open?'':'rotate(180deg)'
-  if(!open) ;['pass-actual','pass-nueva','pass-confirmar'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})
+  if(!open) ;['pass-actual','pass-nueva','pass-confirmar'].forEach(id=>{const el=$id(id);if(el)el.value=''})
 }
 async function openApariencia(){
-  document.getElementById('cfg-name').value=cfgGet('app_name','Taller Mecánico')
+  $id('cfg-name').value=cfgGet('app_name','Taller Mecánico')
   const contact=await getCfgContact()
-  const telEl=document.getElementById('cfg-tel'); if(telEl) telEl.value=contact.tel
-  const dirEl=document.getElementById('cfg-dir'); if(dirEl) dirEl.value=contact.dir
+  const telEl=$id('cfg-tel'); if(telEl) telEl.value=contact.tel
+  const dirEl=$id('cfg-dir'); if(dirEl) dirEl.value=contact.dir
   renderPaletteGrid()
   renderFontList()
   const currentFont=FONTS.find(f=>f.id===cfgGet('app_font','barlow'))
-  const fcl=document.getElementById('font-current-label')
+  const fcl=$id('font-current-label')
   if(fcl&&currentFont) fcl.textContent=currentFont.name
   const sizeVal=isAdmin()?cfgGet('app_font_size','0'):getLocalFontSize()
-  const sl=document.getElementById('font-size-slider')
+  const sl=$id('font-size-slider')
   if(sl) sl.value=sizeVal
-  const lbl=document.getElementById('font-size-label')
+  const lbl=$id('font-size-label')
   if(lbl) lbl.textContent=SIZE_LABELS[sizeVal]||'Normal'
   const logo=cfgGet('app_logo','')
-  const lp=document.getElementById('logo-preview')
+  const lp=$id('logo-preview')
   if(logo) lp.innerHTML=`<img src="${logo}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`
   else lp.innerHTML='🔧'
   const bg=cfgGet('app_bg','')
-  const bp=document.getElementById('bg-preview')
+  const bp=$id('bg-preview')
   if(bg){ bp.style.backgroundImage=`url(${bg})`; bp.textContent='' }
   else{ bp.style.backgroundImage='none'; bp.textContent='—' }
-  const form=document.getElementById('pass-form')
+  const form=$id('pass-form')
   if(form) form.style.display='none'
-  const chev=document.getElementById('pass-chev')
+  const chev=$id('pass-chev')
   if(chev) chev.style.transform=''
   updateToggleKnob()
 }
 function updateToggleKnob(){
   const isLight=cfgGet('theme','dark')==='light'
   // Actualizar todos los toggles que existan
-  document.querySelectorAll('.theme-toggle-input').forEach(tog=>{
+  $all('.theme-toggle-input').forEach(tog=>{
     tog.checked=isLight
   })
-  document.querySelectorAll('.theme-toggle-knob').forEach(knob=>{
+  $all('.theme-toggle-knob').forEach(knob=>{
     knob.style.transform=isLight?'translateX(20px)':'translateX(0)'
     const track=knob.parentElement
     if(track) track.style.background=isLight?'var(--orange)':'var(--border2)'
   })
 }
 function saveCfgName(){
-  const val=document.getElementById('cfg-name').value.trim()
+  const val=$id('cfg-name').value.trim()
   if(!val){showToast('⚠️ Ingresa un nombre','error');return}
   cfgSet('app_name',val)
   applyConfig()
   showToast('✅ Nombre guardado','success')
 }
 async function saveCfgContact(){
-  const tel=document.getElementById('cfg-tel').value.trim()
-  const dir=document.getElementById('cfg-dir').value.trim()
+  const tel=$id('cfg-tel').value.trim()
+  const dir=$id('cfg-dir').value.trim()
   // Cifrar datos sensibles antes de guardar en Sheet
   if(tel){ const enc=await aesEncrypt(tel); cfgSet('app_tel',enc) }
   if(dir){ const enc=await aesEncrypt(dir); cfgSet('app_dir',enc) }
@@ -3130,7 +3070,7 @@ async function getCfgContact(){
 }
 // ── INVENTARIO ────────────────────────────────────────────────────
 function renderInventario(){
-  const list=document.getElementById('inv-list'); if(!list)return
+  const list=$id('inv-list'); if(!list)return
   const items=DB[SH_INV]||[]
   if(!items.length){
     list.innerHTML='<div class="empty"><div class="ei">📦</div><div class="et">Sin piezas</div><div class="es">Agrega tu primer pieza al inventario</div></div>'
@@ -3161,15 +3101,15 @@ function renderInventario(){
     </div>`).join('')
 }
 function addInventario(){
-  const nombre=document.getElementById('inv-nombre').value.trim()
-  const cat=document.getElementById('inv-cat').value.trim()||'General'
-  const qty=parseInt(document.getElementById('inv-qty').value)||0
-  const min=parseInt(document.getElementById('inv-min').value)||0
-  const costo=parseFloat(document.getElementById('inv-costo').value)||0
+  const nombre=$id('inv-nombre').value.trim()
+  const cat=$id('inv-cat').value.trim()||'General'
+  const qty=parseInt($id('inv-qty').value)||0
+  const min=parseInt($id('inv-min').value)||0
+  const costo=parseFloat($id('inv-costo').value)||0
   if(!nombre){showToast('⚠️ Ingresa el nombre de la pieza','error');return}
   const p={id:gid(),nombre,categoria:cat,cantidad:qty,minimo:min,costo}
   gsAppendBg(SH_INV,p)
-  ;['inv-nombre','inv-cat','inv-qty','inv-min','inv-costo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})
+  ;['inv-nombre','inv-cat','inv-qty','inv-min','inv-costo'].forEach(id=>{const el=$id(id);if(el)el.value=''})
   renderInventario()
   showToast('✅ Pieza agregada','success')
 }
@@ -3189,7 +3129,7 @@ function delInv(id){
 // ── COTIZACIONES ──────────────────────────────────────────────────
 let _cotActual=null // cotización en edición
 function renderCotizaciones(){
-  const items=document.getElementById('cot-items'); if(!items)return
+  const items=$id('cot-items'); if(!items)return
   const cots=(DB[SH_COT]||[]).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))
   if(!cots.length){
     items.innerHTML='<div class="empty"><div class="ei">📄</div><div class="et">Sin cotizaciones</div><div class="es">Crea la primera cotización</div></div>'
@@ -3246,13 +3186,13 @@ function editCot(id){
   showCotModal()
 }
 function showCotModal(){
-  document.getElementById('modal-cot').classList.add('open')
-  document.getElementById('cot-cli-nombre').value=_cotActual.cliente||''
-  document.getElementById('cot-cli-vehiculo').value=_cotActual.vehiculo||''
+  $id('modal-cot').classList.add('open')
+  $id('cot-cli-nombre').value=_cotActual.cliente||''
+  $id('cot-cli-vehiculo').value=_cotActual.vehiculo||''
   renderCotReps()
 }
 function renderCotReps(){
-  const list=document.getElementById('cot-rep-list'); if(!list)return
+  const list=$id('cot-rep-list'); if(!list)return
   list.innerHTML=(_cotActual.reps||[]).map((r,i)=>`
     <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
       <div style="flex:1;font-size:0.82rem">${r.desc}</div>
@@ -3260,23 +3200,23 @@ function renderCotReps(){
       <button onclick="delCotRep(${i})" style="background:transparent;border:none;color:var(--text3);cursor:pointer">✕</button>
     </div>`).join('')
   const tot=(_cotActual.reps||[]).reduce((s,r)=>s+(parseFloat(r.total)||0),0)
-  const totEl=document.getElementById('cot-total-label')
+  const totEl=$id('cot-total-label')
   if(totEl) totEl.textContent='Total: '+f$(tot)
 }
 function addCotRep(){
-  const desc=document.getElementById('cot-rep-desc').value.trim()
-  const total=parseFloat(document.getElementById('cot-rep-total').value)||0
+  const desc=$id('cot-rep-desc').value.trim()
+  const total=parseFloat($id('cot-rep-total').value)||0
   if(!desc){showToast('⚠️ Ingresa la descripción','error');return}
   if(!_cotActual.reps) _cotActual.reps=[]
   _cotActual.reps.push({desc,total})
-  document.getElementById('cot-rep-desc').value=''
-  document.getElementById('cot-rep-total').value=''
+  $id('cot-rep-desc').value=''
+  $id('cot-rep-total').value=''
   renderCotReps()
 }
 function delCotRep(i){ _cotActual.reps.splice(i,1); renderCotReps() }
 function saveCot(){
-  const nombre=document.getElementById('cot-cli-nombre').value.trim()
-  const vehiculo=document.getElementById('cot-cli-vehiculo').value.trim()
+  const nombre=$id('cot-cli-nombre').value.trim()
+  const vehiculo=$id('cot-cli-vehiculo').value.trim()
   if(!nombre){showToast('⚠️ Ingresa el nombre del cliente','error');return}
   if(!_cotActual.reps||!_cotActual.reps.length){showToast('⚠️ Agrega al menos una reparación','error');return}
   _cotActual.cliente=nombre; _cotActual.vehiculo=vehiculo
@@ -3326,8 +3266,8 @@ function renderCliCotizaciones(){
   const cots=(DB[SH_COT]||[]).filter(c=>
     c.cliente.trim().toLowerCase()===nombre.trim().toLowerCase()&&c.status==='pending'
   )
-  const banner=document.getElementById('cli-cot-banner')
-  const list=document.getElementById('cli-cot-list')
+  const banner=$id('cli-cot-banner')
+  const list=$id('cli-cot-list')
   if(!banner||!list)return
   if(!cots.length){ banner.style.display='none'; return }
   banner.style.display='block'
@@ -3434,9 +3374,9 @@ async function generarPDFCot(id){
 }
 
 async function changePassword(){
-  const actual=document.getElementById('pass-actual').value
-  const nueva=document.getElementById('pass-nueva').value
-  const confirmar=document.getElementById('pass-confirmar').value
+  const actual=$id('pass-actual').value
+  const nueva=$id('pass-nueva').value
+  const confirmar=$id('pass-confirmar').value
   const currentRaw=String(cfgGet('delete_pass','1505')).trim()
   const actualHash=await sha256(actual.trim())
   // Soportar contraseña actual en texto plano o hash (compatibilidad)
@@ -3447,7 +3387,7 @@ async function changePassword(){
   if(nueva!==confirmar){showToast('⚠️ Las contraseñas no coinciden','error');return}
   const nuevaHash=await sha256(nueva)
   cfgSet('delete_pass',nuevaHash)
-  ;['pass-actual','pass-nueva','pass-confirmar'].forEach(id=>document.getElementById(id).value='')
+  ;['pass-actual','pass-nueva','pass-confirmar'].forEach(id=>$id(id).value='')
   togPassForm()
   showToast('✅ Contraseña actualizada','success')
 }
@@ -3458,7 +3398,7 @@ async function uploadLogo(input){
 }
 function removeLogo(){
   cfgSet('app_logo','')
-  document.getElementById('logo-preview').innerHTML='🔧'
+  $id('logo-preview').innerHTML='🔧'
   applyConfig()
   showToast('🗑 Logo eliminado','error')
 }
@@ -3469,7 +3409,7 @@ async function uploadBg(input){
 }
 function removeBg(){
   cfgSet('app_bg','')
-  const bp=document.getElementById('bg-preview')
+  const bp=$id('bg-preview')
   bp.style.backgroundImage='none'; bp.textContent='Sin imagen de fondo'
   applyConfig()
   showToast('🗑 Fondo eliminado','error')
@@ -3477,8 +3417,8 @@ function removeBg(){
 
 function renderDbClientes(){
   try{
-  const cl=DB[SH_CLI],list=document.getElementById('dbc-list')
-  document.getElementById('badge-dbc').textContent=cl.length
+  const cl=DB[SH_CLI],list=$id('dbc-list')
+  $set('badge-dbc',cl.length)
   if(!cl.length){list.innerHTML=`<div class="empty"><div class="ei">👥</div><div class="et">Sin clientes</div></div>`;return}
   const stL={pending:'⏳ Pendiente',process:'🔧 En proceso',done:'✅ Completado'}
   list.innerHTML=`<div class="db-section-lbl">Total: ${cl.length} · ${cl.filter(c=>c.activeSession&&c.activeSession!=='').length} activos</div>`
@@ -3514,16 +3454,16 @@ function renderDbClientes(){
   }catch(err){console.error("renderDbClientes:",err);showToast("❌ Error en renderDbClientes: "+err.message,"error")}
 }
 function togDbcEdit(cid){
-  const form=document.getElementById('dbc-form-'+cid)
+  const form=$id('dbc-form-'+cid)
   if(!form)return
   const open=form.style.display==='flex'
   // Cerrar todos los demás
-  document.querySelectorAll('.db-inline-form').forEach(f=>f.style.display='none')
+  $all('.db-inline-form').forEach(f=>f.style.display='none')
   if(!open) form.style.display='flex'
 }
 function saveDbcEdit(cid){
-  const nombre=toTitle(document.getElementById('dbc-nombre-'+cid).value.trim())
-  const vehiculo=toTitle(document.getElementById('dbc-vehiculo-'+cid).value.trim())
+  const nombre=toTitle($id('dbc-nombre-'+cid).value.trim())
+  const vehiculo=toTitle($id('dbc-vehiculo-'+cid).value.trim())
   if(!nombre||!vehiculo){showToast('⚠️ Completa todos los campos','error');return}
   const ci=DB[SH_CLI].findIndex(c=>c.id===cid);if(ci===-1)return
   DB[SH_CLI][ci]={...DB[SH_CLI][ci],nombre,vehiculo}
@@ -3543,8 +3483,8 @@ function dbDelClient(cid){
 // ── Admin DB Catálogo ─────────────────────────────────────────────
 function renderDbReparaciones(){
   try{
-  const items=DB[SH_CAT_REP],list=document.getElementById('dbr-list')
-  document.getElementById('badge-dbr').textContent=items.length
+  const items=DB[SH_CAT_REP],list=$id('dbr-list')
+  $set('badge-dbr',items.length)
   if(!items.length){list.innerHTML=`<div class="empty"><div class="ei">🔩</div><div class="et">Sin tipos de reparación</div></div>`;return}
   list.innerHTML=`<div class="db-section-lbl">Catálogo: ${items.length} tipo${items.length!==1?'s':''}</div>`
     +items.map((r,i)=>{
@@ -3588,22 +3528,22 @@ function renderDbReparaciones(){
   }catch(err){console.error("renderDbReparaciones:",err);showToast("❌ Error en renderDbReparaciones: "+err.message,"error")}
 }
 function togDbrEdit(i){
-  const form=document.getElementById('dbr-form-'+i)
+  const form=$id('dbr-form-'+i)
   if(!form)return
   const open=form.style.display==='flex'
-  document.querySelectorAll('.db-inline-form').forEach(f=>f.style.display='none')
+  $all('.db-inline-form').forEach(f=>f.style.display='none')
   if(!open) form.style.display='flex'
 }
 function calcDbrEdit(i){
-  const mo=numF(document.getElementById('dbr-mo-'+i)?.value)
-  const mat=numF(document.getElementById('dbr-mat-'+i)?.value)
-  const tot=document.getElementById('dbr-tot-'+i)
+  const mo=numF($id('dbr-mo-'+i)?.value)
+  const mat=numF($id('dbr-mat-'+i)?.value)
+  const tot=$id('dbr-tot-'+i)
   if(tot) tot.textContent=f$(mo+mat)
 }
 function saveDbrEdit(i,orig){
-  const desc=toTitle(document.getElementById('dbr-desc-'+i).value.trim())
-  const mo=numF(document.getElementById('dbr-mo-'+i).value)
-  const mat=numF(document.getElementById('dbr-mat-'+i).value)
+  const desc=toTitle($id('dbr-desc-'+i).value.trim())
+  const mo=numF($id('dbr-mo-'+i).value)
+  const mat=numF($id('dbr-mat-'+i).value)
   if(!desc){showToast('⚠️ Ingresa una descripción','error');return}
   const ri=DB[SH_CAT_REP].findIndex(r=>r.reparacion===orig);if(ri===-1)return
   DB[SH_CAT_REP][ri]={reparacion:desc,manoObra:mo,material:mat}
@@ -3621,9 +3561,9 @@ function dbDelCatalogo(rep){
 
 // ── DB Cierre Mensual ─────────────────────────────────────────────
 function renderDbCierre(){
-  const rows=DB[SH_CIE],list=document.getElementById('db-cierre-list')
+  const rows=DB[SH_CIE],list=$id('db-cierre-list')
   if(!rows.length){
-    document.getElementById('badge-db-cierre').textContent='0'
+    $set('badge-db-cierre','0')
     list.innerHTML=`<div class="empty"><div class="ei">📦</div><div class="et">Sin cierres registrados</div></div>`
     return
   }
@@ -3635,7 +3575,7 @@ function renderDbCierre(){
     byMonth[mk].rows.push(r)
   })
   const months=Object.values(byMonth).sort((a,b)=>b.key.localeCompare(a.key))
-  document.getElementById('badge-db-cierre').textContent=months.length
+  $set('badge-db-cierre',months.length)
   list.innerHTML=months.map((m,i)=>{
     const total=m.rows.reduce((s,r)=>s+numF(r.total),0)
     const clientes=[...new Set(m.rows.map(r=>r.nombre))].length
@@ -3670,9 +3610,9 @@ function dbDelCierre(monthKey){
 function _invalidateRenderCache(){ _cacheHistorial.hash=''; _cacheTabla.hash=''; _cacheInv=false; _cacheCot=false }
 function renderTabla(){
   // Apuntar el botón al spreadsheet (extraer el ID del URL del Apps Script si es posible)
-  const btn=document.getElementById('btn-open-sheet')
+  const btn=$id('btn-open-sheet')
   if(btn) btn.href='https://docs.google.com/spreadsheets/d/1EcAw_xr37TSj0RJdA46RLQmn6x_Be0eZMPvQUWqkx3E/edit?usp=sharing'
-  const q=(document.getElementById('tabla-search')?.value||'').toLowerCase()
+  const q=($id('tabla-search')?.value||'').toLowerCase()
   const cmap=Object.fromEntries(DB[SH_CLI].map(c=>[c.id,c]))
   // Combinar activos + cierre
   const rows=[
@@ -3702,7 +3642,7 @@ function renderTabla(){
     r.vehiculo.toLowerCase().includes(q)||
     r.reparacion.toLowerCase().includes(q)
   ):rows
-  const tbody=document.getElementById('tabla-body')
+  const tbody=$id('tabla-body')
   if(!tbody) return
   if(!fil.length){
     tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text3)">Sin datos</td></tr>`
@@ -3735,13 +3675,13 @@ function _esHoy(fecha){
   return _localDateKey(fecha)===_hoyKey()
 }
 // ── Modales ───────────────────────────────────────────────────────
-function openModal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function closeMBg(e,id){if(e.target===document.getElementById(id))closeModal(id)}
+function openModal(id){$id(id).classList.add('open')}
+function closeModal(id){$id(id).classList.remove('open')}
+function closeMBg(e,id){if(e.target===$id(id))closeModal(id)}
 
 // ── Toast ─────────────────────────────────────────────────────────
 function showToast(msg,type='success'){
-  const t=document.getElementById('toast')
+  const t=$id('toast')
   t.textContent=msg;t.className=`toast ${type} show`
   clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2800)
 }
@@ -3773,26 +3713,26 @@ self.addEventListener('fetch',e=>{
 // ── Login tabs ────────────────────────────────────────────────────
 function showLoginTab(tab){
   const isLogin=tab==='login'
-  document.getElementById('login-form').style.display=isLogin?'flex':'none'
-  document.getElementById('reg-form').style.display=isLogin?'none':'flex'
-  document.getElementById('tab-login').style.background=isLogin?'var(--orange)':'transparent'
-  document.getElementById('tab-login').style.color=isLogin?'#fff':'var(--text3)'
-  document.getElementById('tab-reg').style.background=isLogin?'transparent':'var(--orange)'
-  document.getElementById('tab-reg').style.color=isLogin?'var(--text3)':'#fff'
-  document.getElementById('login-error').style.display='none'
-  document.getElementById('reg-error').style.display='none'
+  $id('login-form').style.display=isLogin?'flex':'none'
+  $id('reg-form').style.display=isLogin?'none':'flex'
+  $id('tab-login').style.background=isLogin?'var(--orange)':'transparent'
+  $id('tab-login').style.color=isLogin?'#fff':'var(--text3)'
+  $id('tab-reg').style.background=isLogin?'transparent':'var(--orange)'
+  $id('tab-reg').style.color=isLogin?'var(--text3)':'#fff'
+  $show('login-error',false)
+  $show('reg-error',false)
 }
 
 async function doRegister(){
-  const nombre=document.getElementById('reg-nombre').value.trim()
-  const pass=document.getElementById('reg-pass').value
-  const pass2=document.getElementById('reg-pass2').value
-  const errEl=document.getElementById('reg-error')
+  const nombre=$id('reg-nombre').value.trim()
+  const pass=$id('reg-pass').value
+  const pass2=$id('reg-pass2').value
+  const errEl=$id('reg-error')
   errEl.style.display='none'
   if(!nombre){errEl.style.display='block';errEl.textContent='⚠️ Ingresa tu nombre';return}
   if(pass.length<4){errEl.style.display='block';errEl.textContent='⚠️ Mínimo 4 caracteres';return}
   if(pass!==pass2){errEl.style.display='block';errEl.textContent='⚠️ Las contraseñas no coinciden';return}
-  if(!_ready){document.getElementById('login-loading').style.display='block';await new Promise(r=>setTimeout(r,1500));document.getElementById('login-loading').style.display='none'}
+  if(!_ready){$show('login-loading');await new Promise(r=>setTimeout(r,1500));$show('login-loading',false)}
   // Verificar que el nombre existe en clientes
   const existe=DB[SH_CLI].find(c=>c.nombre.trim().toLowerCase()===nombre.toLowerCase())
   if(!existe){errEl.style.display='block';errEl.textContent='❌ Tu nombre no está registrado en el taller. Contacta al taller.';return}
@@ -3812,21 +3752,21 @@ async function doRegister(){
 // ── Vista cliente ─────────────────────────────────────────────────
 function showClienteTab(tab){
   const isActivo=tab==='activo'
-  document.getElementById('cli-activo-list').style.display=isActivo?'block':'none'
-  document.getElementById('cli-hist-list').style.display=isActivo?'none':'block'
-  document.getElementById('ctab-activo').style.borderBottomColor=isActivo?'var(--orange)':'transparent'
-  document.getElementById('ctab-activo').style.color=isActivo?'var(--orange)':'var(--text3)'
-  document.getElementById('ctab-hist').style.borderBottomColor=isActivo?'transparent':'var(--orange)'
-  document.getElementById('ctab-hist').style.color=isActivo?'var(--text3)':'var(--orange)'
+  $id('cli-activo-list').style.display=isActivo?'block':'none'
+  $id('cli-hist-list').style.display=isActivo?'none':'block'
+  $id('ctab-activo').style.borderBottomColor=isActivo?'var(--orange)':'transparent'
+  $id('ctab-activo').style.color=isActivo?'var(--orange)':'var(--text3)'
+  $id('ctab-hist').style.borderBottomColor=isActivo?'transparent':'var(--orange)'
+  $id('ctab-hist').style.color=isActivo?'var(--text3)':'var(--orange)'
   if(!isActivo) renderClienteHist()
 }
 
 function renderClienteActivo(){
   renderCliCotizaciones()
   const nombre=_session?.nombre||''
-  const bienvenida=document.getElementById('cli-bienvenida')
+  const bienvenida=$id('cli-bienvenida')
   if(bienvenida) bienvenida.textContent=`Hola, ${nombre}`
-  const list=document.getElementById('cli-activo-list')
+  const list=$id('cli-activo-list')
   if(!list) return
   // Clientes activos con ese nombre
   const misClientes=DB[SH_CLI].filter(c=>
@@ -3873,7 +3813,7 @@ function renderClienteActivo(){
 
 function renderClienteHist(){
   const nombre=_session?.nombre||''
-  const list=document.getElementById('cli-hist-list')
+  const list=$id('cli-hist-list')
   if(!list) return
   // Historial del cierre mensual con ese nombre
   const groups={}
@@ -3975,10 +3915,10 @@ async function sha256(str){
 
 // ── Login ─────────────────────────────────────────────────────────
 async function doLogin(){
-  const nombre=document.getElementById('login-user').value.trim()
-  const pass=document.getElementById('login-pass').value
-  const errEl=document.getElementById('login-error')
-  const loadEl=document.getElementById('login-loading')
+  const nombre=$id('login-user').value.trim()
+  const pass=$id('login-pass').value
+  const errEl=$id('login-error')
+  const loadEl=$id('login-loading')
   errEl.style.display='none'
   if(!nombre||!pass){errEl.style.display='block';errEl.textContent='⚠️ Ingresa usuario y contraseña';return}
   loadEl.style.display='block'
@@ -4009,15 +3949,15 @@ async function doLogin(){
 function logout(){
   _session=null
   localStorage.removeItem(LS_SESSION)
-  document.getElementById('login-user').value=''
-  document.getElementById('login-pass').value=''
-  document.getElementById('login-error').style.display='none'
+  $id('login-user').value=''
+  $id('login-pass').value=''
+  $show('login-error',false)
   showLoginTab('login')
   _showScreen('screen-login')
   _resetNavState()
 }
 function enterApp(){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
+  $clsRm('.screen','active')
   if(!isAdmin()){
     applyTheme(getLocalTheme())
     // Empleado/cliente: usar su tamaño local, no el del Sheet
@@ -4027,7 +3967,7 @@ function enterApp(){
   if(isCliente()){
     applyConfig()
     renderClienteActivo()
-    document.getElementById('screen-home-cliente').classList.add('active')
+    $id('screen-home-cliente').classList.add('active')
   } else {
     applyRoleUI()
     _showScreen('screen-home')
@@ -4035,8 +3975,8 @@ function enterApp(){
   _resetNavState()
 }
 function applyRoleUI(){
-  const homeAdmin=document.getElementById('home-admin-btns')
-  const homeEmp=document.getElementById('home-emp-btns')
+  const homeAdmin=$id('home-admin-btns')
+  const homeEmp=$id('home-emp-btns')
   if(homeAdmin) homeAdmin.style.display=isAdmin()?'flex':'none'
   if(homeEmp) homeEmp.style.display=isEmpleado()?'flex':'none'
   updateStats()
@@ -4044,9 +3984,9 @@ function applyRoleUI(){
 
 // ── Usuarios ──────────────────────────────────────────────────────
 function renderUsuarios(){
-  const list=document.getElementById('usr-list')
+  const list=$id('usr-list')
   const users=DB[SH_USR]
-  document.getElementById('badge-usr').textContent=users.length
+  $set('badge-usr',users.length)
   if(!users.length){list.innerHTML=`<div class="empty"><div class="ei">👤</div><div class="et">Sin usuarios creados</div></div>`;return}
   const rolLabel={admin:'👑 Dueño / Admin',empleado:'🔧 Empleado'}
   list.innerHTML=users.map((u,i)=>`
@@ -4080,15 +4020,15 @@ function renderUsuarios(){
     </div>`).join('')
 }
 function togUsrEdit(i){
-  const form=document.getElementById('usr-form-'+i)
+  const form=$id('usr-form-'+i)
   if(!form)return
   const open=form.style.display==='flex'
-  document.querySelectorAll('[id^="usr-form-"]').forEach(f=>f.style.display='none')
+  $all('[id^="usr-form-"]').forEach(f=>f.style.display='none')
   if(!open) form.style.display='flex'
 }
 async function saveUsrEdit(i,uid){
-  const newPass=document.getElementById('usr-np-'+i).value.trim()
-  const newRol=document.getElementById('usr-nr-'+i).value
+  const newPass=$id('usr-np-'+i).value.trim()
+  const newRol=$id('usr-nr-'+i).value
   const ui=DB[SH_USR].findIndex(u=>u.id===uid); if(ui===-1)return
   const updated={...DB[SH_USR][ui],rol:newRol}
   if(newPass&&newPass.length>=4) updated.password=await sha256(newPass)
@@ -4098,9 +4038,9 @@ async function saveUsrEdit(i,uid){
   showToast('✅ Usuario actualizado','success')
 }
 async function addUsuario(){
-  const nombre=document.getElementById('usr-nombre').value.trim()
-  const pass=document.getElementById('usr-pass').value.trim()
-  const rol=document.getElementById('usr-rol').value
+  const nombre=$id('usr-nombre').value.trim()
+  const pass=$id('usr-pass').value.trim()
+  const rol=$id('usr-rol').value
   if(!nombre){showToast('⚠️ Ingresa el nombre','error');return}
   if(pass.length<4){showToast('⚠️ Contraseña mínimo 4 caracteres','error');return}
   if(DB[SH_USR].find(u=>u.nombre.toLowerCase()===nombre.toLowerCase())){
@@ -4109,8 +4049,8 @@ async function addUsuario(){
   const passHash=await sha256(pass)
   const u={id:gid(),nombre,password:passHash,rol}
   gsAppendBg(SH_USR,u)
-  document.getElementById('usr-nombre').value=''
-  document.getElementById('usr-pass').value=''
+  $id('usr-nombre').value=''
+  $id('usr-pass').value=''
   renderUsuarios()
   showToast('✅ Usuario creado','success')
 }
@@ -4124,11 +4064,11 @@ function delUsuario(uid){
 // ── Vista empleado (sin costos) ───────────────────────────────────
 function renderClientesEmp(){
   try{
-  const q=(document.getElementById('inp-search-emp')?.value||'').trim().toLowerCase()
+  const q=($id('inp-search-emp')?.value||'').trim().toLowerCase()
   const active=DB[SH_CLI].filter(c=>c.activeSession&&c.activeSession!=='')
   const fil=q?active.filter(c=>c.nombre.toLowerCase().includes(q)||c.vehiculo.toLowerCase().includes(q)):active
-  document.getElementById('badge-cli-emp').textContent=active.length
-  const list=document.getElementById('clients-list-emp')
+  $set('badge-cli-emp',active.length)
+  const list=$id('clients-list-emp')
   if(!fil.length){
     list.innerHTML=`<div class="empty"><div class="ei">🔧</div><div class="et">Sin clientes activos</div></div>`
     return
@@ -4146,7 +4086,7 @@ function renderClientesEmp(){
     const isDone=st==='done'&&saldo<=0
     return `<div class="ccard ani" id="emp-cc-${c.id}" style="animation-delay:${i*.03}s">
       <div class="ss ${st}"></div>
-      <div class="ccard-head" onclick="document.getElementById('emp-cc-${c.id}').classList.toggle('expanded')">
+      <div class="ccard-head" onclick="$id('emp-cc-${c.id}').classList.toggle('expanded')">
         <div style="flex:1;min-width:0;display:flex;align-items:center;gap:8px;overflow:hidden">
           <div class="cc-name" style="flex-shrink:0">${c.nombre}</div>
           <div class="cc-car" style="flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🚗 ${c.vehiculo}</div>
@@ -4188,7 +4128,7 @@ function setStatusEmp(cid,status,e){
 }
 function doAbonoEmp(cid,e){
   e&&e.stopPropagation()
-  const inp=document.getElementById('emp-abo-'+cid)
+  const inp=$id('emp-abo-'+cid)
   const monto=numF(inp.value)
   if(monto<=0){showToast('⚠️ Ingresa un monto válido','error');return}
   gsAppendBg(SH_ABO,{id:gid(),clientId:cid,monto,nota:'',fecha:new Date().toISOString()})
@@ -4212,14 +4152,14 @@ function openCropper(mode,file){
   _cropperMode=mode
   if(_cropUrl){ URL.revokeObjectURL(_cropUrl); _cropUrl=null }
   _cropUrl=URL.createObjectURL(file)
-  const img=document.getElementById('cropper-img')
-  const wrap=document.getElementById('cropper-wrap')
-  const modal=document.getElementById('cropper-modal')
+  const img=$id('cropper-img')
+  const wrap=$id('cropper-wrap')
+  const modal=$id('cropper-modal')
   // Calcular dimensiones del wrap
   const modalPad=40
   let wrapW,wrapH
   if(mode==='bg'){
-    const headerEl=document.querySelector('.home-header')
+    const headerEl=$qs('.home-header')
     wrapH=headerEl?headerEl.offsetHeight:Math.round(Math.min(160,Math.max(100,window.innerWidth*0.15)))
     wrapW=window.innerWidth-modalPad
   } else {
@@ -4234,7 +4174,7 @@ function openCropper(mode,file){
   // Mostrar modal
   modal.classList.add('open')
   // Subtítulo
-  const sub=document.getElementById('cropper-subtitle')
+  const sub=$id('cropper-subtitle')
   if(sub) sub.textContent=mode==='bg'?'Vista previa exacta del header':'Arrastra · Slider para zoom'
   // Cargar imagen con un objeto Image separado para obtener dimensiones
   _cropLoader=new Image()
@@ -4248,8 +4188,8 @@ function openCropper(mode,file){
     _cropY=Math.round((wrapH-nh*fillScale)/2)
     const nativeV=Math.round(((1/fillScale)-1)/0.8*100)
     _cropSnapV=Math.max(-50,Math.min(150,nativeV))
-    document.getElementById('cropper-zoom').value=0
-    document.getElementById('cropper-snap-label').textContent=''
+    $id('cropper-zoom').value=0
+    $set('cropper-snap-label','')
     // Forzar render: limpiar src primero, luego asignar
     img.src=''
     requestAnimationFrame(()=>{
@@ -4265,7 +4205,7 @@ function openCropper(mode,file){
   wrap.ontouchcancel=cropperTouchEnd
 }
 function cropperApply(){
-  const img=document.getElementById('cropper-img')
+  const img=$id('cropper-img')
   if(!img) return
   // translate(x,y) mueve la imagen, scale(s) la escala desde origen 0,0
   // img siempre empieza en top:0 left:0 — solo transform lo mueve
@@ -4273,19 +4213,19 @@ function cropperApply(){
 }
 function cropperZoom(val){
   const v=parseFloat(val)
-  const lbl=document.getElementById('cropper-snap-label')
+  const lbl=$id('cropper-snap-label')
   const snapZone=4
   // Snap 1: v≈0 → fillScale (imagen llena exactamente el área)
   if(Math.abs(v)<=snapZone){
     _cropScale=_cropNaturalScale
-    document.getElementById('cropper-zoom').value=0
+    $id('cropper-zoom').value=0
     if(lbl) lbl.textContent='⚡ Ajuste al área'
     clampCrop(); cropperApply(); return
   }
   // Snap 2: v≈_cropSnapV → nativeScale (1px imagen = 1px pantalla)
   if(_cropSnapV>=-50&&_cropSnapV<=150&&Math.abs(v-_cropSnapV)<=snapZone){
     _cropScale=_cropNativeScale
-    document.getElementById('cropper-zoom').value=_cropSnapV
+    $id('cropper-zoom').value=_cropSnapV
     if(lbl) lbl.textContent='⚡ Tamaño real 1:1'
     clampCrop(); cropperApply(); return
   }
@@ -4310,7 +4250,7 @@ function cropperMouseMove(e){
 }
 function clampCrop(){
   if(!_cropLoader||!_cropLoader.naturalWidth) return
-  const wrap=document.getElementById('cropper-wrap')
+  const wrap=$id('cropper-wrap')
   const wW=parseInt(wrap.style.width)||wrap.offsetWidth||200
   const wH=parseInt(wrap.style.height)||wrap.offsetHeight||150
   const sw=_cropLoader.naturalWidth*_cropScale
@@ -4337,10 +4277,10 @@ function cropperTouchEnd(){
 document.addEventListener('touchmove',e=>{
   // Solo interceptar si el drag empezó en el wrap de imagen
   if(!_isDraggingCrop) return
-  const wrap=document.getElementById('cropper-wrap')
-  if(!wrap||!document.getElementById('cropper-modal').classList.contains('open'))return
+  const wrap=$id('cropper-wrap')
+  if(!wrap||!$id('cropper-modal').classList.contains('open'))return
   if(e.touches.length===1&&_dragStart){
-    const img=document.getElementById('cropper-img')
+    const img=$id('cropper-img')
     const maxX=0,minX=wrap.offsetWidth-img.naturalWidth*_cropScale
     const maxY=0,minY=wrap.offsetHeight-img.naturalHeight*_cropScale
     _cropX=e.touches[0].clientX-_dragStart.x
@@ -4351,7 +4291,7 @@ document.addEventListener('touchmove',e=>{
   }
 },{passive:false})
 function cropperCancel(){
-  document.getElementById('cropper-modal').classList.remove('open')
+  $id('cropper-modal').classList.remove('open')
   if(_cropUrl){ URL.revokeObjectURL(_cropUrl); _cropUrl=null }
   _cropperMode=null
 }
@@ -4359,7 +4299,7 @@ async function cropperConfirm(){
   if(!_cropLoader||!_cropLoader.naturalWidth){
     showToast('⚠️ Imagen no cargada aún','error'); return
   }
-  const wrap=document.getElementById('cropper-wrap')
+  const wrap=$id('cropper-wrap')
   const wW=parseInt(wrap.style.width)||wrap.offsetWidth
   const wH=parseInt(wrap.style.height)||wrap.offsetHeight
   // Canvas de salida: misma proporción del wrap pero resolución mayor
@@ -4393,15 +4333,15 @@ async function cropperConfirm(){
   const exportMax=_cropperMode==='bg'?120000:50000
   let q=0.9, data=canvas.toDataURL('image/jpeg',q)
   while(data.length>exportMax&&q>0.3){ q-=0.1; data=canvas.toDataURL('image/jpeg',q) }
-  document.getElementById('cropper-modal').classList.remove('open')
+  $id('cropper-modal').classList.remove('open')
   if(_cropperMode==='logo'){
     cfgSet('app_logo',data)
-    const lp=document.getElementById('logo-preview')
+    const lp=$id('logo-preview')
     if(lp) lp.innerHTML=`<img src="${data}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`
     applyConfig(); showToast('✅ Logo guardado','success')
   } else {
     cfgSet('app_bg',data)
-    const bp=document.getElementById('bg-preview')
+    const bp=$id('bg-preview')
     if(bp){ bp.style.backgroundImage=`url(${data})`; bp.textContent='' }
     applyConfig(); showToast('✅ Fondo guardado','success')
   }
@@ -4515,7 +4455,7 @@ function applyFont(id,save=true){
   const root=document.documentElement
   root.style.setProperty('--font',f.body)
   root.style.setProperty('--font-title',f.title)
-  document.querySelectorAll('*').forEach(el=>{
+  $all('*').forEach(el=>{
     if(getComputedStyle(el).fontFamily.includes('Barlow')||
        ['Inter','Outfit','DM Sans','Rajdhani'].some(fn=>getComputedStyle(el).fontFamily.includes(fn))){
       el.style.fontFamily=''
@@ -4524,7 +4464,7 @@ function applyFont(id,save=true){
   if(save){
     cfgSet('app_font',id)
     renderFontList()
-    const fcl=document.getElementById('font-current-label')
+    const fcl=$id('font-current-label')
     const f2=FONTS.find(x=>x.id===id)
     if(fcl&&f2) fcl.textContent=f2.name
   }
@@ -4533,10 +4473,10 @@ function applyFontSize(val,save=true){
   const offset=parseInt(val)||0
   const min=19+offset, max=23+offset
   document.documentElement.style.fontSize=`clamp(${min}px, 2.3vw, ${max}px)`
-  let fixStyle=document.getElementById('_form-fix-style')
+  let fixStyle=$id('_form-fix-style')
   if(!fixStyle){ fixStyle=document.createElement('style'); fixStyle.id='_form-fix-style'; document.head.appendChild(fixStyle) }
   fixStyle.textContent='.field input,.field textarea,.field label,.field select{font-size:revert !important}'
-  const lbl=document.getElementById('font-size-label')
+  const lbl=$id('font-size-label')
   if(lbl) lbl.textContent=SIZE_LABELS[String(val)]||'Normal'
   if(save){
     if(isAdmin()) cfgSet('app_font_size',String(val))  // admin → Sheet (sync a todos los admins)
@@ -4544,7 +4484,7 @@ function applyFontSize(val,save=true){
   }
 }
 function renderPaletteGrid(){
-  const grid=document.getElementById('palette-grid'); if(!grid)return
+  const grid=$id('palette-grid'); if(!grid)return
   const current=cfgGet('app_palette','orange')
   grid.innerHTML=PALETTES.map(p=>`
     <div class="palette-item${p.id===current?' active':''}"
@@ -4553,13 +4493,13 @@ function renderPaletteGrid(){
     </div>`).join('')
 }
 function togFontPanel(){
-  const panel=document.getElementById('font-panel')
+  const panel=$id('font-panel')
   if(!panel)return
   const open=panel.style.display==='flex'
   panel.style.display=open?'none':'flex'
 }
 function renderFontList(){
-  const list=document.getElementById('font-list'); if(!list)return
+  const list=$id('font-list'); if(!list)return
   const current=cfgGet('app_font','barlow')
   list.innerHTML=FONTS.map(f=>`
     <div class="font-option${f.id===current?' active':''}" onclick="applyFont('${f.id}')">
@@ -4576,8 +4516,8 @@ const LS_FONTSIZE_LOCAL='tp_fontsize_local'
 function getLocalFontSize(){ return localStorage.getItem(LS_FONTSIZE_LOCAL)||'0' }
 function setLocalFontSize(v){ localStorage.setItem(LS_FONTSIZE_LOCAL,String(v)) }
 function toggleKPassForm(){
-  const panel=document.getElementById('km-pass-panel')
-  const arrow=document.getElementById('km-pass-arrow')
+  const panel=$id('km-pass-panel')
+  const arrow=$id('km-pass-arrow')
   if(!panel) return
   const open=panel.style.display==='flex'
   panel.style.display=open?'none':'flex'
@@ -4585,16 +4525,16 @@ function toggleKPassForm(){
   if(!open){
     // Limpiar campos al abrir
     ;['km-pass-actual','km-pass-nueva','km-pass-confirmar'].forEach(id=>{
-      const el=document.getElementById(id); if(el) el.value=''
+      const el=$id(id); if(el) el.value=''
     })
-    document.getElementById('km-pass-error').style.display='none'
+    $show('km-pass-error',false)
   }
 }
 async function saveKPassword(){
-  const actual=document.getElementById('km-pass-actual').value.trim()
-  const nueva=document.getElementById('km-pass-nueva').value.trim()
-  const confirmar=document.getElementById('km-pass-confirmar').value.trim()
-  const errEl=document.getElementById('km-pass-error')
+  const actual=$id('km-pass-actual').value.trim()
+  const nueva=$id('km-pass-nueva').value.trim()
+  const confirmar=$id('km-pass-confirmar').value.trim()
+  const errEl=$id('km-pass-error')
   errEl.style.display='none'
   if(!actual||!nueva||!confirmar){
     errEl.textContent='⚠️ Completa todos los campos'; errEl.style.display='block'; return
@@ -4621,15 +4561,15 @@ async function saveKPassword(){
   const updated={...user, password:nuevaHash}
   gsUpdateBg(SH_USR, updated)
   ;['km-pass-actual','km-pass-nueva','km-pass-confirmar'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value=''
+    const el=$id(id); if(el) el.value=''
   })
   toggleKPassForm()
   closeKMenu()
   showToast('✅ Contraseña actualizada','success')
 }
 function toggleKConfig(){
-  const panel=document.getElementById('km-config-panel')
-  const arrow=document.getElementById('km-config-arrow')
+  const panel=$id('km-config-panel')
+  const arrow=$id('km-config-arrow')
   if(!panel) return
   const open=panel.style.display==='flex'
   panel.style.display=open?'none':'flex'
@@ -4637,7 +4577,7 @@ function toggleKConfig(){
 }
 function applyKFontSize(val){
   applyFontSize(val, true)
-  const lbl=document.getElementById('km-fontsize-label')
+  const lbl=$id('km-fontsize-label')
   if(lbl) lbl.textContent=SIZE_LABELS[String(val)]||'Normal'
 }
 function toggleLocalTheme(){
@@ -4649,34 +4589,34 @@ function toggleLocalTheme(){
 }
 function openKMenu(){
   updateKMenu()
-  document.getElementById('km-overlay').classList.add('open')
-  document.getElementById('km-panel').classList.add('open')
+  $id('km-overlay').classList.add('open')
+  $id('km-panel').classList.add('open')
 }
 function closeKMenu(){
-  document.getElementById('km-overlay').classList.remove('open')
-  document.getElementById('km-panel').classList.remove('open')
+  $id('km-overlay').classList.remove('open')
+  $id('km-panel').classList.remove('open')
 }
 function updateKMenu(){
   // dot de sync
-  const dot=document.querySelector('.sync-dot.ok')?'ok':document.querySelector('.sync-dot.syncing')?'syncing':'error'
-  const kmDot=document.getElementById('km-dot')
+  const dot=$qs('.sync-dot.ok')?'ok':$qs('.sync-dot.syncing')?'syncing':'error'
+  const kmDot=$id('km-dot')
   if(kmDot){ kmDot.className='km-sync-dot '+(dot); kmDot.style.background=dot==='ok'?'var(--green)':dot==='syncing'?'var(--orange)':'var(--red)' }
-  const kmSyncLabel=document.getElementById('km-sync-label')
-  const syncLabel=document.getElementById('sync-label')
+  const kmSyncLabel=$id('km-sync-label')
+  const syncLabel=$id('sync-label')
   if(kmSyncLabel&&syncLabel) kmSyncLabel.textContent=syncLabel.textContent
   // tema — solo si no es admin
-  const themeItem=document.getElementById('km-theme-item')
+  const themeItem=$id('km-theme-item')
   if(themeItem) themeItem.style.display=isAdmin()?'none':'flex'
-  const kmThemeLbl=document.getElementById('km-theme-label')
+  const kmThemeLbl=$id('km-theme-label')
   if(kmThemeLbl) kmThemeLbl.textContent=getLocalTheme()==='light'?'Claro activo':'Oscuro activo'
   // Sincronizar slider de fuente con valor actual
-  const kmSlider=document.getElementById('km-fontsize-slider')
-  const kmFsLbl=document.getElementById('km-fontsize-label')
+  const kmSlider=$id('km-fontsize-slider')
+  const kmFsLbl=$id('km-fontsize-label')
   const curFs=isAdmin()?cfgGet('app_font_size','0'):getLocalFontSize()
   if(kmSlider) kmSlider.value=curFs
   if(kmFsLbl) kmFsLbl.textContent=SIZE_LABELS[String(curFs)]||'Normal'
   // usuario
-  const kmUser=document.getElementById('km-user-label')
+  const kmUser=$id('km-user-label')
   if(kmUser&&_session) kmUser.textContent=_session.nombre||''
 }
 // ── Arranque — carga localStorage primero, luego Sheet ───────────
