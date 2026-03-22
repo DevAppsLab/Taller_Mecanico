@@ -2037,18 +2037,14 @@ window.addEventListener('popstate',e=>{
     history.pushState({screen:'__dummy'},'','')
     return
   }
-  // Si se consumio un dummy del stack de proteccion, reponer y no navegar
-  if(isDummy){
-    history.pushState({screen:'__dummy'},'','')
-    return
-  }
   const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
-  // En home: cerrar sesion
+  // En home: cerrar sesion siempre (con o sin dummies en el stack)
   if(activeNow===homeScreen){
-    history.pushState({screen:homeScreen},'','')
     logout()
     return
   }
+  // Si se consumio un dummy fuera del home, ignorar
+  if(isDummy) return
   // Navegar al menu padre definido, o al home si no hay padre definido
   const parent=_parentScreen[activeNow]||homeScreen
   history.pushState({screen:parent},'','')
@@ -3804,10 +3800,7 @@ function enterApp(){
     applyRoleUI()
     _showScreen('screen-home')
   }
-  // Reponer dummies — cada vez que se entra al home (incluso desde cache)
-  // el stack puede estar vacio, asi que lo llenamos de nuevo
-  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
-  history.pushState({screen:homeScreen},'','')
+  history.replaceState({screen:homeScreen},'','')
 }
 function applyRoleUI(){
   const homeAdmin=document.getElementById('home-admin-btns')
@@ -4459,8 +4452,14 @@ function updateKMenu(){
 // ── Arranque — carga localStorage primero, luego Sheet ───────────
 // Inyectar dummies INMEDIATAMENTE al cargar — antes de cualquier lógica
 // Así funciona sin importar si hay caché, sesión, o desde dónde arranque
-;(()=>{ for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','') })()
-if(!history.state) history.replaceState({screen:'screen-login'},'','')
+// Dummies solo si no hay sesion — protegen el login para no cerrar la app
+const _savedSess=localStorage.getItem(LS_SESSION)
+if(!_savedSess){
+  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
+  history.replaceState({screen:'screen-login'},'','')
+} else {
+  history.replaceState({screen:'screen-login'},'','')
+}
 const hasCached=lsLoad()
 // Recuperar sesión guardada
 const savedSession=localStorage.getItem(LS_SESSION)
