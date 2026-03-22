@@ -126,11 +126,11 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .home-sub{color:var(--text2);font-size:0.75rem;margin-top:2px}
 /* ── STAT CARDS — editar aquí para cambiar todas a la vez ── */
 :root{
-  --stat-min-h:80px;
+  --stat-min-h:60px;
   --stat-radius:clamp(9px,1.2vw,14px);
-  --stat-pad:clamp(8px,1.2vw,14px) clamp(6px,1vw,10px);
-  --stat-val-size:clamp(1.1rem,2.8vw,1.6rem);
-  --stat-lbl-size:clamp(0.52rem,0.9vw,0.65rem);
+  --stat-pad:clamp(8px,1.2vw,14px) clamp(8px,1.2vw,12px);
+  --stat-val-size:clamp(1.3rem,3.2vw,1.9rem);
+  --stat-lbl-size:clamp(0.6rem,1vw,0.75rem);
 }
 .home-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(4px,0.8vw,8px);padding:clamp(8px,1.5vw,16px) 12px;scrollbar-width:none}
 .home-stats::-webkit-scrollbar{display:none}
@@ -519,6 +519,9 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .cc-saldo-wrap{flex-shrink:0;margin-left:auto}
 .entregar-wrap{padding:0 0 10px}
 .corte-detail{display:block}
+.mc-compact{padding:clamp(5px,0.8vw,8px) clamp(8px,1.2vw,12px) !important}
+.mc-compact .mc-icon{width:32px;height:32px;font-size:1rem;flex-shrink:0}
+.mc-compact .mc-title{font-size:clamp(0.72rem,1.2vw,0.85rem)}
 /* TOAST */
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(72px);
   background:var(--card);border:1px solid var(--border2);border-radius:11px;padding:11px 18px;
@@ -628,7 +631,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <div class="tb-sync-wrap">
-            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.2.3</span>
+            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.2.4</span>
             <div class="km-btn" onclick="openKMenu()">⋮</div>
             <div class="sync-chip-bare">
               <div class="sync-dot pending" id="sd-home"></div>
@@ -639,8 +642,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </div>
     </div>
     <div class="home-stats">
-      <div class="stat" onclick="goTo('screen-bases');showBasesTab('cli')" style="cursor:pointer"><div class="sv" id="s-cli">0</div><div class="sl">Clientes</div></div>
-      <div class="stat" id="stat-rep" onclick="goTo('screen-bases');showBasesTab('rep')" style="cursor:pointer"><div class="sv" id="s-rep">0</div><div class="sl">Reparaciones</div></div>
+      <div class="stat" onclick="goToFrom('screen-bases','screen-home');showBasesTab('cli')" style="cursor:pointer"><div class="sv" id="s-cli">0</div><div class="sl">Clientes</div></div>
+      <div class="stat" id="stat-rep" onclick="goToFrom('screen-bases','screen-home');showBasesTab('rep')" style="cursor:pointer"><div class="sv" id="s-rep">0</div><div class="sl">Reparaciones</div></div>
       <div class="stat" onclick="goTo('screen-clientes')" style="cursor:pointer"><div class="sv" id="s-pend">0</div><div class="sl">Pendientes</div></div>
       <div class="stat" id="stat-dia" onclick="goTo('screen-cortes');showCortesTab('dia')" style="cursor:pointer"><div class="sv" id="s-dia">$0</div><div class="sl">Hoy</div></div>
       <div class="stat" id="stat-sem" onclick="goTo('screen-cortes');showCortesTab('sem')" style="cursor:pointer"><div class="sv" id="s-sem">$0</div><div class="sl" id="sl-sem">Semana</div></div>
@@ -879,17 +882,17 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-admin"></div><span class="sync-chip-label" >Sincronizado</span></div>
       </div>
     </div>
-    <div class="scrollbody" style="padding:12px 20px 40px;display:flex;flex-direction:column;gap:10px">
+    <div class="scrollbody" style="padding:12px 20px 40px;display:flex;flex-direction:column;gap:8px">
       <div class="admin-section-title">Apariencia</div>
-      <div style="display:flex;flex-direction:column;flex:1;gap:clamp(3px,0.5vw,7px)">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(3px,0.5vw,7px);flex:1">
-          <div class="mc" onclick="goTo('screen-apariencia')" style="align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
+      <div style="display:flex;flex-direction:column;flex:1;gap:6px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div class="mc mc-compact" onclick="goTo('screen-apariencia')" style="align-items:center;gap:8px">
             <div class="mc-icon">🎨</div>
-            <div class="mc-info"><div class="mc-title" class="mc-title-sm">Personalizar</div></div>
+            <div class="mc-info"><div class="mc-title mc-title-sm">Personalizar</div></div>
           </div>
-          <div class="mc" style="align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px);cursor:default;pointer-events:none">
+          <div class="mc mc-compact" style="align-items:center;gap:8px;cursor:default;pointer-events:none">
             <div class="mc-icon">🌓</div>
-            <div class="mc-info"><div class="mc-title" class="mc-title-sm">Tema</div></div>
+            <div class="mc-info"><div class="mc-title mc-title-sm">Tema</div></div>
             <label style="position:relative;display:inline-block;width:38px;height:22px;flex-shrink:0;pointer-events:all;margin-left:auto">
               <input type="checkbox" class="theme-toggle-input" onchange="toggleTheme()" style="opacity:0;width:0;height:0">
               <span style="position:absolute;inset:0;background:var(--border2);border-radius:22px;cursor:pointer;transition:.3s;display:flex;align-items:center;padding:2px">
@@ -899,19 +902,19 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           </div>
         </div>
         <div class="admin-section-title" style="flex-shrink:0">Bases de datos</div>
-        <div class="mc" onclick="goTo('screen-datos')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
+        <div class="mc mc-compact" onclick="goToFrom('screen-datos','screen-admin')" style="align-items:center;gap:8px">
           <div class="mc-icon">📊</div>
           <div class="mc-info"><div class="mc-title mc-title-sm">Datos e Historial</div></div>
           <div class="mc-arr">›</div>
         </div>
-        <div class="mc" onclick="goTo('screen-bases')" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px)">
+        <div class="mc mc-compact" onclick="goToFrom('screen-bases','screen-admin')" style="align-items:center;gap:8px">
           <div class="mc-icon">🗂</div>
           <div class="mc-info"><div class="mc-title mc-title-sm">Bases y Usuarios</div></div>
           <div class="mc-arr">›</div>
         </div>
-        <div class="mc" onclick="openDeleteAll()" style="flex:1;align-items:center;gap:8px;padding:clamp(8px,1.2vw,12px);border-color:rgba(239,68,68,.3)">
+        <div class="mc mc-compact" onclick="openDeleteAll()" style="align-items:center;gap:8px;border-color:rgba(239,68,68,.3)">
           <div class="mc-icon" style="background:rgba(239,68,68,.12);color:var(--red)">🗑</div>
-          <div class="mc-info"><div class="mc-title" style="font-size:clamp(0.72rem,1.2vw,0.85rem);color:var(--red)">Borrar Todo</div></div>
+          <div class="mc-info"><div class="mc-title mc-title-sm" style="color:var(--red)">Borrar Todo</div></div>
           <div class="mc-arr" style="color:var(--red)">›</div>
         </div>
       </div>
@@ -1066,7 +1069,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- ══ DATOS E HISTORIAL ══ -->
   <div id="screen-datos" class="screen">
     <div class="topbar">
-      <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
+      <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Datos e Historial</div>
       <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
@@ -1117,7 +1120,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- ══ BASES Y USUARIOS ══ -->
   <div id="screen-bases" class="screen">
     <div class="topbar">
-      <div class="tb-back" onclick="goTo('screen-admin')">‹</div>
+      <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Bases y Usuarios</div>
       <div class="tb-sync-wrap">
         <div class="km-btn" onclick="openKMenu()">⋮</div>
@@ -1988,6 +1991,12 @@ function _showScreen(id){
   rerenderActive()
   if(_queue.length) flushQueue()
 }
+// goToFrom — navega a una pantalla y registra desde dónde se llegó
+const _dynamicParent={}
+function goToFrom(screen, from){
+  _dynamicParent[screen]=from
+  _showScreen(screen)
+}
 function goTo(id){
   const prev=$qs('.screen.active')?.id
   if(prev===id) return
@@ -2018,8 +2027,11 @@ function _goBack(){
   const activeNow=$qs('.screen.active')?.id||''
   if(!_session||activeNow==='screen-login') return
   const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
-  if(activeNow===homeScreen||activeNow===''){ logout(); return }
-  const parent=_parentScreen[activeNow]||homeScreen
+  if(activeNow===homeScreen||activeNow===''){logout();return}
+  // Check dynamic parent first (set by goToFrom)
+  const parent=_dynamicParent[activeNow]||_parentScreen[activeNow]||homeScreen
+  // Clear dynamic parent after using it
+  delete _dynamicParent[activeNow]
   _showScreen(parent)
 }
 
