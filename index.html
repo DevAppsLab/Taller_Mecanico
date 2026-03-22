@@ -1983,6 +1983,7 @@ function _showScreen(id){
   const pf=document.getElementById('pass-form'); if(pf) pf.style.display='none'
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))
   document.getElementById(id)?.classList.add('active')
+  if(typeof window._updateFab==='function') window._updateFab(id)
   rerenderActive()
   if(_queue.length) flushQueue()
 }
@@ -2008,10 +2009,13 @@ const _parentScreen={
   'screen-db-reparaciones':'screen-admin',
   'screen-db-cierre':      'screen-admin',
 }
-// ── Navegacion con gesto de swipe desde borde izquierdo ──────────
-// Funciona en iOS Safari, Android Chrome y cualquier WebApp sin depender
-// de popstate (que es poco fiable en apps instaladas en móvil).
-function _resetNavState(){ try{ history.replaceState({nav:true},'','') }catch(e){} }
+// ── Navegación atrás ─────────────────────────────────────────────
+function _resetNavState(){
+  try{
+    history.replaceState({nav:'base'},'','')
+    history.pushState({nav:'active'},'','')
+  }catch(e){}
+}
 function _goBack(){
   const activeNow=document.querySelector('.screen.active')?.id||''
   if(!_session||activeNow==='screen-login') return
@@ -2020,32 +2024,74 @@ function _goBack(){
   const parent=_parentScreen[activeNow]||homeScreen
   _showScreen(parent)
 }
-// popstate como respaldo (botón físico Android / browser back)
-window.addEventListener('popstate',()=>{
-  try{ history.pushState({nav:true},'','') }catch(e){}
-  _goBack()
-})
-// Swipe desde borde izquierdo — zona de 28px
+
+// MÉTODO 1 — botón flotante ‹
 ;(()=>{
-  let _sx=0,_sy=0,_active=false,_locked=false
-  const EDGE=28, MIN_X=60, MAX_Y=80, COOLDOWN=400
+  const btn=document.createElement('div')
+  btn.id='fab-back'
+  btn.textContent='‹'
+  btn.style.cssText='position:fixed;top:12px;left:12px;z-index:999;width:38px;height:38px;'+
+    'border-radius:50%;background:rgba(15,17,23,0.72);backdrop-filter:blur(8px);'+
+    '-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);'+
+    'color:#f0f2f8;font-size:1.5rem;line-height:1;display:none;align-items:center;'+
+    'justify-content:center;cursor:pointer;user-select:none;-webkit-user-select:none;'+
+    'transition:opacity .2s;box-shadow:0 2px 12px rgba(0,0,0,.5)'
+  btn.addEventListener('click',()=>_goBack())
+  btn.addEventListener('touchend',e=>{ e.preventDefault(); _goBack() })
+  document.body.appendChild(btn)
+  window._updateFab=function(screenId){
+    const hide=['screen-login','screen-home','screen-home-cliente']
+    const show=!hide.includes(screenId)&&!!_session
+    btn.style.display=show?'flex':'none'
+  }
+})()
+
+// MÉTODO 2 — doble tap en topbar/home-header
+;(()=>{
+  let _lastTap=0
+  document.addEventListener('touchend',e=>{
+    const bar=e.target.closest('.topbar,.home-header')
+    if(!bar) return
+    const now=Date.now()
+    if(now-_lastTap<320){ e.preventDefault(); _goBack() }
+    _lastTap=now
+  },{passive:false})
+})()
+
+// MÉTODO 3 — swipe derecho en toda la pantalla
+;(()=>{
+  let _sx=0,_sy=0,_t=0,_locked=false
+  const MIN_X=80, MAX_Y=100, COOLDOWN=500
   document.addEventListener('touchstart',e=>{
-    const t=e.touches[0]
-    _sx=t.clientX; _sy=t.clientY
-    _active=_sx<=EDGE
+    if(e.touches.length!==1) return
+    _sx=e.touches[0].clientX; _sy=e.touches[0].clientY; _t=Date.now()
   },{passive:true})
-  document.addEventListener('touchmove',e=>{
-    if(!_active||_locked) return
-    const t=e.touches[0]
-    const dx=t.clientX-_sx, dy=Math.abs(t.clientY-_sy)
-    if(dx>MIN_X&&dy<MAX_Y){
-      _locked=true; _active=false
+  document.addEventListener('touchend',e=>{
+    if(_locked) return
+    const dx=e.changedTouches[0].clientX-_sx
+    const dy=Math.abs(e.changedTouches[0].clientY-_sy)
+    const dt=Date.now()-_t
+    // Swipe rápido hacia la derecha, no demasiado vertical, no lento (scroll)
+    if(dx>MIN_X && dy<MAX_Y && dt<400){
+      // No disparar si hay un scroll activo o si el origen es un input/textarea
+      const tag=e.target.tagName
+      if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return
+      // No disparar si hay un modal abierto
+      if(document.querySelector('.modal-ov.open,.cropper-modal.open')) return
+      _locked=true
       _goBack()
       setTimeout(()=>{ _locked=false },COOLDOWN)
     }
   },{passive:true})
-  document.addEventListener('touchend',()=>{ _active=false },{passive:true})
 })()
+
+// MÉTODO 4 — popstate (botón físico Android / browser back)
+// Stack: [base, activa]. Back consume "activa". Handler la repone antes de navegar.
+// setTimeout(0) garantiza que el browser registre el pushState antes del siguiente back.
+window.addEventListener('popstate',()=>{
+  history.pushState({nav:'active'},'','')
+  setTimeout(_goBack,0)
+})
 function clearIngreso(){
   selCid=null
   ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})
@@ -4451,14 +4497,11 @@ function updateKMenu(){
   if(kmUser&&_session) kmUser.textContent=_session.nombre||''
 }
 // ── Arranque — carga localStorage primero, luego Sheet ───────────
-// Inyectar dummies INMEDIATAMENTE al cargar — antes de cualquier lógica
-// Así funciona sin importar si hay caché, sesión, o desde dónde arranque
-// Asegurar que siempre haya un estado en el stack al arrancar
-// El popstate handler se encarga de reponer el estado despues de cada back
-// asi la app nunca se cierra sin importar cuantas veces se presione atras
-// Estado inicial fijo — el popstate handler lo repone siempre tras cada back
-history.replaceState({nav:true},'','')
-history.pushState({nav:true},'','')
+// Stack de history: [dummy-base, activa]
+// dummy-base: nunca se consume, garantiza que siempre haya un estado debajo
+// activa: la que consume el back → el handler la repone con pushState
+history.replaceState({nav:'base'},'','')   // entrada 1 — dummy inamovible
+history.pushState({nav:'active'},'','')    // entrada 2 — la que dispara popstate
 const hasCached=lsLoad()
 // Recuperar sesión guardada
 const savedSession=localStorage.getItem(LS_SESSION)
