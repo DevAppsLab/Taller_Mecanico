@@ -629,7 +629,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.1</span>
+            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.2</span>
             <div class="km-btn" onclick="openKMenu()">⋮</div>
             <div class="sync-chip" style="border:none;background:transparent;padding:0">
               <div class="sync-dot pending" id="sd-home"></div>
@@ -2181,8 +2181,8 @@ function updateStats(){
     document.getElementById('s-sem').textContent=sem>=1000?'$'+(sem/1000).toFixed(1)+'k':f$(sem)
     // Día
     const hoy=_hoyKey()
-    const activeDia=DB[SH_SES].filter(r=>String(r.fecha||'').slice(0,10)===hoy).reduce((s,r)=>s+numF(r.total),0)
-    const closedDia=DB[SH_CIE].filter(r=>String(r.fechaRep||r.closedAt||'').slice(0,10)===hoy).reduce((s,r)=>s+numF(r.total),0)
+    const activeDia=DB[SH_SES].filter(r=>_localDateKey(r.fecha)===hoy).reduce((s,r)=>s+numF(r.total),0)
+    const closedDia=DB[SH_CIE].filter(r=>_localDateKey(r.fechaRep||r.closedAt)===hoy).reduce((s,r)=>s+numF(r.total),0)
     const dia=activeDia+closedDia
     document.getElementById('s-dia').textContent=dia>=1000?'$'+(dia/1000).toFixed(1)+'k':f$(dia)
     // Labels dinámicos
@@ -2678,7 +2678,7 @@ function _corteTablaHTML(rows, showFecha=false){
     const cid=`cg-${i}-${g.nombre.replace(/\s/g,'')}`
     const repRows=g.repairs.map(r=>`<tr style="${bs}">
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text)">${r.reparacion}</td>
-      ${showFecha?`<td style="padding:5px 8px;font-size:0.72rem;color:var(--text3);white-space:nowrap">${fD(r.fecha)}</td>`:''}
+      ${showFecha?`<td style="padding:5px 8px;font-size:0.68rem;color:var(--text3);white-space:nowrap">${fD(r.fecha)}</td>`:''}
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text2);white-space:nowrap;text-align:right">${f$(r.manoObra)}</td>
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text2);white-space:nowrap;text-align:right">${f$(r.material)}</td>
       <td style="padding:5px 8px;font-size:0.8rem;font-weight:700;color:var(--orange);white-space:nowrap;text-align:right">${f$(r.total)}</td>
@@ -2702,7 +2702,7 @@ function _corteTablaHTML(rows, showFecha=false){
           <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:var(--surface)">
               <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);text-align:left">Reparación</th>
-              ${showFecha?'<th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);white-space:nowrap">Fecha</th>':''}
+              ${showFecha?'<th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);white-space:nowrap">Ingreso</th>':''}
               <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);text-align:right;white-space:nowrap">M.O.</th>
               <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--text3);text-align:right;white-space:nowrap">Mat.</th>
               <th style="padding:5px 8px;font-size:0.62rem;font-weight:700;color:var(--orange);text-align:right;white-space:nowrap">Total</th>
@@ -2715,19 +2715,25 @@ function _corteTablaHTML(rows, showFecha=false){
   }).join('')
 }
 
+// Convierte cualquier fecha ISO a clave local YYYY-MM-DD
+function _localDateKey(iso){
+  if(!iso) return ''
+  const d=new Date(iso)
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+}
 // Construye filas de reparaciones para un rango de fechas
 function _rowsForRange(desde, hasta){
   const cmap=Object.fromEntries(DB[SH_CLI].map(c=>[c.id,c]))
   const rows=[]
   DB[SH_SES].forEach(r=>{
-    const f=String(r.fecha||'').slice(0,10)
+    const f=_localDateKey(r.fecha)
     if(f<desde||f>hasta) return
     const cli=cmap[r.clientId]
     rows.push({nombre:cli?.nombre||'—',vehiculo:cli?.vehiculo||'—',reparacion:r.reparacion,
       manoObra:r.manoObra,material:r.material,total:r.total,fecha:r.fecha,_activo:true,_liquidado:false})
   })
   DB[SH_CIE].forEach(r=>{
-    const f=String(r.fechaRep||r.closedAt||'').slice(0,10)
+    const f=_localDateKey(r.fechaRep||r.closedAt)
     if(f<desde||f>hasta) return
     rows.push({nombre:r.nombre,vehiculo:r.vehiculo,reparacion:r.reparacion,
       manoObra:r.manoObra,material:r.material,total:r.total,fecha:r.fechaRep||r.closedAt,_activo:false,_liquidado:true})
@@ -2769,27 +2775,26 @@ function _renderCortesDia(now, hoy){
   const rowsHoy=_rowsForRange(hoy,hoy)
   _setCortesTotal(rowsHoy.reduce((s,r)=>s+numF(r.total),0),'Hoy')
   document.getElementById('badge-cortes').textContent=rowsHoy.length
-  // Calcular primer lunes de la cuadrícula
+  // Calcular primer domingo de la cuadrícula
   const firstDay=new Date(year,month,1)
   let calStart=new Date(firstDay)
-  calStart.setDate(calStart.getDate()-((calStart.getDay()+6)%7))
-  // Generar semanas completas
+  calStart.setDate(calStart.getDate()-calStart.getDay()) // retroceder al domingo
+  // Generar semanas completas (dom→sáb)
   const semanas=[]
   let cur=new Date(calStart)
-  while(cur.getMonth()<=month&&cur.getFullYear()<=year){
-    if(cur>new Date(year,month,daysInMonth)&&cur.getDay()===1) break
+  const lastDay=new Date(year,month+1,0)
+  while(cur<=lastDay){
     const sem=[]
     for(let d=0;d<7;d++){
-      const key=cur.toISOString().slice(0,10)
+      const key=`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`
       const inMonth=cur.getMonth()===month&&cur.getFullYear()===year
       const rows=inMonth?_rowsForRange(key,key):[]
       sem.push({key,day:cur.getDate(),inMonth,esHoy:key===hoy,rows,total:rows.reduce((s,r)=>s+numF(r.total),0)})
       cur.setDate(cur.getDate()+1)
     }
     semanas.push(sem)
-    if(cur.getMonth()!==month||cur.getFullYear()!==year) break
   }
-  const DIAS=['L','M','M','J','V','S','D']
+  const DIAS=['D','L','M','M','J','V','S']
   let selKey=hoy
   cont.innerHTML=`
     <div style="margin-bottom:6px">
@@ -2829,13 +2834,13 @@ function _renderCortesSem(now, hoy){
   const firstDay=new Date(year,month,1)
   const lastDay=new Date(year,month+1,0)
   let cur=new Date(firstDay)
-  cur.setDate(cur.getDate()-((cur.getDay()+6)%7))
+  cur.setDate(cur.getDate()-cur.getDay()) // retroceder al domingo
   const semanas=[]
   let semNum=1
   while(cur<=lastDay){
-    const desde=cur.toISOString().slice(0,10)
+    const desde=`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`
     const hastaDate=new Date(cur); hastaDate.setDate(hastaDate.getDate()+6)
-    const hasta=hastaDate.toISOString().slice(0,10)
+    const hasta=`${hastaDate.getFullYear()}-${String(hastaDate.getMonth()+1).padStart(2,'0')}-${String(hastaDate.getDate()).padStart(2,'0')}`
     const rows=_rowsForRange(desde,hasta)
     const total=rows.reduce((s,r)=>s+numF(r.total),0)
     const esSemActual=hoy>=desde&&hoy<=hasta
@@ -3731,7 +3736,7 @@ function _hoyKey(){
 }
 function _esHoy(fecha){
   if(!fecha) return false
-  return String(fecha).slice(0,10)===_hoyKey()
+  return _localDateKey(fecha)===_hoyKey()
 }
 // ── Modales ───────────────────────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open')}
