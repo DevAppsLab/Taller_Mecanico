@@ -2984,6 +2984,7 @@ function renderCotizaciones(){
           <span class="cot-badge ${statusClass[c.status]||'pend'}">${statusLabel[c.status]||'⏳ Pendiente'}</span>
           <button onclick="generarPDFCot('${c.id}')" style="background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-weight:700">📄</button>
           ${c.status==='pending'?`<button onclick="editCot('${c.id}')" style="background:var(--og);color:var(--orange);border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-weight:700">✏️</button>`:''}
+          <button onclick="delCot('${c.id}')" style="background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.25);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.72rem;font-weight:700">🗑</button>
         </div>
       </div>
       ${(c.reps||[]).map(r=>`
@@ -3058,6 +3059,12 @@ function rechazarCot(id){
   gsUpdateBg(SH_COT,{...c,status:'rejected'})
   renderCotizaciones()
   showToast('❌ Cotización rechazada','error')
+}
+function delCot(id){
+  if(!confirm('¿Eliminar esta cotización?')) return
+  gsDeleteBg(SH_COT,id)
+  renderCotizaciones()
+  showToast('🗑 Cotización eliminada','error')
 }
 function convertCotToRep(id){
   const c=DB[SH_COT].find(x=>x.id===id); if(!c)return
@@ -3781,7 +3788,9 @@ function enterApp(){
     applyRoleUI()
     _showScreen('screen-home')
   }
-  history.replaceState({screen:homeScreen},'','')
+  // Inyectar dummies para que el home siempre mande al login aunque se cierre la app
+  for(let _i=0;_i<50;_i++) history.pushState({screen:'__dummy'},'','')
+  history.pushState({screen:homeScreen},'','')
 }
 function applyRoleUI(){
   const homeAdmin=document.getElementById('home-admin-btns')
