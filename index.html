@@ -603,7 +603,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0">
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div class="tb-sync-wrap">
-          <span class="tb-version">v1.2.7</span>
+          <span class="tb-version">v1.2.8</span>
           <div class="km-btn" onclick="openKMenu()">⋮</div>
           <div class="sync-chip-bare">
             <div class="sync-dot pending" id="sd-home-cli"></div>
@@ -634,7 +634,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0">
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div class="tb-sync-wrap">
-          <span class="tb-version">v1.2.7</span>
+          <span class="tb-version">v1.2.8</span>
           <div class="km-btn" onclick="openKMenu()">⋮</div>
           <div class="sync-chip-bare">
             <div class="sync-dot pending" id="sd-home"></div>
@@ -695,8 +695,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-registro" class="screen">
         <div class="topbar" data-title="Nuevo Ingreso" data-dot="sd-registro" data-badge=""></div>
-    </div>
-    </div>
     <div class="scrollbody" style="padding-bottom:20px">
       <div class="sec-card" style="padding:10px 12px">
         <div style="display:flex;gap:8px">
@@ -813,8 +811,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-clientes-emp" class="screen">
         <div class="topbar" data-title="Clientes" data-dot="sd-clientes-emp" data-badge="badge-cli-emp"></div>
-    </div>
-    </div>
     <div class="search-bar">
       <div class="si-wrap">
         <span class="si-ico">🔍</span>
@@ -825,8 +821,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-clientes" class="screen">
         <div class="topbar" data-title="Clientes" data-dot="sd-clientes" data-badge="badge-cli"></div>
-    </div>
-    </div>
     <div class="search-bar">
       <div class="si-wrap">
         <span class="si-ico">🔍</span>
@@ -837,8 +831,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-cortes" class="screen">
         <div class="topbar" data-title="Cortes" data-dot="sd-cortes" data-badge=""></div>
-    </div>
-    </div>
     <div class="tabs-row">
       <button class="tab-btn active" id="cortes-tab-dia"  onclick="showCortesTab('dia')">📅 Día</button>
       <button class="tab-btn"        id="cortes-tab-sem"  onclick="showCortesTab('sem')">📆 Semana</button>
@@ -855,8 +847,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- screen-historial removed — now inside screen-datos -->
   <div id="screen-admin" class="screen">
         <div class="topbar" data-title="Administración" data-dot="sd-admin" data-badge=""></div>
-    </div>
-    </div>
     <div class="scrollbody" style="padding:12px 20px 40px;display:flex;flex-direction:column;gap:8px">
       <div class="admin-section-title">Apariencia</div>
       <div style="display:flex;flex-direction:column;flex:1;gap:6px">
@@ -897,8 +887,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-inventario" class="screen">
         <div class="topbar" data-title="Inventario" data-dot="sd-inventario" data-badge=""></div>
-    </div>
-    </div>
     <div class="sec-card" style="margin:12px 16px 0;flex-shrink:0">
       <div class="sec-lbl">➕ Nueva pieza</div>
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -919,8 +907,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-cotizaciones" class="screen">
         <div class="topbar" data-title="Cotizaciones" data-dot="sd-cotizaciones" data-badge=""></div>
-    </div>
-    </div>
     <div class="scrollbody" id="cot-list" style="padding:12px 16px 80px">
       <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
         <button onclick="openNuevaCot()" style="background:var(--orange);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 16px;font-weight:700;cursor:pointer;font-size:0.82rem">➕ Nueva cotización</button>
@@ -930,8 +916,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div id="screen-apariencia" class="screen">
         <div class="topbar" data-title="Personalizar App" data-dot="sd-apariencia" data-badge=""></div>
-    </div>
-    </div>
     <div class="scrollbody" style="padding-bottom:40px">
       <!-- Nombre + Contacto -->
       <div class="sec-card" style="display:flex;flex-direction:column;gap:10px">
@@ -1029,8 +1013,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- ══ DATOS E HISTORIAL ══ -->
   <div id="screen-datos" class="screen">
         <div class="topbar" data-title="Datos e Historial" data-dot="sd-datos" data-badge=""></div>
-    </div>
-    </div>
     <div class="tabs-row">
       <button class="tab-btn active" id="datos-tab-tabla" onclick="showDatosTab('tabla')">📊 Ver Datos</button>
       <button class="tab-btn" id="datos-tab-hist" onclick="showDatosTab('hist')">📋 Historial</button>
@@ -1075,8 +1057,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- ══ BASES Y USUARIOS ══ -->
   <div id="screen-bases" class="screen">
         <div class="topbar" data-title="Bases y Usuarios" data-dot="sd-bases" data-badge=""></div>
-    </div>
-    </div>
     <div class="tabs-row">
       <button class="tab-btn active" id="bases-tab-cli" onclick="showBasesTab('cli')">👥 Clientes</button>
       <button class="tab-btn" id="bases-tab-rep" onclick="showBasesTab('rep')">🔩 Reparaciones</button>
@@ -1107,8 +1087,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- ══ FINANZAS ══ -->
   <div id="screen-finanzas" class="screen">
         <div class="topbar" data-title="Finanzas" data-dot="sd-finanzas" data-badge=""></div>
-    </div>
-    </div>
     <div class="tabs-row">
       <button class="tab-btn active" id="fin-tab-reg" onclick="showFinTab('reg')">📝 Registrar</button>
       <button class="tab-btn" id="fin-tab-cortes" onclick="showFinTab('cortes')">📊 Cortes</button>
@@ -1290,7 +1268,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 <div class="toast" id="toast"></div>
 <script>
 // ── Versión — cambiar aquí actualiza todos los headers ───────────
-const APP_VERSION='v1.2.7'
+const APP_VERSION='v1.2.8'
 // ── Helpers globales ─────────────────────────────────────────────
 const $id=id=>document.getElementById(id)
 const $qs=(sel,ctx=document)=>ctx.querySelector(sel)
