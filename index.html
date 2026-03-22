@@ -620,7 +620,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           <div class="tb-sync-wrap">
-            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.1.8</span>
+            <span style="font-size:0.48rem;font-weight:700;color:var(--text3);letter-spacing:.04em;opacity:.7;line-height:1;margin-bottom:1px">v1.2.0</span>
             <div class="km-btn" onclick="openKMenu()">⋮</div>
             <div class="sync-chip-bare">
               <div class="sync-dot pending" id="sd-home"></div>
@@ -658,6 +658,11 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="mc" onclick="goTo('screen-cotizaciones')">
           <div class="mc-icon">📄</div>
           <div class="mc-info"><div class="mc-title">Cotizaciones</div><div class="mc-desc">Crear y gestionar cotizaciones</div></div>
+          <div class="mc-arr">›</div>
+        </div>
+        <div class="mc" onclick="goTo('screen-finanzas')">
+          <div class="mc-icon">💰</div>
+          <div class="mc-info"><div class="mc-title">Finanzas</div><div class="mc-desc">Ingresos, gastos y utilidad</div></div>
           <div class="mc-arr">›</div>
         </div>
         <div class="mc" onclick="goTo('screen-admin')">
@@ -1192,6 +1197,81 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div class="scrollbody" id="db-cierre-list" style="padding-top:12px"></div>
   </div>
+  <!-- ══ FINANZAS ══ -->
+  <div id="screen-finanzas" class="screen">
+    <div class="topbar">
+      <div class="tb-back" onclick="goTo('screen-home')">‹</div>
+      <div class="tb-title">Finanzas</div>
+      <div class="tb-sync-wrap">
+        <div class="km-btn" onclick="openKMenu()">⋮</div>
+        <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-finanzas"></div><span class="sync-chip-label">Sincronizado</span></div>
+      </div>
+    </div>
+    <div class="tabs-row" style="margin:8px 12px 0;flex-shrink:0">
+      <button class="tab-btn active" id="fin-tab-reg" onclick="showFinTab('reg')">📝 Registrar</button>
+      <button class="tab-btn" id="fin-tab-cortes" onclick="showFinTab('cortes')">📊 Cortes</button>
+    </div>
+    <!-- TAB REGISTRAR -->
+    <div id="fin-vista-reg" class="scrollbody" style="padding:10px 12px 80px">
+      <!-- Tipo: gasto o ingreso manual -->
+      <div class="sec-card" style="padding:10px 12px">
+        <div style="display:flex;gap:8px">
+          <button id="fin-tipo-gasto" onclick="setFinTipo('gasto')"
+            style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--red);background:rgba(239,68,68,.1);color:var(--red);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">💸 Gasto</button>
+          <button id="fin-tipo-ingreso" onclick="setFinTipo('ingreso')"
+            style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:transparent;color:var(--text3);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">💵 Ingreso externo</button>
+        </div>
+      </div>
+      <div class="sec-card">
+        <div class="sec-lbl" id="fin-form-lbl">💸 Nuevo gasto</div>
+        <div class="field">
+          <label>Descripción</label>
+          <div class="ac-wrap">
+            <input type="text" id="fin-desc" placeholder="Ej: Sueldo empleado, gasolina…" autocomplete="off"
+              oninput="acFinDesc(this)" onfocus="acFinDesc(this)" onkeydown="acK(event,'ac-fin-desc')">
+            <div class="ac-list" id="ac-fin-desc"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label id="fin-cat-lbl">Categoría</label>
+          <div class="ac-wrap">
+            <input type="text" id="fin-cat" placeholder="Ej: Nómina, Combustible, Personal…" autocomplete="off"
+              oninput="acFinCat(this)" onfocus="acFinCat(this)" onkeydown="acK(event,'ac-fin-cat')">
+            <div class="ac-list" id="ac-fin-cat"></div>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Monto ($)</label>
+          <input type="number" id="fin-monto" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+        </div>
+      </div>
+      <button class="btn-reg" onclick="regFinanza()" id="fin-btn-reg">💸 Registrar gasto</button>
+    </div>
+    <!-- TAB CORTES -->
+    <div id="fin-vista-cortes" style="flex:1;overflow:hidden;display:none;flex-direction:column">
+      <div class="tabs-row" style="margin:8px 12px 0;flex-shrink:0">
+        <button class="tab-btn active" id="fin-corte-tab-dia" onclick="showFinCorteTab('dia')">📅 Día</button>
+        <button class="tab-btn" id="fin-corte-tab-sem" onclick="showFinCorteTab('sem')">📆 Semana</button>
+        <button class="tab-btn" id="fin-corte-tab-mes" onclick="showFinCorteTab('mes')">🗓 Mes</button>
+      </div>
+      <!-- Resumen -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:8px 12px 0;flex-shrink:0">
+        <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:var(--r-sm);padding:8px;text-align:center">
+          <div style="font-size:0.6rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em">Ingresos</div>
+          <div id="fin-res-ing" style="font-size:0.9rem;font-weight:800;color:var(--green)">$0</div>
+        </div>
+        <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:var(--r-sm);padding:8px;text-align:center">
+          <div style="font-size:0.6rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.05em">Gastos</div>
+          <div id="fin-res-gas" style="font-size:0.9rem;font-weight:800;color:var(--red)">$0</div>
+        </div>
+        <div id="fin-res-util-card" style="background:var(--og);border:1px solid var(--icon-border);border-radius:var(--r-sm);padding:8px;text-align:center">
+          <div style="font-size:0.6rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em">Utilidad</div>
+          <div id="fin-res-util" style="font-size:0.9rem;font-weight:800;color:var(--orange)">$0</div>
+        </div>
+      </div>
+      <div id="fin-corte-cont" style="flex:1;overflow-y:auto;padding:8px 12px 40px"></div>
+    </div>
+  </div>
 
 </div><!-- /app -->
 
@@ -1326,8 +1406,8 @@ window.addEventListener('unhandledrejection',function(e){
 const GS_URL='https://script.google.com/macros/s/AKfycbxm5I0uZfn8xKKcewG-el0Jhzb6opzZI_xyrJu8QrkRoOf2CaCNh57l1hsjzx6fhn6opw/exec'
 const SH_CLI='clientes',SH_SES='sesiones',SH_CIE='cierre',SH_ABO='abonos'
 const SH_CAT_REP='catalogo_reparaciones',SH_CAT_CLI='catalogo_clientes',SH_CFG='config',SH_USR='usuarios'
-const SH_INV='inventario',SH_COT='cotizaciones'
-const ALL_SHEETS=[SH_CLI,SH_SES,SH_CIE,SH_ABO,SH_CAT_REP,SH_CAT_CLI,SH_CFG,SH_USR,SH_INV,SH_COT]
+const SH_INV='inventario',SH_COT='cotizaciones',SH_GAS='gastos'
+const ALL_SHEETS=[SH_CLI,SH_SES,SH_CIE,SH_ABO,SH_CAT_REP,SH_CAT_CLI,SH_CFG,SH_USR,SH_INV,SH_COT,SH_GAS]
 const LS_KEY='tp_cache'
 const LS_VER='tp_version'
 const LS_DID='tp_device'
@@ -1892,7 +1972,7 @@ function startAutoSync(){
 }
 
 // ── Indicadores ───────────────────────────────────────────────────
-const DOT_IDS=['sd-home','sd-home-cli','sd-registro','sd-clientes','sd-clientes-emp','sd-historial','sd-admin','sd-apariencia','sd-tabla','sd-usuarios','sd-db-clientes','sd-db-reparaciones','sd-db-cierre','sd-inventario','sd-cotizaciones','sd-cortes']
+const DOT_IDS=['sd-home','sd-home-cli','sd-registro','sd-clientes','sd-clientes-emp','sd-historial','sd-admin','sd-apariencia','sd-tabla','sd-usuarios','sd-db-clientes','sd-db-reparaciones','sd-db-cierre','sd-inventario','sd-cotizaciones','sd-cortes','sd-finanzas']
 function setDot(status,label=''){
   DOT_IDS.forEach(id=>{ const el=$id(id); if(el) el.className='sync-dot '+status })
   // Actualizar label en home
@@ -1962,6 +2042,7 @@ function goTo(id){
 // Mapa de pantalla → menú padre
 const _parentScreen={
   'screen-cortes':         'screen-home',
+  'screen-finanzas':       'screen-home',
   'screen-clientes':       'screen-home',
   'screen-historial':      'screen-admin',
   'screen-tabla':          'screen-admin',
@@ -2069,6 +2150,7 @@ function rerenderActive(){
     if(id==='screen-inventario')     renderInventario()
     if(id==='screen-cotizaciones')   renderCotizaciones()
     if(id==='screen-cortes')         renderCortes()
+    if(id==='screen-finanzas')       renderFinanzas()
     if(id==='screen-apariencia')     openApariencia()
   }catch(err){
     console.error('rerenderActive:',id,err)
@@ -3674,6 +3756,197 @@ function _esHoy(fecha){
   if(!fecha) return false
   return _localDateKey(fecha)===_hoyKey()
 }
+// ── Finanzas ─────────────────────────────────────────────────────
+let _finTipo='gasto'
+let _finCorteTab='dia'
+
+function setFinTipo(tipo){
+  _finTipo=tipo
+  const esg=tipo==='gasto'
+  const bg=$id('fin-tipo-gasto'), bi=$id('fin-tipo-ingreso')
+  if(bg){bg.style.borderColor=esg?'var(--red)':'var(--border)';bg.style.background=esg?'rgba(239,68,68,.1)':'transparent';bg.style.color=esg?'var(--red)':'var(--text3)'}
+  if(bi){bi.style.borderColor=!esg?'var(--green)':'var(--border)';bi.style.background=!esg?'rgba(34,197,94,.1)':'transparent';bi.style.color=!esg?'var(--green)':'var(--text3)'}
+  const lbl=$id('fin-form-lbl'); if(lbl) lbl.textContent=esg?'💸 Nuevo gasto':'💵 Nuevo ingreso externo'
+  const catLbl=$id('fin-cat-lbl'); if(catLbl) catLbl.textContent=esg?'Categoría':'Fuente / Categoría'
+  const btn=$id('fin-btn-reg'); if(btn) btn.textContent=esg?'💸 Registrar gasto':'💵 Registrar ingreso'
+  const btnEl=$id('fin-btn-reg')
+  if(btnEl){
+    btnEl.style.background=esg?'linear-gradient(135deg,var(--red),#c0392b)':'linear-gradient(135deg,var(--green),#16a34a)'
+    btnEl.style.boxShadow=esg?'0 4px 14px rgba(239,68,68,.4)':'0 4px 14px rgba(34,197,94,.4)'
+  }
+}
+
+function acFinDesc(el){
+  const q=el.value.trim().toLowerCase()
+  const list=$id('ac-fin-desc')
+  const gas=DB[SH_GAS]||[]
+  const seen=new Set()
+  const fil=gas.filter(g=>{
+    if(seen.has(g.desc)) return false
+    seen.add(g.desc)
+    return !q||g.desc.toLowerCase().includes(q)
+  }).slice(-10).reverse()
+  if(!fil.length){list.classList.remove('open');return}
+  list.innerHTML=fil.map(g=>`<div class="ac-item"
+    onclick="selFinDesc('${escQ(g.desc)}','${escQ(g.cat||'')}')">
+    <span class="ac-ico">${g.tipo==='gasto'?'💸':'💵'}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:600">${g.desc}</div>
+      <div style="font-size:0.68rem;color:var(--text3)">${g.cat||''}</div>
+    </div></div>`).join('')
+  closeOtherAC('ac-fin-desc')
+  list.classList.add('open')
+}
+
+function selFinDesc(desc,cat){
+  const d=$id('fin-desc'); if(d) d.value=desc
+  const c=$id('fin-cat'); if(c&&cat) c.value=cat
+  $id('ac-fin-desc')?.classList.remove('open')
+}
+
+function acFinCat(el){
+  const q=el.value.trim().toLowerCase()
+  const list=$id('ac-fin-cat')
+  const gas=DB[SH_GAS]||[]
+  const seen=new Set()
+  const fil=gas.filter(g=>{
+    const cat=g.cat||''; if(!cat||seen.has(cat)) return false
+    seen.add(cat)
+    return !q||cat.toLowerCase().includes(q)
+  }).slice(-8).reverse()
+  if(!fil.length){list.classList.remove('open');return}
+  list.innerHTML=fil.map(g=>`<div class="ac-item" onclick="$id('fin-cat').value='${escQ(g.cat)}';$id('ac-fin-cat').classList.remove('open')">
+    <span class="ac-ico">🏷</span><span>${g.cat}</span></div>`).join('')
+  closeOtherAC('ac-fin-cat')
+  list.classList.add('open')
+}
+
+function regFinanza(){
+  const desc=($id('fin-desc')?.value||'').trim()
+  const cat=($id('fin-cat')?.value||'').trim()
+  const monto=parseFloat($id('fin-monto')?.value||0)
+  if(!desc){showToast('⚠️ Ingresa una descripción','error');return}
+  if(!monto||monto<=0){showToast('⚠️ Ingresa un monto válido','error');return}
+  const row={id:gid(),tipo:_finTipo,desc,cat,monto,fecha:new Date().toISOString()}
+  gsAppendBg(SH_GAS,row)
+  // Limpiar campos
+  ;['fin-desc','fin-cat','fin-monto'].forEach(id=>{const el=$id(id);if(el)el.value=''})
+  showToast(_finTipo==='gasto'?'💸 Gasto registrado':'💵 Ingreso registrado','success')
+}
+
+function showFinTab(tab){
+  const isReg=tab==='reg'
+  $id('fin-vista-reg').style.display=isReg?'block':'none'
+  const vc=$id('fin-vista-cortes'); if(vc){vc.style.display=isReg?'none':'flex';vc.style.flexDirection='column'}
+  $id('fin-tab-reg').classList.toggle('active',isReg)
+  $id('fin-tab-cortes').classList.toggle('active',!isReg)
+  if(!isReg) renderFinCorte()
+}
+
+function showFinCorteTab(tab){
+  _finCorteTab=tab
+  ;['dia','sem','mes'].forEach(t=>{
+    $id('fin-corte-tab-'+t)?.classList.toggle('active',t===tab)
+  })
+  renderFinCorte()
+}
+
+// Obtiene ingresos de reparaciones + ingresos externos para un rango
+function _finRowsForRange(desde, hasta){
+  const cmap=Object.fromEntries((DB[SH_CLI]||[]).map(c=>[c.id,c]))
+  const rows=[]
+  // Ingresos de reparaciones activas
+  ;(DB[SH_SES]||[]).forEach(r=>{
+    const f=_localDateKey(r.fecha)
+    if(f<desde||f>hasta) return
+    const cli=cmap[r.clientId]
+    rows.push({tipo:'ingreso',desc:r.reparacion,cat:'Reparación',monto:numF(r.total),fecha:r.fecha,
+      cliente:cli?.nombre||'—',_auto:true})
+  })
+  // Ingresos de cierre (liquidados)
+  ;(DB[SH_CIE]||[]).forEach(r=>{
+    const f=_localDateKey(r.fechaRep||r.closedAt)
+    if(f<desde||f>hasta) return
+    rows.push({tipo:'ingreso',desc:r.reparacion,cat:'Reparación (cerrada)',monto:numF(r.total),fecha:r.fechaRep||r.closedAt,
+      cliente:r.nombre,_auto:true})
+  })
+  // Gastos e ingresos manuales
+  ;(DB[SH_GAS]||[]).forEach(g=>{
+    const f=_localDateKey(g.fecha)
+    if(f<desde||f>hasta) return
+    rows.push({tipo:g.tipo,desc:g.desc,cat:g.cat||'—',monto:numF(g.monto),fecha:g.fecha,_auto:false})
+  })
+  return rows.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))
+}
+
+function _finResumenHTML(rows){
+  const ingresos=rows.filter(r=>r.tipo==='ingreso').reduce((s,r)=>s+r.monto,0)
+  const gastos=rows.filter(r=>r.tipo==='gasto').reduce((s,r)=>s+r.monto,0)
+  const util=ingresos-gastos
+  // Update summary cards
+  $set('fin-res-ing',f$(ingresos))
+  $set('fin-res-gas',f$(gastos))
+  $set('fin-res-util',f$(util))
+  const uc=$id('fin-res-util-card')
+  if(uc){
+    const pos=util>=0
+    uc.style.background=pos?'var(--og)':'rgba(239,68,68,.08)'
+    uc.style.borderColor=pos?'var(--icon-border)':'rgba(239,68,68,.25)'
+    $id('fin-res-util').style.color=pos?'var(--orange)':'var(--red)'
+    uc.querySelector('div').style.color=pos?'var(--orange)':'var(--red)'
+  }
+  if(!rows.length) return `<div class="empty"><div class="ei">💰</div><div class="et">Sin movimientos</div></div>`
+  // Tabla detallada
+  return rows.map(r=>{
+    const esIng=r.tipo==='ingreso'
+    const col=esIng?'var(--green)':'var(--red)'
+    const signo=esIng?'+':'-'
+    return `<div class="ccard" style="margin-bottom:6px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:var(--r-sm);background:${esIng?'rgba(34,197,94,.12)':'rgba(239,68,68,.1)'};
+        display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">${esIng?'💵':'💸'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.desc}</div>
+        <div style="font-size:0.65rem;color:var(--text3)">${r.cat}${r.cliente?' · '+r.cliente:''}${r._auto?' · Auto':''} · ${fD(r.fecha)}</div>
+      </div>
+      <div style="font-size:0.9rem;font-weight:800;color:${col};flex-shrink:0">${signo}${f$(r.monto)}</div>
+      ${!r._auto?`<div onclick="delFinanza('${r.id||''}')" style="width:28px;height:28px;border-radius:6px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.75rem;flex-shrink:0">🗑</div>`:''}
+    </div>`
+  }).join('')
+}
+
+function delFinanza(id){
+  if(!id||!confirm('¿Eliminar este movimiento?')) return
+  gsDeleteBg(SH_GAS,id)
+  renderFinCorte()
+  showToast('🗑 Movimiento eliminado','error')
+}
+
+function renderFinCorte(){
+  const cont=$id('fin-corte-cont'); if(!cont) return
+  const now=new Date(), hoy=_hoyKey()
+  let desde,hasta,label
+  if(_finCorteTab==='dia'){
+    desde=hasta=hoy; label='Hoy'
+  } else if(_finCorteTab==='sem'){
+    const d=new Date(now); d.setDate(d.getDate()-d.getDay())
+    desde=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+    const h=new Date(d); h.setDate(h.getDate()+6)
+    hasta=`${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`
+    label='Esta semana'
+  } else {
+    desde=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`
+    hasta=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-31`
+    label=now.toLocaleDateString('es-MX',{month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase())
+  }
+  const rows=_finRowsForRange(desde,hasta)
+  cont.innerHTML=_finResumenHTML(rows)
+}
+
+function renderFinanzas(){
+  // Resetear al tab de registro al entrar
+  setFinTipo(_finTipo)
+}
+
 // ── Modales ───────────────────────────────────────────────────────
 function openModal(id){$id(id).classList.add('open')}
 function closeModal(id){$id(id).classList.remove('open')}
