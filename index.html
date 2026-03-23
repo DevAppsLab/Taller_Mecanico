@@ -3806,7 +3806,7 @@ function setFinTipo(tipo){
 function acFinDesc(el){
   const q=el.value.trim().toLowerCase()
   const list=$id('ac-fin-desc')
-  const gas=DB[SH_GAS]||[]
+  const gas=(DB[SH_GAS]||[]).filter(g=>g.tipo===_finTipo)
   const seen=new Set()
   const fil=gas.filter(g=>{
     if(seen.has(g.desc)) return false
@@ -3834,7 +3834,7 @@ function selFinDesc(desc,cat){
 function acFinCat(el){
   const q=el.value.trim().toLowerCase()
   const list=$id('ac-fin-cat')
-  const gas=DB[SH_GAS]||[]
+  const gas=(DB[SH_GAS]||[]).filter(g=>g.tipo===_finTipo)
   const seen=new Set()
   const fil=gas.filter(g=>{
     const cat=g.cat||''; if(!cat||seen.has(cat)) return false
