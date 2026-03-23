@@ -67,6 +67,13 @@
 
 --font-offset:0px;--icon-border:rgba(255,107,43,0.25)
 
+  /* ── SISTEMA GLOBAL DE BOTONES ─────────────────── */
+  --btn-h:48px;              /* altura estándar */
+  --btn-font:0.88rem;        /* tamaño de fuente */
+  --btn-radius:var(--r-btn); /* radio */
+  --btn-pad:10px 18px;       /* padding */
+  --btn-font-w:700;          /* peso */
+
   --stat-min-h:60px;
   --stat-radius:clamp(9px,1.2vw,14px);
   --stat-pad:clamp(8px,1.2vw,14px) clamp(8px,1.2vw,12px);
@@ -190,11 +197,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .tr.grand{border-top:1px solid var(--border);margin-top:5px;padding-top:9px;
   font-size:0.9rem;font-weight:700;color:var(--text)}
 .tr.grand .tv{color:var(--orange)}
-.btn-reg{width:100%;padding:15px;background:linear-gradient(135deg,var(--orange),var(--orange2));
-  border:none;border-radius:var(--r);color:#fff;font-family:var(--font-title);
-  font-size:1rem;font-weight:800;letter-spacing:.06em;cursor:pointer;transition:all .2s;
-  box-shadow:0 4px 14px var(--shadow-orange);display:flex;align-items:center;justify-content:center;gap:7px}
-.btn-reg:active{transform:scale(.98)}.btn-reg:disabled{opacity:.4;cursor:not-allowed}
+/* btn-reg, btn-entregar, btn-abo, rab, btn-se → ver bloque SISTEMA DE BOTONES al final del CSS */
 
 /* AUTOCOMPLETE */
 .ac-wrap{position:relative}
@@ -274,15 +277,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .abono-inline input:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(34,197,94,.1)}
 .abo-saldo{font-size:0.68rem;font-weight:700;flex-shrink:0;white-space:nowrap}
 .abo-saldo.ok{color:var(--green)}.abo-saldo.pend{color:var(--red)}
-.btn-abo{background:var(--green);border:none;border-radius:8px;color:#fff;
-  font-family:var(--font-title);font-size:0.8rem;font-weight:800;
-  padding:8px 13px;cursor:pointer;flex-shrink:0;white-space:nowrap;letter-spacing:.04em}
-.btn-abo:hover{opacity:.86}
-.btn-entregar{background:linear-gradient(135deg,var(--purple),var(--purple2));border:none;border-radius:var(--r-sm);color:#fff;
-  font-family:var(--font-title);font-size:0.85rem;font-weight:800;padding:10px 14px;
-  cursor:pointer;width:100%;margin-top:8px;letter-spacing:.04em;box-shadow:0 4px 12px var(--shadow-purple);
-  display:flex;align-items:center;justify-content:center;gap:6px}
-.btn-entregar:active{transform:scale(.98)}
+/* btn-abo, btn-entregar → ver bloque SISTEMA DE BOTONES */
 .cc-body{display:none}.ccard.expanded .cc-body{display:block}
 .add-rep-btn{display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--surface);
   border:none;border-bottom:1px solid var(--border);color:var(--orange);font-family:var(--font);
@@ -308,14 +303,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .rep-eg input{width:100%;background:var(--surface);border:1.5px solid var(--border2);
   border-radius:7px;padding:7px 9px;color:var(--text);font-family:var(--font);font-size:0.8rem;outline:none}
 .rep-eg input:focus{border-color:var(--orange)}
-.btn-se{background:var(--green);border:none;border-radius:7px;color:#fff;font-size:0.9rem;
-  width:31px;height:31px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-.rep-actions{display:flex;gap:4px;flex-shrink:0}
-.rab{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:0.75rem;border:1px solid transparent;opacity:.65;transition:opacity .15s}
-.rab:hover{opacity:1}
-.rab.edit{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.25);color:var(--blue)}
-.rab.del{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.22);color:var(--red)}
+/* rab, btn-se → ver bloque SISTEMA DE BOTONES */
 .abonos-body{padding:10px 14px;border-top:1px solid var(--border);background:rgba(34,197,94,.03)}
 .abonos-title{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
   color:var(--green);margin-bottom:7px}
@@ -556,6 +544,126 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .sync-chip-bare{display:flex;align-items:center;gap:4px;border:none;background:transparent;padding:0}
 .sync-chip-label{font-size:9px !important;color:var(--text3);line-height:1}
 .mc-title-sm{font-size:clamp(0.72rem,1.2vw,0.85rem)}
+
+
+/* ══ LOADER GLOBAL ════════════════════════════════════════════════ */
+#app-loader{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;
+  display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(3px);
+}
+#app-loader.active{display:flex}
+.app-loader-inner{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border2);border-radius:var(--r);
+  padding:24px 32px;box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+.app-loader-spin{
+  width:36px;height:36px;border:3px solid var(--border2);
+  border-top-color:var(--orange);border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.app-loader-msg{font-size:0.82rem;font-weight:600;color:var(--text2)}
+/* ══ SISTEMA DE BOTONES — fuente única de verdad ══════════════════ */
+/* TODOS los botones de la app usan estas clases. Para cambiar tamaño/radio/font: edita solo :root */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  height:var(--btn-h);padding:var(--btn-pad);
+  border:none;border-radius:var(--btn-radius);
+  font-family:var(--font);font-size:var(--btn-font);font-weight:var(--btn-font-w);
+  cursor:pointer;transition:opacity .15s,transform .15s;user-select:none;
+  white-space:nowrap;text-decoration:none;
+}
+.btn:active{transform:scale(.97);opacity:.88}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* Variantes de color */
+.btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:var(--shadow-orange)}
+.btn-secondary{background:var(--card);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--border);color:var(--text)}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.2)}
+.btn-success{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.btn-success:hover{background:rgba(34,197,94,.2)}
+.btn-purple{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;box-shadow:var(--shadow-purple)}
+.btn-ghost{background:transparent;color:var(--text3);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--card);color:var(--text)}
+
+/* Variantes de tamaño */
+.btn-full{width:100%}
+.btn-sm{height:34px;padding:6px 12px;font-size:0.76rem}
+.btn-lg{height:56px;padding:14px 24px;font-size:1rem;border-radius:var(--r);font-family:var(--font-title);letter-spacing:.06em}
+.btn-icon{width:var(--btn-h);padding:0;flex-shrink:0}
+.btn-icon.btn-sm{width:34px}
+
+/* btn-reg: alias de btn btn-primary btn-lg btn-full — para no romper código existente */
+.btn-reg{
+  width:100%;
+  height:var(--btn-h-lg, 52px);
+  padding:14px;
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  border:none;border-radius:var(--r);
+  color:#fff;font-family:var(--font-title);font-size:1rem;font-weight:800;
+  letter-spacing:.06em;cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 14px var(--shadow-orange);
+  display:flex;align-items:center;justify-content:center;gap:7px
+}
+.btn-reg:active{transform:scale(.98)}.btn-reg:disabled{opacity:.4;cursor:not-allowed}
+
+/* btn-entregar: alias de btn btn-purple btn-full */
+.btn-entregar{
+  background:linear-gradient(135deg,var(--purple),var(--purple2));border:none;
+  border-radius:var(--r-btn);color:#fff;
+  font-family:var(--font-title);font-size:0.85rem;font-weight:800;
+  padding:10px 14px;cursor:pointer;width:100%;margin-top:8px;
+  letter-spacing:.04em;box-shadow:0 4px 12px var(--shadow-purple);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  height:var(--btn-h)
+}
+.btn-entregar:active{transform:scale(.98)}
+
+/* btn-abo: botón de abono (verde, compacto) */
+.btn-abo{
+  background:var(--green);border:none;border-radius:var(--r-btn);color:#fff;
+  font-family:var(--font-title);font-size:0.8rem;font-weight:800;
+  padding:8px 13px;cursor:pointer;flex-shrink:0;
+  white-space:nowrap;letter-spacing:.04em;height:var(--btn-h);
+  display:inline-flex;align-items:center;justify-content:center
+}
+.btn-abo:hover{opacity:.86}
+
+/* Botones de tipo/segmento (Reparación/Cotización, Gasto/Ingreso) */
+/* Estado activo se controla desde JS añadiendo clase .seg-active */
+.btn-seg{
+  flex:1;height:var(--btn-h);
+  padding:8px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text3);font-family:var(--font);font-size:0.82rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:inline-flex;align-items:center;justify-content:center;gap:5px
+}
+.btn-seg.seg-orange.seg-active{border-color:var(--orange);background:var(--og);color:var(--orange)}
+.btn-seg.seg-red.seg-active   {border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+.btn-seg.seg-purple.seg-active{border-color:var(--purple);background:rgba(139,92,246,.14);color:var(--purple)}
+.btn-seg.seg-green.seg-active {border-color:var(--green);background:rgba(34,197,94,.1);color:var(--green)}
+.rab{
+  width:28px;height:28px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:0.78rem;border:1px solid transparent;
+  opacity:.7;transition:opacity .15s
+}
+.rab:hover{opacity:1}
+.rab.edit{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.25);color:var(--blue)}
+.rab.del{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.22);color:var(--red)}
+
+/* Botón guardar inline en edición de reparación */
+.btn-se{
+  background:var(--green);border:none;border-radius:7px;color:#fff;
+  font-size:0.9rem;width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0
+}
 </style>
 </head>
 <body>
@@ -568,10 +676,10 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       </div>
       <div style="display:flex;width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:3px">
         <button id="tab-login" onclick="showLoginTab('login')"
-          style="flex:1;padding:8px;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-size:0.8rem;transition:all .2s;background:var(--orange);color:#fff">
+          class="btn btn-primary" style="flex:1;height:38px;border-radius:7px;font-size:0.8rem">
           Iniciar sesión</button>
         <button id="tab-reg" onclick="showLoginTab('reg')"
-          style="flex:1;padding:8px;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-size:0.8rem;transition:all .2s;background:transparent;color:var(--text3)">
+          class="btn btn-ghost" style="flex:1;height:38px;border-radius:7px;font-size:0.8rem">
           Registrarse</button>
       </div>
       <!-- Login form -->
@@ -617,7 +725,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0">
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div class="tb-sync-wrap">
-          <span class="tb-version">v1.4.0</span>
+          <span class="tb-version"></span>
           <div class="km-btn" onclick="openKMenu()">⋮</div>
           <div class="sync-chip-bare">
             <div class="sync-dot pending" id="sd-home-cli"></div>
@@ -648,7 +756,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0">
         <div class="logo"><div class="logo-icon">🔧</div><div class="logo-text">Taller Mecánico</div></div>
         <div class="tb-sync-wrap">
-          <span class="tb-version">v1.4.0</span>
+          <span class="tb-version"></span>
           <div class="km-btn" onclick="openKMenu()">⋮</div>
           <div class="sync-chip-bare">
             <div class="sync-dot pending" id="sd-home"></div>
@@ -712,7 +820,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Nuevo Ingreso</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-registro"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -720,10 +828,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="scrollbody" style="padding-bottom:20px">
       <div class="sec-card" style="padding:10px 12px">
         <div style="display:flex;gap:8px">
-          <button id="tipo-rep-btn" onclick="setTipoIngreso('rep')"
-            style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--orange);background:var(--og);color:var(--orange);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">🔧 Reparación</button>
-          <button id="tipo-cot-btn" onclick="setTipoIngreso('cot')"
-            style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:transparent;color:var(--text3);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">📄 Cotización</button>
+          <button id="tipo-rep-btn" onclick="setTipoIngreso('rep')" class="btn-seg seg-orange seg-active">🔧 Reparación</button>
+          <button id="tipo-cot-btn" onclick="setTipoIngreso('cot')" class="btn-seg seg-purple">📄 Cotización</button>
         </div>
       </div>
       <div id="ing-cot-section" style="display:none">
@@ -837,7 +943,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-title">Clientes</div>
       <div class="tb-badge" id="badge-cli-emp">0</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-clientes-emp"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -856,7 +962,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-title">Clientes</div>
       <div class="tb-badge" id="badge-cli">0</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-clientes"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -874,7 +980,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Cortes</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-cortes"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -898,7 +1004,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Administración</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-admin"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -946,7 +1052,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Inventario</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-inventario"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -974,14 +1080,14 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Cotizaciones</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-cotizaciones"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
     </div>
     <div class="scrollbody" id="cot-list" style="padding:12px 16px 80px">
       <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-        <button onclick="openNuevaCot()" style="background:var(--orange);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 16px;font-weight:700;cursor:pointer;font-size:0.82rem">➕ Nueva cotización</button>
+        <button onclick="openNuevaCot()" class="btn btn-primary">➕ Nueva cotización</button>
       </div>
       <div id="cot-items"></div>
     </div>
@@ -991,7 +1097,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Personalizar App</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-apariencia"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1083,8 +1189,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           <div class="field"><label>Confirmar nueva</label>
             <input type="password" id="pass-confirmar" placeholder="••••" style="letter-spacing:.3em;text-align:center"></div>
           <div style="display:flex;gap:8px;margin-top:4px">
-            <button onclick="changePassword()" style="flex:1;padding:9px;border-radius:var(--r-sm);background:var(--green);color:#fff;border:none;font-weight:700;cursor:pointer">✅ Cambiar</button>
-            <button onclick="togPassForm()" style="flex:1;padding:9px;border-radius:var(--r-sm);background:var(--surface);color:var(--text2);border:1px solid var(--border);font-weight:600;cursor:pointer">✕ Cancelar</button>
+            <button onclick="changePassword()" class="btn btn-success" style="flex:1">✅ Cambiar</button>
+            <button onclick="togPassForm()" class="btn btn-secondary" style="flex:1">✕ Cancelar</button>
           </div>
         </div>
       </div>
@@ -1096,7 +1202,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Datos e Historial</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-datos"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1148,7 +1254,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Bases y Usuarios</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-bases"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1174,7 +1280,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
               <option value="empleado">🔧 Empleado</option>
             </select>
           </div>
-          <button class="btn-reg" style="margin-top:10px" onclick="addUsuario()">✅ Agregar usuario</button>
+          <button class="btn btn-primary btn-full btn-lg" style="margin-top:10px" onclick="addUsuario()">✅ Agregar usuario</button>
         </div>
         <div id="usr-list"></div>
       </div>
@@ -1186,7 +1292,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="dbgBack()">‹</div>
       <div class="tb-title" id="dbg-title">Base de Datos</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-dbgeneral"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1269,7 +1375,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Finanzas</div>
       <div class="tb-sync-wrap">
-        <span class="tb-version">v1.4.0</span>
+        <span class="tb-version"></span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-finanzas"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1283,10 +1389,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <!-- Tipo: gasto o ingreso manual -->
       <div class="sec-card" style="padding:10px 12px">
         <div style="display:flex;gap:8px">
-          <button id="fin-tipo-gasto" onclick="setFinTipo('gasto')"
-            style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--red);background:rgba(239,68,68,.1);color:var(--red);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">💸 Gasto</button>
-          <button id="fin-tipo-ingreso" onclick="setFinTipo('ingreso')"
-            style="flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:transparent;color:var(--text3);font-family:var(--font);font-size:0.82rem;font-weight:700;cursor:pointer;transition:all .2s">💵 Ingreso externo</button>
+          <button id="fin-tipo-gasto" onclick="setFinTipo('gasto')" class="btn-seg seg-red seg-active">💸 Gasto</button>
+          <button id="fin-tipo-ingreso" onclick="setFinTipo('ingreso')" class="btn-seg seg-green">💵 Ingreso externo</button>
         </div>
       </div>
       <div class="sec-card">
@@ -1452,10 +1556,34 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
 </div>
 
+<div id="app-loader">
+  <div class="app-loader-inner">
+    <div class="app-loader-spin"></div>
+    <div class="app-loader-msg" id="app-loader-msg">Cargando…</div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <script>
-// ── Versión — cambiar aquí actualiza todos los headers ───────────
-const APP_VERSION='v1.4.0'
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  TALLER MECÁNICO — JavaScript                                    ║
+// ║  v1.6.0  |  Bloques organizados por responsabilidad             ║
+// ╠══════════════════════════════════════════════════════════════════╣
+// ║  BLOQUE 1  — Constantes, helpers DOM, loader, validaciones       ║
+// ║  BLOQUE 2  — Configuración, DB local, sync con Google Sheets     ║
+// ║  BLOQUE 3  — Navegación (ROUTES, navStack, navigate, _goBack)    ║
+// ║  BLOQUE 4  — UI / Render (rerenderActive, stats, autocomplete)   ║
+// ║  BLOQUE 5  — Lógica de negocio (clientes, reparaciones, abonos)  ║
+// ║  BLOQUE 6  — Módulos extra (cortes, finanzas, inventario, etc.)  ║
+// ║  BLOQUE 7  — Apariencia (temas, paletas, fuentes)                ║
+// ║  BLOQUE 8  — Menú ⋮, estado global, punto de entrada initApp()  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 1: CONSTANTES, HELPERS DOM, LOADER, VALIDACIONES ──────
+// ══════════════════════════════════════════════════════════════════
+
+// ── Versión — cambiar SOLO aquí; se propaga a todos los headers ──
+const APP_VERSION='v1.6.0'
 // ── Helpers globales ─────────────────────────────────────────────
 const $id=id=>document.getElementById(id)
 const $qs=(sel,ctx=document)=>ctx.querySelector(sel)
@@ -1465,6 +1593,40 @@ function $show(id,show=true){const el=$id(id);if(el)el.style.display=show?'':'no
 const $clsRm=(sel,cls)=>$all(sel).forEach(el=>el.classList.remove(cls))
 const $clsAdd=(sel,cls)=>$all(sel).forEach(el=>el.classList.add(cls))
 
+// ══════════════════════════════════════════════════════════════════
+// ── LOADER GLOBAL ────────────────────────────────────────────────
+function showLoader(msg='Cargando…'){
+  const el=$id('app-loader'), ml=$id('app-loader-msg')
+  if(el) el.classList.add('active')
+  if(ml) ml.textContent=msg
+}
+function hideLoader(){
+  const el=$id('app-loader')
+  if(el) el.classList.remove('active')
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── VALIDACIONES CENTRALIZADAS ────────────────────────────────────
+const Validate = {
+  required(val, label='Campo'){
+    if(!val||!String(val).trim()){ showToast('⚠️ '+label+' es requerido','error'); return false }
+    return true
+  },
+  minLen(val, min, label='Campo'){
+    if(!val||String(val).trim().length<min){ showToast('⚠️ '+label+' debe tener al menos '+min+' caracteres','error'); return false }
+    return true
+  },
+  positiveNum(val, label='Monto'){
+    const n=parseFloat(val)
+    if(isNaN(n)||n<=0){ showToast('⚠️ '+label+' debe ser mayor a 0','error'); return false }
+    return true
+  },
+  match(a, b, label='Las contraseñas'){
+    if(a!==b){ showToast('⚠️ '+label+' no coinciden','error'); return false }
+    return true
+  },
+}
+
 window.onerror=function(msg,src,line,col,err){
   console.error('JS Error:',msg,'línea:',line,err?.stack||'')
   if(typeof showToast==='function') showToast('❌ '+String(msg).slice(0,60),'error')
@@ -1473,6 +1635,9 @@ window.onerror=function(msg,src,line,col,err){
 window.addEventListener('unhandledrejection',function(e){
   console.error('Unhandled promise rejection:',e.reason)
 })
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 2: CONFIGURACIÓN / BASE DE DATOS / SYNC ───────────────
+// ══════════════════════════════════════════════════════════════════
 const GS_URL='https://script.google.com/macros/s/AKfycbxm5I0uZfn8xKKcewG-el0Jhzb6opzZI_xyrJu8QrkRoOf2CaCNh57l1hsjzx6fhn6opw/exec'
 const SH_CLI='clientes',SH_SES='sesiones',SH_CIE='cierre',SH_ABO='abonos'
 const SH_CAT_REP='catalogo_reparaciones',SH_CAT_CLI='catalogo_clientes',SH_CFG='config',SH_USR='usuarios'
@@ -1888,16 +2053,9 @@ function setTipoIngreso(tipo){
   const cotBtn = $id('tipo-cot-btn')
   const repSec = $id('ing-rep-section')
   const cotSec = $id('ing-cot-section')
-  if(repBtn){
-    repBtn.style.borderColor = isRep ? 'var(--orange)' : 'var(--border)'
-    repBtn.style.background  = isRep ? 'var(--og)' : 'transparent'
-    repBtn.style.color       = isRep ? 'var(--orange)' : 'var(--text3)'
-  }
-  if(cotBtn){
-    cotBtn.style.borderColor = !isRep ? 'var(--purple)' : 'var(--border)'
-    cotBtn.style.background  = !isRep ? 'rgba(139,92,246,0.14)' : 'transparent'
-    cotBtn.style.color       = !isRep ? 'var(--purple)' : 'var(--text3)'
-  }
+  // Usar clases CSS — no más estilos inline
+  if(repBtn){ repBtn.classList.toggle('seg-active', isRep) }
+  if(cotBtn){ cotBtn.classList.toggle('seg-active', !isRep) }
   if(repSec) repSec.style.display = isRep  ? 'block' : 'none'
   if(cotSec) cotSec.style.display = !isRep ? 'block' : 'none'
   if(!isRep){ calcTCot() }
@@ -2054,6 +2212,7 @@ function setDot(status,label=''){
 // ── Sync manual ───────────────────────────────────────────────────
 async function manualSync(btn){
   if(btn){ btn.style.pointerEvents='none' }
+  showLoader('Sincronizando…')
   setDot('syncing','Sincronizando...')
   try{
     await flushQueue()
@@ -2062,10 +2221,16 @@ async function manualSync(btn){
     setDot('ok','Sincronizado')
     showToast('✅ Sincronizado','success')
   }catch(e){ setDot('error','Error'); showToast('❌ Error al sincronizar','error') }
-  finally{ if(btn){ btn.style.pointerEvents='' } }
+  finally{
+    hideLoader()
+    if(btn){ btn.style.pointerEvents='' }
+  }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// ── UTILIDADES / HELPERS ─────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 function gid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function toTitle(s){return(s||'').replace(/\b\w/g,c=>c.toUpperCase())}
 function f$(n){return'$'+parseFloat(n||0).toLocaleString('es-MX',{minimumFractionDigits:0,maximumFractionDigits:0})}
@@ -2084,12 +2249,49 @@ function fMes(iso){const d=new Date(iso);return d.toLocaleDateString('es-MX',{mo
 function mKey(iso){const d=new Date(iso);return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
 function escQ(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;')}
 
-// ── Navegación ────────────────────────────────────────────────────
-function _showScreen(id){
-  // Cambio visual puro — sin tocar historial
-  const prev=$qs('.screen.active')?.id
-  if(prev===id) return
-  if(prev==='screen-registro'&&id!=='screen-registro') clearIngreso()
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 3: SISTEMA DE NAVEGACIÓN v1.6.0 ───────────────────────
+// Árbol único (ROUTES) + historial real (navStack) + navigate()
+// ──────────────────────────────────────────────────────────────────
+// Para agregar una pantalla nueva:
+//   1. Añadir su id al objeto ROUTES con su pantalla padre
+//   2. Crear el <div id="screen-xxx" class="screen"> en el HTML
+//   3. Navegar con navigate('screen-xxx') o goTo('screen-xxx')
+// ══════════════════════════════════════════════════════════════════
+
+// ── ÁRBOL DE RUTAS — fuente única de verdad ──────────────────────
+// null = pantalla raíz (no tiene padre)
+const ROUTES = {
+  'screen-login':           null,
+  'screen-home':            null,
+  'screen-home-cliente':    null,
+  // ── Nivel 1 (hijos de home) ──
+  'screen-registro':        'screen-home',
+  'screen-clientes':        'screen-home',
+  'screen-clientes-emp':    'screen-home',
+  'screen-cortes':          'screen-home',
+  'screen-finanzas':        'screen-home',
+  'screen-cotizaciones':    'screen-home',
+  'screen-inventario':      'screen-home',
+  'screen-admin':           'screen-home',
+  // ── Nivel 2 (hijos de admin) ──
+  'screen-datos':           'screen-admin',
+  'screen-bases':           'screen-admin',
+  'screen-dbgeneral':       'screen-admin',
+  'screen-apariencia':      'screen-admin',
+}
+
+// ── HISTORIAL REAL ───────────────────────────────────────────────
+let navStack = []   // [ 'screen-home', 'screen-admin', ... ]
+
+// ── FUNCIÓN CENTRAL: navigate(id) ────────────────────────────────
+// Usar siempre esta función — nunca _showScreen() directamente
+function navigate(id){
+  if(!(id in ROUTES)) { console.warn('navigate: ruta desconocida →', id); return }
+  const prev = $qs('.screen.active')?.id
+  if(prev === id) return
+  // Limpiar UI de pantalla anterior
+  if(prev==='screen-registro') clearIngreso()
   $clsRm('.ac-list','open')
   $all('.mcard.open').forEach(m=>m.classList.remove('open'))
   $all('.week-detail.open').forEach(w=>w.classList.remove('open'))
@@ -2099,54 +2301,54 @@ function _showScreen(id){
   $all('.ccard.expanded').forEach(c=>c.classList.remove('expanded'))
   const fp=$id('font-panel'); if(fp) fp.style.display='none'
   const pf=$id('pass-form'); if(pf) pf.style.display='none'
+  // Cambiar pantalla activa
   $clsRm('.screen','active')
   $id(id)?.classList.add('active')
+  // Registrar en historial (evitar duplicados consecutivos)
+  if(navStack[navStack.length-1] !== id) navStack.push(id)
+  // Mantener tamaño razonable del stack
+  if(navStack.length > 60) navStack = navStack.slice(-40)
   rerenderActive()
-  if(_queue.length) flushQueue()
+  if(typeof _queue !== 'undefined' && _queue.length) flushQueue()
 }
-// goToFrom — navega a una pantalla y registra desde dónde se llegó
-const _dynamicParent={}
-function goToFrom(screen, from){
-  _dynamicParent[screen]=from
-  _showScreen(screen)
-}
-function goTo(id){
-  const prev=$qs('.screen.active')?.id
-  if(prev===id) return
-  _showScreen(id)
-}
-// Mapa de pantalla → menú padre
-const _parentScreen={
-  'screen-registro':       'screen-home',
-  'screen-clientes':       'screen-home',
-  'screen-cortes':         'screen-home',
-  'screen-finanzas':       'screen-home',
-  'screen-cotizaciones':   'screen-home',
-  'screen-clientes-emp':   'screen-home',
-  'screen-inventario':     'screen-home',
-  'screen-admin':          'screen-home',
-  'screen-datos':          'screen-admin',
-  'screen-bases':          'screen-admin',
-  'screen-dbgeneral':      'screen-admin',
-  'screen-apariencia':     'screen-admin',
-}
-// ── Navegación atrás ─────────────────────────────────────────────
-function _resetNavState(){
-  try{
-    history.replaceState({nav:0},'','')
-    for(let i=1;i<=50;i++) history.pushState({nav:i},'','')
-  }catch(e){}
-}
+
+// ── COMPATIBILIDAD — goTo / goToFrom usan navigate() ─────────────
+// goToFrom: el segundo parámetro (_from) ya no se usa — el historial real (navStack) lo reemplaza
+function goTo(id){ navigate(id) }
+function goToFrom(screen){ navigate(screen) }
+// _showScreen queda como alias interno (compatibilidad con código existente)
+function _showScreen(id){ navigate(id) }
+
+// ── NAVEGACIÓN ATRÁS ─────────────────────────────────────────────
+// _resetNavState removed — history is now managed exclusively by initApp()
+
 function _goBack(){
-  const activeNow=$qs('.screen.active')?.id||''
-  if(!_session||activeNow==='screen-login') return
-  const homeScreen=(_session.rol==='cliente')?'screen-home-cliente':'screen-home'
-  if(activeNow===homeScreen||activeNow===''){logout();return}
-  // Check dynamic parent first (set by goToFrom)
-  const parent=_dynamicParent[activeNow]||_parentScreen[activeNow]||homeScreen
-  // Clear dynamic parent after using it
-  delete _dynamicParent[activeNow]
-  _showScreen(parent)
+  const activeNow = $qs('.screen.active')?.id || ''
+  if(!_session || activeNow==='screen-login') return
+  const homeScreen = (_session.rol==='cliente') ? 'screen-home-cliente' : 'screen-home'
+  // Si estamos en home → logout
+  if(activeNow===homeScreen || activeNow==='') { logout(); return }
+  // 1. Sacar la pantalla actual del stack
+  if(navStack[navStack.length-1] === activeNow) navStack.pop()
+  // 2. El tope del stack es el "anterior real" del usuario
+  const stackPrev = navStack[navStack.length-1]
+  // 3. Fallback: usar árbol de rutas si el stack está vacío o sin padre válido
+  const routeParent = ROUTES[activeNow]
+  const target = stackPrev || routeParent || homeScreen
+  // Navegar sin volver a agregar al stack (ya está ahí)
+  if(!(target in ROUTES)) { navigate(homeScreen); return }
+  const prev2 = $qs('.screen.active')?.id
+  if(prev2==='screen-registro') clearIngreso()
+  $clsRm('.ac-list','open')
+  $all('.mcard.open').forEach(m=>m.classList.remove('open'))
+  $all('.hist-body[style*="block"]').forEach(h=>h.style.display='none')
+  $all('.ccard.expanded').forEach(c=>c.classList.remove('expanded'))
+  const fp2=$id('font-panel'); if(fp2) fp2.style.display='none'
+  const pf2=$id('pass-form'); if(pf2) pf2.style.display='none'
+  $clsRm('.screen','active')
+  $id(target)?.classList.add('active')
+  rerenderActive()
+  if(typeof _queue !== 'undefined' && _queue.length) flushQueue()
 }
 
 // MÉTODO 2 — doble tap en topbar/home-header
@@ -2174,12 +2376,9 @@ function _goBack(){
     const dx=e.changedTouches[0].clientX-_sx
     const dy=Math.abs(e.changedTouches[0].clientY-_sy)
     const dt=Date.now()-_t
-    // Swipe rápido hacia la derecha, no demasiado vertical, no lento (scroll)
     if(dx>MIN_X && dy<MAX_Y && dt<400){
-      // No disparar si hay un scroll activo o si el origen es un input/textarea
       const tag=e.target.tagName
       if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return
-      // No disparar si hay un modal abierto
       if($qs('.modal-ov.open,.cropper-modal.open')) return
       _locked=true
       _goBack()
@@ -2189,7 +2388,6 @@ function _goBack(){
 })()
 
 // MÉTODO 4 — popstate (botón físico Android / browser back)
-// El stack tiene 50 entradas, cada back consume una y dispara esto.
 window.addEventListener('popstate',()=>{
   _goBack()
 })
@@ -2207,6 +2405,9 @@ function scheduleRender(){
   _renderTimeout=setTimeout(()=>rerenderActive(), 50)
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 4: UI / RENDER ────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 function rerenderActive(){
   const id=$qs('.screen.active')?.id
   const openMonths=new Set([...$all('.mcard.open')].map(el=>el.id))
@@ -2330,7 +2531,7 @@ function acSR(eid,lid,rep,mo,mat){
   else if(eid==='inp-mrep'){mi='inp-mmo';ti='inp-mmat'}
   if(mi&&$id(mi)){
     $id(mi).value=mo;$id(ti).value=mat
-    calcT();calcT2();calcTM()
+    calcT();calcTM()
   }
 }
 function acS(eid,lid,val){$id(eid).value=val;$id(lid).classList.remove('open')}
@@ -2368,21 +2569,17 @@ function calcT(){
   const mo=numF($id('inp-mo').value),mat=numF($id('inp-mat').value)
   $set('t-total',f$(mo+mat))
 }
-function calcT2(){
-  // inp-mo2/inp-mat2 removed — kept for compatibility only
-  const mo=numF($id('inp-mo2')?.value||0)
-  const mat=numF($id('inp-mat2')?.value||0)
-  const el=$id('t-total2'); if(el) el.textContent=f$(mo+mat)
-}
+// calcT2 removed — inp-mo2/inp-mat2 fields no longer exist
 function calcTM(){
   const mo=numF($id('inp-mmo').value),mat=numF($id('inp-mmat').value)
   $set('t-modal',f$(mo+mat))
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 5: LÓGICA DE NEGOCIO ──────────────────────────────────
+// Registro, clientes, reparaciones, abonos, cierre
+// ══════════════════════════════════════════════════════════════════
 // ── Registro unificado ───────────────────────────────────────────
-
-// ── Registrar a existente ─────────────────────────────────────────
-// ── Ingreso unificado ─────────────────────────────────────────────
 // selCid = null → cliente nuevo, selCid = id → cliente existente
 function acIngreso(el){
   const q=el.value.trim().toLowerCase()
@@ -2654,6 +2851,10 @@ function buildClientCard(c,i){
     </div>`
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 6: MÓDULOS EXTRA ──────────────────────────────────────
+// Cortes, finanzas, inventario, cotizaciones, datos, db general
+// ══════════════════════════════════════════════════════════════════
 function renderClientes(){
   try{
   const q=($id('inp-search')?.value||'').trim().toLowerCase()
@@ -3062,15 +3263,15 @@ function openDbSheet(key){
 
 function dbgBack(){
   if(_dbgSheet){
-    // Dentro de una base específica → volver al menú general
+    // Nivel 2: dentro de una base específica → volver al menú general
     _dbgSheet=null
     $id('dbg-title').textContent='Base de Datos'
     $id('dbg-menu').style.display=''
     $id('dbg-sheet').style.display='none'
     renderDbGeneral()
   } else {
-    // En el menú general → volver a Administración
-    goToFrom('screen-admin','screen-home')
+    // Nivel 1: en el menú general → volver a Administración (árbol de rutas)
+    navigate('screen-admin')
   }
 }
 
@@ -3372,6 +3573,7 @@ async function confirmDeleteAll(){
   errEl.style.display='none'
   const btn=$qs('#modal-deleteall .btn-danger')
   if(btn){btn.disabled=true;btn.textContent='⏳ Borrando...'}
+  showLoader('Borrando datos…')
   setDot('syncing','Borrando...')
   _polling=true // bloquear autoSync mientras borramos
   try{
@@ -3392,10 +3594,11 @@ async function confirmDeleteAll(){
   }catch(e){
     showToast('❌ Error: '+e.message,'error')
   }finally{
+    hideLoader()
     if(btn){btn.disabled=false;btn.textContent='🗑 Confirmar borrado'}
-    _polling=false // liberar autoSync
+    _polling=false
     setDot('ok','Sincronizado')
-    setTimeout(()=>goTo('screen-home'),400)
+    setTimeout(()=>navigate('screen-home'),400)
   }
 }
 
@@ -3849,9 +4052,9 @@ function renderDbClientes(){
           <div class="field" style="margin-bottom:0"><label>Vehículo</label>
             <input type="text" id="dbc-vehiculo-${c.id}" value="${escQ(c.vehiculo)}" placeholder="Marca / Modelo"></div>
           <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn-se" style="flex:1;padding:9px;border-radius:var(--r-sm);background:var(--green);color:#fff;border:none;font-weight:700;cursor:pointer"
+            <button class="btn btn-success btn-full"
               onclick="saveDbcEdit('${c.id}')">✅ Guardar</button>
-            <button class="btn-se" style="flex:1;padding:9px;border-radius:var(--r-sm);background:var(--surface);color:var(--text2);border:1px solid var(--border);font-weight:600;cursor:pointer"
+            <button class="btn btn-secondary btn-full"
               onclick="togDbcEdit('${c.id}')">✕ Cancelar</button>
           </div>
         </div>
@@ -3923,9 +4126,9 @@ function renderDbReparaciones(){
           </div>
           <div style="font-size:0.75rem;color:var(--text3);text-align:right">Total: <strong id="dbr-tot-${i}" style="color:var(--orange)">${f$(numF(r.manoObra)+numF(r.material))}</strong></div>
           <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn-se" style="flex:1;padding:9px;border-radius:var(--r-sm);background:var(--green);color:#fff;border:none;font-weight:700;cursor:pointer"
+            <button class="btn btn-success btn-full"
               onclick="saveDbrEdit(${i},'${(r.reparacion||'').replace(/'/g,"\\'")}')">✅ Guardar</button>
-            <button class="btn-se" style="flex:1;padding:9px;border-radius:var(--r-sm);background:var(--surface);color:var(--text2);border:1px solid var(--border);font-weight:600;cursor:pointer"
+            <button class="btn btn-secondary btn-full"
               onclick="togDbrEdit(${i})">✕ Cancelar</button>
           </div>
         </div>
@@ -4088,13 +4291,14 @@ function setFinTipo(tipo){
   _finTipo=tipo
   const esg=tipo==='gasto'
   const bg=$id('fin-tipo-gasto'), bi=$id('fin-tipo-ingreso')
-  if(bg){bg.style.borderColor=esg?'var(--red)':'var(--border)';bg.style.background=esg?'rgba(239,68,68,.1)':'transparent';bg.style.color=esg?'var(--red)':'var(--text3)'}
-  if(bi){bi.style.borderColor=!esg?'var(--green)':'var(--border)';bi.style.background=!esg?'rgba(34,197,94,.1)':'transparent';bi.style.color=!esg?'var(--green)':'var(--text3)'}
+  // Usar clases CSS — no más estilos inline
+  if(bg){ bg.classList.toggle('seg-active', esg) }
+  if(bi){ bi.classList.toggle('seg-active', !esg) }
   const lbl=$id('fin-form-lbl'); if(lbl) lbl.textContent=esg?'💸 Nuevo gasto':'💵 Nuevo ingreso externo'
   const catLbl=$id('fin-cat-lbl'); if(catLbl) catLbl.textContent=esg?'Categoría':'Fuente / Categoría'
-  const btn=$id('fin-btn-reg'); if(btn) btn.textContent=esg?'💸 Registrar gasto':'💵 Registrar ingreso'
   const btnEl=$id('fin-btn-reg')
   if(btnEl){
+    btnEl.textContent=esg?'💸 Registrar gasto':'💵 Registrar ingreso'
     btnEl.style.background=esg?'linear-gradient(135deg,var(--red),#c0392b)':'linear-gradient(135deg,var(--green),#16a34a)'
     btnEl.style.boxShadow=esg?'0 4px 14px rgba(239,68,68,.4)':'0 4px 14px rgba(34,197,94,.4)'
   }
@@ -4324,10 +4528,11 @@ function showLoginTab(tab){
   const isLogin=tab==='login'
   $id('login-form').style.display=isLogin?'flex':'none'
   $id('reg-form').style.display=isLogin?'none':'flex'
-  $id('tab-login').style.background=isLogin?'var(--orange)':'transparent'
-  $id('tab-login').style.color=isLogin?'#fff':'var(--text3)'
-  $id('tab-reg').style.background=isLogin?'transparent':'var(--orange)'
-  $id('tab-reg').style.color=isLogin?'var(--text3)':'#fff'
+  // Usar clases en lugar de estilos inline
+  $id('tab-login').classList.toggle('btn-primary', isLogin)
+  $id('tab-login').classList.toggle('btn-ghost', !isLogin)
+  $id('tab-reg').classList.toggle('btn-primary', !isLogin)
+  $id('tab-reg').classList.toggle('btn-ghost', isLogin)
   $show('login-error',false)
   $show('reg-error',false)
 }
@@ -4522,6 +4727,9 @@ async function sha256(str){
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('')
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ── AUTENTICACIÓN ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 // ── Login ─────────────────────────────────────────────────────────
 async function doLogin(){
   const nombre=$id('login-user').value.trim()
@@ -4529,10 +4737,12 @@ async function doLogin(){
   const errEl=$id('login-error')
   const loadEl=$id('login-loading')
   errEl.style.display='none'
-  if(!nombre||!pass){errEl.style.display='block';errEl.textContent='⚠️ Ingresa usuario y contraseña';return}
+  if(!Validate.required(nombre,'Usuario')||!Validate.required(pass,'Contraseña')){ return }
   loadEl.style.display='block'
+  showLoader('Verificando...')
   if(!_ready){ await new Promise(r=>setTimeout(r,2000)) }
   loadEl.style.display='none'
+  hideLoader()
   // Hashear contraseña antes de comparar
   const passHash=await sha256(pass.trim())
   const user=DB[SH_USR].find(u=>
@@ -4546,6 +4756,7 @@ async function doLogin(){
     if(nombre.toLowerCase()==='admin'&&(pass.trim()===adminPassRaw||passHash===adminPassHash)){
       _session={id:'admin',nombre:'Admin',rol:'admin'}
     } else {
+      hideLoader()
       errEl.style.display='block';errEl.textContent='❌ Usuario o contraseña incorrectos';return
     }
   } else {
@@ -4557,31 +4768,38 @@ async function doLogin(){
 }
 function logout(){
   _session=null
+  navStack = []
   localStorage.removeItem(LS_SESSION)
   $id('login-user').value=''
   $id('login-pass').value=''
   $show('login-error',false)
   showLoginTab('login')
-  _showScreen('screen-login')
-  _resetNavState()
+  // No usar navigate() en logout — login no está en ROUTES como destino normal
+  $clsRm('.screen','active')
+  $id('screen-login')?.classList.add('active')
+  // Reiniciar historial de navegación
+  navStack = []
+  try{ history.replaceState({nav:0},'',''); for(let i=1;i<=50;i++) history.pushState({nav:i},'','') }catch(e){}
 }
 function enterApp(){
   $clsRm('.screen','active')
   if(!isAdmin()){
     applyTheme(getLocalTheme())
-    // Empleado/cliente: usar su tamaño local, no el del Sheet
     applyFontSize(getLocalFontSize(), false)
   }
-  const homeScreen=isCliente()?'screen-home-cliente':'screen-home'
+  // Limpiar historial de navegación al entrar
+  navStack = []
   if(isCliente()){
     applyConfig()
     renderClienteActivo()
     $id('screen-home-cliente').classList.add('active')
+    navStack = ['screen-home-cliente']
   } else {
     applyRoleUI()
-    _showScreen('screen-home')
+    navigate('screen-home')
   }
-  _resetNavState()
+  // Reiniciar historial del browser al entrar a la app
+  try{ history.replaceState({nav:0},'',''); for(let i=1;i<=50;i++) history.pushState({nav:i},'','') }catch(e){}
 }
 function applyRoleUI(){
   const homeAdmin=$id('home-admin-btns')
@@ -4958,6 +5176,9 @@ async function cropperConfirm(){
   _cropLoader=null
   _cropperMode=null
 }
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 7: APARIENCIA — temas, paletas, fuentes ───────────────
+// ══════════════════════════════════════════════════════════════════
 // ── Paletas de color ─────────────────────────────────────────────
 const PALETTES=[
   // bg/surface/card/border = fondos propios calibrados por paleta
@@ -5240,58 +5461,106 @@ function updateKMenu(){
   const kmUser=$id('km-user-label')
   if(kmUser&&_session) kmUser.textContent=_session.nombre||''
 }
-// ── Arranque — carga localStorage primero, luego Sheet ───────────
-// Meter 50 entradas al stack. Cada back consume una y dispara popstate.
-// Con 50 entradas el usuario nunca las agota en uso normal.
-// _resetNavState() recarga las 50 al hacer login/logout.
-history.replaceState({nav:0},'','')
-for(let i=1;i<=50;i++) history.pushState({nav:i},'','')
-const hasCached=lsLoad()
-// Recuperar sesión guardada
-const savedSession=localStorage.getItem(LS_SESSION)
-if(savedSession){ try{ _session=JSON.parse(savedSession) }catch(e){} }
+// ══════════════════════════════════════════════════════════════════
+// ── BLOQUE 8: ESTADO GLOBAL, MENÚ ⋮ Y PUNTO DE ENTRADA ──────────
+// ══════════════════════════════════════════════════════════════════
+// ── ESTADO GLOBAL CENTRAL (STATE) ────────────────────────────────
+const STATE = {
+  user:          null,   // sesión activa (mismo que _session)
+  currentScreen: null,   // pantalla activa actual
+  dbReady:       false,  // datos cargados
+  syncing:       false,  // sincronización en curso
+}
+// Mantener STATE.currentScreen actualizado cuando cambia la pantalla
+const _origRerenderActive = typeof rerenderActive === 'function' ? rerenderActive : null
+// Proxy para observar cambios de pantalla activa
+;(()=>{
+  const obs = new MutationObserver(()=>{
+    const active = $qs('.screen.active')?.id
+    if(active) STATE.currentScreen = active
+  })
+  obs.observe(document.getElementById('app') || document.body, {
+    subtree: true, attributeFilter: ['class']
+  })
+})()
 
-if(hasCached){
-  // Caché disponible — entrar INMEDIATAMENTE, sincronizar en fondo
-  _ready=true
-  applyConfig()
-  if(_session){ enterApp() }
-  updateStats()
-  setDot('ok','Caché local')
-  // Sync en segundo plano sin bloquear UI
-  setTimeout(()=>{
-    setDot('syncing','Actualizando...')
-    gsGetVersion()
-      .then(async remoteV=>{
-        if(remoteV!==_version&&!remoteV.includes(_deviceId)){
-          await gsLoadAll()
-          _version=remoteV
-          lsSave()
-          applyConfig()
-          rerenderActive()
-        }
+// ══════════════════════════════════════════════════════════════════
+// ── PUNTO DE ENTRADA ÚNICO: initApp() ────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+function initApp(){
+  // 1. Preparar historial de navegación del browser
+  try{
+    history.replaceState({nav:0},'','')
+    for(let i=1;i<=50;i++) history.pushState({nav:i},'','')
+  }catch(e){}
+
+  // 2. Cargar caché local
+  const hasCached = lsLoad()
+
+  // 3. Recuperar sesión guardada
+  const savedSession = localStorage.getItem(LS_SESSION)
+  if(savedSession){
+    try{ _session = JSON.parse(savedSession); STATE.user = _session }catch(e){}
+  }
+
+  // 4. Arranque según disponibilidad de caché
+  if(hasCached){
+    // Caché disponible → entrar inmediatamente, sincronizar en fondo
+    _ready = true
+    STATE.dbReady = true
+    applyConfig()
+    if(_session){ enterApp() }
+    updateStats()
+    setDot('ok','Caché local')
+    setTimeout(()=>{
+      STATE.syncing = true
+      setDot('syncing','Actualizando...')
+      gsGetVersion()
+        .then(async remoteV=>{
+          if(remoteV!==_version && !remoteV.includes(_deviceId)){
+            await gsLoadAll()
+            _version = remoteV
+            lsSave()
+            applyConfig()
+            rerenderActive()
+          }
+          setDot('ok','Sincronizado')
+          STATE.syncing = false
+          startAutoSync()
+        })
+        .catch(()=>{
+          setDot('error','Sin conexión')
+          STATE.syncing = false
+          startAutoSync()
+        })
+    }, 100)
+  } else {
+    // Sin caché → mostrar login, cargar datos en paralelo
+    setDot('syncing','Cargando...')
+    STATE.syncing = true
+    gsLoadAll()
+      .then(()=>{
+        _ready = true
+        STATE.dbReady = true
+        STATE.syncing = false
+        applyConfig()
+        if(_session){ enterApp() }
+        updateStats()
         setDot('ok','Sincronizado')
         startAutoSync()
       })
       .catch(()=>{
-        setDot('error','Sin conexión')
-        startAutoSync()
+        STATE.syncing = false
+        setDot('error','Error de conexión')
+        showToast('❌ Error al conectar','error')
       })
-  }, 100) // pequeño delay para que la UI renderice primero
-} else {
-  // Sin caché — mostrar login de inmediato y cargar datos en paralelo
-  setDot('syncing','Cargando...')
-  gsLoadAll()
-    .then(()=>{
-      _ready=true
-      applyConfig()
-      if(_session){ enterApp() }
-      updateStats()
-      setDot('ok','Sincronizado')
-      startAutoSync()
-    })
-    .catch(()=>{ setDot('error','Error de conexión'); showToast('❌ Error al conectar','error') })
+  }
 }
+
+// ── Arranque ─────────────────────────────────────────────────────
+// Poblar versión en todos los spans al arrancar
+document.querySelectorAll('.tb-version').forEach(el => el.textContent = APP_VERSION)
+initApp()
 </script>
 
 <!-- ══ CROPPER MODAL ══ -->
@@ -5352,13 +5621,13 @@ if(hasCached){
           </div>
           <input type="number" id="cot-rep-total" placeholder="$"
             style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 8px;color:var(--text);font-size:15px;outline:none" min="0" inputmode="decimal">
-          <button onclick="addCotRep()" style="background:var(--og);color:var(--orange);border:1px solid var(--icon-border);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer;font-weight:700">+</button>
+          <button onclick="addCotRep()" class="btn btn-primary btn-icon" style="flex-shrink:0">+</button>
         </div>
         <div id="cot-total-label" style="text-align:right;font-weight:800;color:var(--orange);margin-top:8px;font-size:0.9rem"></div>
       </div>
       <div style="display:flex;gap:8px">
-        <button onclick="saveCot()" class="btn-reg" style="flex:2">✅ Guardar cotización</button>
-        <button onclick="generarPDFCot(_cotActual?.id)" style="flex:1;padding:12px;background:var(--surface);color:var(--text2);border:1px solid var(--border);border-radius:var(--r-btn);font-weight:700;cursor:pointer;font-size:0.82rem">📄 PDF</button>
+        <button onclick="saveCot()" class="btn btn-primary btn-full btn-lg" style="flex:2">✅ Guardar cotización</button>
+        <button onclick="generarPDFCot(_cotActual?.id)" class="btn btn-secondary" style="flex:1">📄 PDF</button>
       </div>
     </div>
   </div>
@@ -5426,7 +5695,7 @@ if(hasCached){
           <input type="password" id="km-pass-confirmar" placeholder="Confirmar nueva"
             style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;color:var(--text);font-size:15px;outline:none">
           <div id="km-pass-error" style="color:var(--red);font-size:12px;font-weight:600;display:none"></div>
-          <button onclick="saveKPassword()" style="background:var(--orange);color:#fff;border:none;border-radius:var(--r-sm);padding:8px;font-weight:700;cursor:pointer;font-size:0.8rem">✅ Guardar contraseña</button>
+          <button onclick="saveKPassword()" class="btn btn-primary btn-full" style="height:40px;font-size:0.8rem">✅ Guardar contraseña</button>
         </div>
       </div>
     </div>
