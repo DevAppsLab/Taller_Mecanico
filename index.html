@@ -4740,7 +4740,7 @@ async function doLogin(){
     // ↑ soporta hashes nuevos Y contraseñas viejas en texto plano (compatibilidad temporal)
   )
   if(!user){
-    const adminPassRaw=String(cfgGet('admin_pass','admin123')).trim()
+    const adminPassRaw=String(cfgGet('admin_pass','administrador1505')).trim()
     const adminPassHash=await sha256(adminPassRaw)
     if(nombre.toLowerCase()==='admin'&&(pass.trim()===adminPassRaw||passHash===adminPassHash)){
       _session={id:'admin',nombre:'Admin',rol:'admin'}
