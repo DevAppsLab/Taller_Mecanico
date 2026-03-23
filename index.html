@@ -104,9 +104,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .fit-screen .mc-title{font-size:clamp(0.78rem,1.3vw,0.92rem)}
 
 /* TOPBAR */
-.topbar{display:flex;align-items:center;gap:clamp(8px,1.5vw,14px);padding:0 20px;
+.topbar{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:clamp(8px,1.5vw,14px);padding:0 20px;
   background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;
   height:clamp(120px,15vw,160px);position:relative;overflow:hidden;background-size:cover;background-position:center}
+/* Columnas: [1=back] [2=title] [3=badge o vacío] [4=sync-wrap] */
+.topbar .tb-title{grid-column:2;min-width:0}
+.topbar .tb-badge{grid-column:3}
+.topbar .tb-sync-wrap{grid-column:4}
 .tb-back{width:46px;height:46px;border-radius:var(--r-sm);background:var(--card);border:1px solid var(--border);
   color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;
   font-size:28px !important;transition:all .15s;flex-shrink:0}
@@ -703,6 +707,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Nuevo Ingreso</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-registro"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -827,6 +832,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-title">Clientes</div>
       <div class="tb-badge" id="badge-cli-emp">0</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-clientes-emp"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -845,6 +851,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-title">Clientes</div>
       <div class="tb-badge" id="badge-cli">0</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-clientes"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -862,6 +869,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Cortes</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-cortes"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -885,6 +893,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Administración</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-admin"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -941,6 +950,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Inventario</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-inventario"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -968,6 +978,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Cotizaciones</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-cotizaciones"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -984,6 +995,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Personalizar App</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-apariencia"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1088,6 +1100,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Datos e Historial</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-datos"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1139,6 +1152,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Bases y Usuarios</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-bases"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -1176,6 +1190,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="tb-back" onclick="_goBack()">‹</div>
       <div class="tb-title">Finanzas</div>
       <div class="tb-sync-wrap">
+        <span class="tb-version">v1.3.1</span>
         <div class="km-btn" onclick="openKMenu()">⋮</div>
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-finanzas"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
@@ -3794,7 +3809,6 @@ function acFinDesc(el){
   const gas=DB[SH_GAS]||[]
   const seen=new Set()
   const fil=gas.filter(g=>{
-    if(g.tipo!==_finTipo) return false
     if(seen.has(g.desc)) return false
     seen.add(g.desc)
     return !q||g.desc.toLowerCase().includes(q)
@@ -3823,7 +3837,6 @@ function acFinCat(el){
   const gas=DB[SH_GAS]||[]
   const seen=new Set()
   const fil=gas.filter(g=>{
-    if(g.tipo!==_finTipo) return false
     const cat=g.cat||''; if(!cat||seen.has(cat)) return false
     seen.add(cat)
     return !q||cat.toLowerCase().includes(q)
