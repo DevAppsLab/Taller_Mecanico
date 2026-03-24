@@ -2955,7 +2955,6 @@ function togCli(id){
   const el=$id(id)
   if(!el) return
   el.classList.toggle('open')
-  // Forzar display en el body para que el CSS class selector funcione correctamente
   const body=el.querySelector('.cli-body')
   if(body) body.style.display=el.classList.contains('open')?'block':'none'
 }
@@ -2970,6 +2969,8 @@ function _corteTablaHTML(rows, showFecha=false){
     if(!groups[k]) groups[k]={nombre:r.nombre,vehiculo:r.vehiculo,repairs:[],_liquidado:r._liquidado}
     groups[k].repairs.push(r)
   })
+  // Prefijo único por render para que IDs no colisionen entre semana/mes/día
+  const pfx='cg'+Date.now().toString(36)
   return Object.values(groups).map((g,i)=>{
     const tot=g.repairs.reduce((s,r)=>s+numF(r.total),0)
     const moTot=g.repairs.reduce((s,r)=>s+numF(r.manoObra),0)
@@ -2979,7 +2980,7 @@ function _corteTablaHTML(rows, showFecha=false){
     const badgeColor=liq?'var(--green)':'var(--red)'
     const badgeBg=liq?'rgba(34,197,94,.15)':'rgba(239,68,68,.12)'
     const badge=liq?'✅ Liquidado':'🔴 Pendiente'
-    const cid=`cg-${i}-${g.nombre.replace(/\s/g,'')}`
+    const cid=`${pfx}-${i}`
     const repRows=g.repairs.map(r=>`<tr style="border-bottom:1px solid var(--border)">
       <td style="padding:5px 8px;font-size:0.75rem;color:var(--text)">${r.reparacion}</td>
       ${showFecha?`<td style="padding:5px 8px;font-size:0.68rem;color:var(--text3);white-space:nowrap">${fD(r.fecha)}</td>`:''}
@@ -3001,7 +3002,7 @@ function _corteTablaHTML(rows, showFecha=false){
           <div style="font-size:0.6rem;color:var(--text3)">MO ${f$(moTot)} · Mat ${f$(matTot)}</div>
         </div>
       </div>
-      <div class="cli-body" style="border-top:1px solid var(--border)">
+      <div class="cli-body" style="border-top:1px solid var(--border);display:none">
         <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:var(--surface)">
@@ -3409,11 +3410,14 @@ function dbgTogEdit(i){
   const el=$id('dbge-'+i)
   if(!el) return
   const open=el.style.display==='flex'
-  $all('#dbg-list [id^="dbge-"]').forEach(e=>{ e.style.display='none'; e.style.flexDirection='' })
+  // Cerrar solo los paneles de edición (div con id="dbge-N"), no los inputs (id="dbge-f-N-campo")
+  $all('#dbg-list > div > div[id^="dbge-"]').forEach(e=>{
+    e.style.display='none'
+    e.style.flexDirection=''
+  })
   if(!open){
     el.style.display='flex'
     el.style.flexDirection='column'
-    // Scroll para que el panel sea visible
     setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),50)
   }
 }
