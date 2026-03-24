@@ -657,17 +657,17 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 <body>
 <div id="app">
   <div id="screen-login" class="screen active" style="justify-content:center;align-items:center;background:var(--bg);overflow-y:auto">
-    <div style="width:100%;max-width:340px;padding:clamp(20px,5vw,40px);display:flex;flex-direction:column;align-items:center;gap:14px;box-sizing:border-box">
+    <div style="width:min(100%,340px);padding:clamp(20px,5vw,40px);display:flex;flex-direction:column;align-items:center;gap:14px;box-sizing:border-box;overflow:hidden">
       <div id="login-logo" style="width:72px;height:72px;background:var(--orange);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 6px 20px var(--shadow-orange);margin-bottom:4px">🔧</div>
       <div style="text-align:center;margin-bottom:4px">
         <div id="login-title" class="logo-text" style="font-size:clamp(1.6rem,5vw,2.4rem)">Taller Mecánico</div>
       </div>
-      <div style="display:flex;width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:3px;box-sizing:border-box">
+      <div style="display:flex;width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:3px;box-sizing:border-box;overflow:hidden">
         <button id="tab-login" onclick="showLoginTab('login')"
-          class="btn btn-primary" style="flex:1;height:38px;border-radius:7px;font-size:0.8rem">
+          class="btn btn-primary" style="flex:1;min-width:0;height:38px;border-radius:7px;font-size:clamp(0.7rem,1.8vw,0.82rem);padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
           Iniciar sesión</button>
         <button id="tab-reg" onclick="showLoginTab('reg')"
-          class="btn btn-ghost" style="flex:1;height:38px;border-radius:7px;font-size:0.8rem">
+          class="btn btn-ghost" style="flex:1;min-width:0;height:38px;border-radius:7px;font-size:clamp(0.7rem,1.8vw,0.82rem);padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
           Registrarse</button>
       </div>
       <!-- Login form -->
@@ -1590,7 +1590,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 // ══════════════════════════════════════════════════════════════════
 
 // ── Versión — cambiar SOLO aquí; se propaga a todos los headers ──
-const APP_VERSION='v1.6.1'
+const APP_VERSION='v1.6.3'
 // ── Helpers globales ─────────────────────────────────────────────
 const $id=id=>document.getElementById(id)
 const $qs=(sel,ctx=document)=>ctx.querySelector(sel)
@@ -4887,22 +4887,27 @@ function renderClienteActivo(){
     const pagado=abos.reduce((s,a)=>s+numF(a.monto),0)
     const saldo=total-pagado
     const stL={pending:'⏳ Pendiente',process:'🔧 En proceso',done:'✅ Completado'}
+    const stColor={pending:'yellow',process:'orange',done:'green'}
     const st=c.status||'pending'
     return `<div class="ccard ani" style="animation-delay:${i*.04}s;margin-bottom:12px">
       <div class="ss ${st}"></div>
-      <div style="padding:12px 16px 8px;display:flex;align-items:center;justify-content:space-between">
+      <div style="padding:12px 16px 6px;display:flex;align-items:center;justify-content:space-between">
         <div style="font-size:0.9rem;font-weight:800">🚗 ${c.vehiculo}</div>
-        <div style="font-size:0.72rem;font-weight:700;color:var(--${st==='pending'?'yellow':st==='process'?'orange':'green'})">${stL[st]}</div>
+        <div style="font-size:0.72rem;font-weight:700;color:var(--${stColor[st]})">${stL[st]}</div>
       </div>
-      <div style="padding:0 16px 8px">
+      <div style="margin:0 16px 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 12px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:0.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">Total · Saldo pendiente</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:0.8rem;font-weight:800;color:var(--orange)">${f$(total)}</span>
+          <span style="font-size:0.65rem;color:var(--text3)">·</span>
+          <span style="font-size:0.8rem;font-weight:800;color:${saldo<=0?'var(--green)':'var(--red)'}">${saldo<=0?'✅ Al día':f$(saldo)}</span>
+        </div>
+      </div>
+      <div style="padding:0 16px 12px">
         ${reps.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
           <div style="flex:1;font-size:0.82rem;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reparacion}</div>
-          <div style="font-size:0.68rem;color:var(--text3);white-space:nowrap;flex-shrink:0">📅 ${fD(r.fecha)}</div>
+          <div style="font-size:0.78rem;font-weight:700;color:var(--orange);flex-shrink:0">${f$(r.total)}</div>
         </div>`).join('')}
-      </div>
-      <div style="margin:0 16px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:0.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">Saldo pendiente</div>
-        <div style="font-size:0.88rem;font-weight:800;color:${saldo<=0?'var(--green)':'var(--red)'}">${saldo<=0?'✅ Al día':f$(saldo)}</div>
       </div>
     </div>`
   }).join('')
