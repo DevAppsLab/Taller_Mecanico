@@ -2337,30 +2337,11 @@ function _goBack(){
   // Si estamos en home → logout
   if(activeNow===homeScreen || activeNow==='') { logout(); return }
   // ── Caso especial: screen-dbgeneral tiene dos niveles internos ──
-  // Si hay un sheet abierto, el back va al menú interno (no a admin)
   if(activeNow==='screen-dbgeneral' && _dbgSheet){ dbgBack(); return }
-  // 1. Sacar la pantalla actual del stack
-  if(navStack[navStack.length-1] === activeNow) navStack.pop()
-  // 2. El tope del stack es el "anterior real" del usuario
-  const stackPrev = navStack[navStack.length-1]
-  // 3. Fallback: usar árbol de rutas si el stack está vacío o sin padre válido
-  const routeParent = ROUTES[activeNow]
-  const target = stackPrev || routeParent || homeScreen
-  // Navegar sin volver a agregar al stack (ya está ahí)
-  if(!(target in ROUTES)) { navigate(homeScreen); return }
-  const prev2 = $qs('.screen.active')?.id
-  if(prev2==='screen-registro') clearIngreso()
-  if(prev2==='screen-finanzas') clearFinForm()
-  $clsRm('.ac-list','open')
-  $all('.mcard.open').forEach(m=>m.classList.remove('open'))
-  $all('.hist-body[style*="block"]').forEach(h=>h.style.display='none')
-  $all('.ccard.expanded').forEach(c=>c.classList.remove('expanded'))
-  const fp2=$id('font-panel'); if(fp2) fp2.style.display='none'
-  const pf2=$id('pass-form'); if(pf2) pf2.style.display='none'
-  $clsRm('.screen','active')
-  $id(target)?.classList.add('active')
-  rerenderActive()
-  if(typeof _queue !== 'undefined' && _queue.length) flushQueue()
+  // Siempre usar el árbol ROUTES como fuente de verdad
+  // El navStack NO define el back — solo el árbol jerárquico lo hace
+  const target = ROUTES[activeNow] || homeScreen
+  navigate(target)
 }
 
 // MÉTODO 2 — doble tap en topbar/home-header
