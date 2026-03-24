@@ -271,7 +271,6 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 .abo-saldo.ok{color:var(--green)}.abo-saldo.pend{color:var(--red)}
 /* btn-abo, btn-entregar → ver bloque SISTEMA DE BOTONES */
 .cc-body{display:none}.ccard.expanded .cc-body{display:block}
-.cli-block .cli-body{display:none}.cli-block.open .cli-body{display:block}
 .add-rep-btn{display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--surface);
   border:none;border-bottom:1px solid var(--border);color:var(--orange);font-family:var(--font);
   font-size:0.75rem;font-weight:600;cursor:pointer;width:100%}
@@ -796,9 +795,10 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         </div>
       </div>
       <div id="home-emp-btns" style="display:none;flex-direction:column;gap:12px">
-        <div class="mc" style="cursor:default;opacity:.7">
+        <div class="mc" style="cursor:default;pointer-events:none;opacity:0.65">
           <div class="mc-icon">👥</div>
           <div class="mc-info"><div class="mc-title">Clientes</div><div class="mc-desc">Ver estado y agregar abonos</div></div>
+          <div class="mc-arr">›</div>
         </div>
       </div>
     </div>
@@ -908,23 +908,20 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
             <div class="ac-list" id="ac-r"></div>
           </div>
         </div>
+        <div class="field">
+          <label>📦 Material utilizado (inventario)</label>
+          <div class="ac-wrap">
+            <input type="text" id="inp-material-inv" placeholder="Buscar pieza del inventario…" autocomplete="off"
+              oninput="acMaterialInv(this)" onfocus="acMaterialInv(this)" onkeydown="acK(event,'ac-mat-inv')">
+            <div class="ac-list" id="ac-mat-inv"></div>
+          </div>
+          <div id="mat-inv-seleccionados" style="display:flex;flex-direction:column;gap:4px;margin-top:6px"></div>
+        </div>
         <div class="cost-row">
           <div class="field" style="margin-bottom:0"><label>Mano de obra ($)</label>
             <input type="number" id="inp-mo" placeholder="0.00" min="0" step="0.01" oninput="calcT()" inputmode="decimal"></div>
           <div class="field" style="margin-bottom:0"><label>Material ($)</label>
             <input type="number" id="inp-mat" placeholder="0.00" min="0" step="0.01" oninput="calcT()" inputmode="decimal"></div>
-        </div>
-        <div class="field" style="margin-top:8px">
-          <label>🔩 Material utilizado (inventario)</label>
-          <div class="ac-wrap">
-            <input type="text" id="inp-inv-mat" placeholder="Buscar pieza del inventario…" autocomplete="off"
-              oninput="acInvMat(this)" onfocus="acInvMat(this)" onkeydown="acK(event,'ac-inv-mat')">
-            <div class="ac-list" id="ac-inv-mat"></div>
-          </div>
-          <div id="inv-mat-seleccionado" style="display:none;margin-top:5px;background:var(--og);border:1px solid var(--icon-border);border-radius:var(--r-sm);padding:6px 10px;align-items:center;justify-content:space-between;gap:8px">
-            <span id="inv-mat-label" style="font-size:0.75rem;font-weight:600;color:var(--orange)"></span>
-            <button onclick="clearInvMat()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.9rem;padding:0">✕</button>
-          </div>
         </div>
         <div onclick="regIngreso()" style="margin-top:10px;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:var(--r);
           padding:14px 16px;display:flex;justify-content:space-between;align-items:center;
@@ -1009,30 +1006,27 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="sync-chip-bare"><div class="sync-dot pending" id="sd-admin"></div><span class="sync-chip-label">Sincronizado</span></div>
       </div>
     </div>
-    <div class="scrollbody" style="padding:12px 20px 40px;display:flex;flex-direction:column;gap:12px">
+    <div class="scrollbody" style="padding:12px 20px 40px;display:flex;flex-direction:column;gap:8px">
+      <div class="admin-section-title">Apariencia</div>
       <div class="mc" onclick="goTo('screen-apariencia')">
         <div class="mc-icon">🎨</div>
-        <div class="mc-info"><div class="mc-title">Personalizar</div><div class="mc-desc">Colores, tema, fuente y apariencia</div></div>
+        <div class="mc-info"><div class="mc-title">Personalizar</div><div class="mc-desc">Colores, tipografía, logo y tema</div></div>
         <div class="mc-arr">›</div>
       </div>
+      <div class="admin-section-title">Bases de datos</div>
       <div class="mc" onclick="navigate('screen-datos')">
         <div class="mc-icon">📊</div>
-        <div class="mc-info"><div class="mc-title">Datos e Historial</div><div class="mc-desc">Ver y exportar registros del taller</div></div>
+        <div class="mc-info"><div class="mc-title">Datos e Historial</div><div class="mc-desc">Ver y filtrar todos los registros</div></div>
         <div class="mc-arr">›</div>
       </div>
       <div class="mc" onclick="navigate('screen-dbgeneral')">
         <div class="mc-icon">🗂</div>
-        <div class="mc-info"><div class="mc-title">Base de Datos General</div><div class="mc-desc">Editar todos los registros directamente</div></div>
+        <div class="mc-info"><div class="mc-title">Base de Datos General</div><div class="mc-desc">Editar registros directamente</div></div>
         <div class="mc-arr">›</div>
       </div>
-      <div class="mc" onclick="navigate('screen-bases');showBasesTab('usr')">
-        <div class="mc-icon">👤</div>
-        <div class="mc-info"><div class="mc-title">Usuarios</div><div class="mc-desc">Crear y gestionar cuentas de acceso</div></div>
-        <div class="mc-arr">›</div>
-      </div>
-      <div class="mc" style="border-color:rgba(239,68,68,.3)" onclick="openDeleteAll()">
-        <div class="mc-icon" style="background:rgba(239,68,68,.12)">🗑</div>
-        <div class="mc-info"><div class="mc-title" style="color:var(--red)">Borrar Todo</div><div class="mc-desc">Eliminar todos los datos del taller</div></div>
+      <div class="mc" onclick="openDeleteAll()" style="border-color:rgba(239,68,68,.3)">
+        <div class="mc-icon" style="background:rgba(239,68,68,.12);color:var(--red)">🗑</div>
+        <div class="mc-info"><div class="mc-title" style="color:var(--red)">Borrar Todo</div><div class="mc-desc">Eliminar todos los datos permanentemente</div></div>
         <div class="mc-arr" style="color:var(--red)">›</div>
       </div>
     </div>
@@ -1142,13 +1136,13 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="sec-card">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <div>
-            <div class="sec-lbl" style="margin-bottom:2px">🌓 Tema</div>
-            <div style="font-size:0.68rem;color:var(--text3)" id="apariencia-tema-label">Oscuro</div>
+            <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)">🌓 Tema</div>
+            <div id="apariencia-theme-label" style="font-size:0.75rem;color:var(--orange);font-weight:700;margin-top:2px">Oscuro</div>
           </div>
           <label style="position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0">
-            <input type="checkbox" class="theme-toggle-input" onchange="toggleTheme();updateAparienciaTemaLabel()" style="opacity:0;width:0;height:0">
-            <span style="position:absolute;inset:0;background:var(--border2);border-radius:26px;cursor:pointer;transition:.3s;display:flex;align-items:center;padding:2px">
-              <span class="theme-toggle-knob" style="width:22px;height:22px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></span>
+            <input type="checkbox" class="theme-toggle-input" onchange="toggleTheme()" style="opacity:0;width:0;height:0">
+            <span style="position:absolute;inset:0;background:var(--border2);border-radius:26px;cursor:pointer;transition:.3s;display:flex;align-items:center;padding:3px">
+              <span class="theme-toggle-knob" style="width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></span>
             </span>
           </label>
         </div>
@@ -1480,6 +1474,15 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
           <div class="ac-list" id="ac-mr"></div>
         </div>
       </div>
+      <div class="field">
+        <label>📦 Material utilizado (inventario)</label>
+        <div class="ac-wrap">
+          <input type="text" id="modal-material-inv" placeholder="Buscar pieza del inventario…" autocomplete="off"
+            oninput="acMaterialInvModal(this)" onfocus="acMaterialInvModal(this)" onkeydown="acK(event,'ac-modal-mat-inv')">
+          <div class="ac-list" id="ac-modal-mat-inv"></div>
+        </div>
+        <div id="modal-mat-inv-seleccionados" style="display:flex;flex-direction:column;gap:4px;margin-top:6px"></div>
+      </div>
       <div class="cost-row">
         <div class="field"><label>Mano de obra ($)</label>
           <input type="number" id="inp-mmo" placeholder="0.00" min="0" step="0.01" oninput="calcTM()" inputmode="decimal"></div>
@@ -1587,7 +1590,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
 // ══════════════════════════════════════════════════════════════════
 
 // ── Versión — cambiar SOLO aquí; se propaga a todos los headers ──
-const APP_VERSION='v1.7.0'
+const APP_VERSION='v1.6.1'
 // ── Helpers globales ─────────────────────────────────────────────
 const $id=id=>document.getElementById(id)
 const $qs=(sel,ctx=document)=>ctx.querySelector(sel)
@@ -2296,7 +2299,7 @@ function navigate(id){
   if(prev === id) return
   // Limpiar UI de pantalla anterior
   if(prev==='screen-registro') clearIngreso()
-  if(prev==='screen-finanzas') _clearFinForm()
+  if(prev==='screen-finanzas') clearFinForm()
   $clsRm('.ac-list','open')
   $all('.mcard.open').forEach(m=>m.classList.remove('open'))
   $all('.week-detail.open').forEach(w=>w.classList.remove('open'))
@@ -2347,7 +2350,7 @@ function _goBack(){
   if(!(target in ROUTES)) { navigate(homeScreen); return }
   const prev2 = $qs('.screen.active')?.id
   if(prev2==='screen-registro') clearIngreso()
-  if(prev2==='screen-finanzas') _clearFinForm()
+  if(prev2==='screen-finanzas') clearFinForm()
   $clsRm('.ac-list','open')
   $all('.mcard.open').forEach(m=>m.classList.remove('open'))
   $all('.hist-body[style*="block"]').forEach(h=>h.style.display='none')
@@ -2402,8 +2405,9 @@ window.addEventListener('popstate',()=>{
 })
 function clearIngreso(){
   selCid=null
-  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat','inp-inv-mat'].forEach(id=>{const el=$id(id);if(el)el.value=''})
-  if(typeof clearInvMat==='function') clearInvMat()
+  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat','inp-material-inv'].forEach(id=>{const el=$id(id);if(el)el.value=''})
+  _matInvSel=[]
+  const cont=$id('mat-inv-seleccionados'); if(cont) cont.innerHTML=''
   calcT()
   $show('campo-vehiculo')
   const selV=$id('campo-vehiculo-sel');if(selV)selV.style.display='none'
@@ -2634,7 +2638,6 @@ function regIngreso(){
   if(!rep){showToast('⚠️ Describe la reparación','error');return}
   const now=new Date().toISOString()
   if(selCid){
-    // ── Cliente existente — solo agregar reparación ──
     const ci=DB[SH_CLI].findIndex(c=>c.id===selCid);if(ci===-1)return
     let sid=DB[SH_CLI][ci].activeSession
     if(!sid||sid==='') sid=gid()
@@ -2644,7 +2647,6 @@ function regIngreso(){
     sAC('db-reparaciones',rep,mo,mat)
     showToast('✅ Reparación agregada','success')
   } else {
-    // ── Cliente nuevo ──
     const vehiculo=toTitle($id('inp-vehiculo').value.trim())
     if(!vehiculo){showToast('⚠️ Ingresa el vehículo','error');return}
     const cid=gid(),sid=gid()
@@ -2654,12 +2656,13 @@ function regIngreso(){
     sAC('db-reparaciones',rep,mo,mat)
     showToast('✅ Cliente registrado','success')
   }
-  // Descontar material de inventario si se seleccionó
-  _descontarInvMat()
+  // Descontar materiales del inventario
+  if(_matInvSel.length) descontarMatInv(_matInvSel)
+  _matInvSel=[]
   // Limpiar formulario
   selCid=null
-  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat','inp-inv-mat'].forEach(id=>{ const el=$id(id); if(el) el.value='' })
-  clearInvMat()
+  ;['inp-nombre','inp-vehiculo','inp-rep','inp-mo','inp-mat','inp-material-inv'].forEach(id=>{ const el=$id(id); if(el) el.value='' })
+  const cont=$id('mat-inv-seleccionados'); if(cont) cont.innerHTML=''
   calcT()
   $show('campo-vehiculo')
   const selV=$id('campo-vehiculo-sel'); if(selV) selV.style.display='none'
@@ -2919,7 +2922,9 @@ function delAbo(aid,cid){
 function openRepModal(cid,nombre,vehiculo){
   $id('modal-cid').value=cid
   $set('modal-rep-title',`${nombre} · ${vehiculo}`)
-  ;['inp-mrep','inp-mmo','inp-mmat'].forEach(id=>$id(id).value='')
+  ;['inp-mrep','inp-mmo','inp-mmat','modal-material-inv'].forEach(id=>$id(id)&&($id(id).value=''))
+  _matInvSelModal=[]
+  const mc=$id('modal-mat-inv-seleccionados'); if(mc) mc.innerHTML=''
   calcTM();openModal('modal-rep')
 }
 function regDesdeModal(){
@@ -2936,62 +2941,16 @@ function regDesdeModal(){
   gsUpdateBg(SH_CLI,DB[SH_CLI][ci])
   gsAppendBg(SH_SES,newRep)
   sAC('db-reparaciones',rep,mo,mat)
+  // Descontar materiales del inventario (modal)
+  if(_matInvSelModal.length) descontarMatInv(_matInvSelModal)
+  _matInvSelModal=[]
+  const mc=$id('modal-mat-inv-seleccionados'); if(mc) mc.innerHTML=''
+  const mfi=$id('modal-material-inv'); if(mfi) mfi.value=''
   closeModal('modal-rep');scheduleRender()
   showToast('✅ Reparación guardada','success')
   setTimeout(()=>$id('cc-'+cid)?.classList.add('expanded'),50)
 }
 
-let _invMatSelId=null // id del item de inventario seleccionado
-
-function acInvMat(el){
-  const q=el.value.trim().toLowerCase()
-  const list=$id('ac-inv-mat')
-  const inv=(DB[SH_INV]||[]).filter(i=>numF(i.cantidad)>0)
-  const fil=q?inv.filter(i=>String(i.nombre||'').toLowerCase().includes(q)||String(i.categoria||'').toLowerCase().includes(q)):inv.slice(-10).reverse()
-  if(!fil.length){list.classList.remove('open');return}
-  list.innerHTML=fil.map((item,i)=>`<div class="ac-item" onclick="selInvMat('${escQ(String(item.id||item.nombre))}','${escQ(item.nombre)}',${numF(item.costo)})">
-    <span class="ac-ico">📦</span>
-    <div style="flex:1;min-width:0">
-      <div style="font-weight:600">${item.nombre}</div>
-      <div style="font-size:0.68rem;color:var(--text3)">${item.categoria||'—'} · Stock: ${item.cantidad} · <span style="color:var(--orange)">${f$(item.costo)}</span></div>
-    </div></div>`).join('')
-  closeOtherAC('ac-inv-mat')
-  list.classList.add('open')
-}
-
-function selInvMat(id,nombre,costo){
-  _invMatSelId=id
-  const inp=$id('inp-inv-mat'); if(inp) inp.value=nombre
-  $id('ac-inv-mat')?.classList.remove('open')
-  // Mostrar badge de seleccionado
-  const sel=$id('inv-mat-seleccionado')
-  const lbl=$id('inv-mat-label')
-  if(sel){ sel.style.display='flex' }
-  if(lbl){ lbl.textContent=`📦 ${nombre} — ${f$(costo)} se descontará del inventario` }
-  // Auto-fill material cost
-  const matInp=$id('inp-mat')
-  if(matInp&&(!matInp.value||parseFloat(matInp.value)===0)) matInp.value=costo
-  calcT()
-}
-
-function clearInvMat(){
-  _invMatSelId=null
-  const inp=$id('inp-inv-mat'); if(inp) inp.value=''
-  const sel=$id('inv-mat-seleccionado')
-  if(sel) sel.style.display='none'
-}
-
-function _descontarInvMat(){
-  if(!_invMatSelId) return
-  const idx=DB[SH_INV].findIndex(i=>String(i.id||i.nombre)===String(_invMatSelId))
-  if(idx===-1) return
-  const item=DB[SH_INV][idx]
-  const nuevaCantidad=Math.max(0,numF(item.cantidad)-1)
-  DB[SH_INV][idx]={...item,cantidad:nuevaCantidad}
-  gsUpdateBg(SH_INV,DB[SH_INV][idx])
-  showToast(`📦 ${item.nombre} descontado del inventario (quedan ${nuevaCantidad})`,'success')
-  clearInvMat()
-}
 // ── Cierre Mensual ────────────────────────────────────────────────
 function getWeekNum(dateStr){
   const d=new Date(dateStr),day=d.getDate()
@@ -3429,13 +3388,11 @@ function renderDbgSheet(){
         </div>
         <button onclick="event.stopPropagation();dbgDelRow('${escQ(String(r[idField]||''))}','${idField}')"
           style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:var(--r-sm);color:var(--red);padding:6px 9px;cursor:pointer;font-size:0.75rem;font-weight:700;flex-shrink:0">🗑</button>
-        <button onclick="event.stopPropagation();dbgTogEdit(${i})"
-          style="background:var(--og);border:1px solid var(--icon-border);border-radius:var(--r-sm);color:var(--orange);padding:6px 9px;cursor:pointer;font-size:0.75rem;font-weight:700;flex-shrink:0">✏️</button>
       </div>
-      <div id="${eid}" style="display:none;padding:12px 14px 14px;border-top:1px solid var(--border);flex-direction:column;gap:4px;max-height:60vh;overflow-y:auto">
-        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:8px;background:var(--og);padding:6px 10px;border-radius:var(--r-sm)">✏️ Editar registro</div>
+      <div id="${eid}" style="display:none;padding:12px 14px 14px;border-top:1px solid var(--border);flex-direction:column;gap:4px">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px">✏️ Editar registro</div>
         ${editInputs(r,i)}
-        <div style="display:flex;gap:8px;margin-top:8px;position:sticky;bottom:0;background:var(--card);padding-top:8px">
+        <div style="display:flex;gap:8px;margin-top:6px">
           <button onclick="dbgSaveRow(${i},'${escQ(String(r[idField]||''))}','${idField}')"
             style="flex:1;padding:10px;border-radius:var(--r-sm);background:var(--green);color:#fff;border:none;font-weight:700;cursor:pointer;font-size:0.85rem">✅ Guardar</button>
           <button onclick="dbgTogEdit(${i})"
@@ -3452,8 +3409,13 @@ function dbgTogEdit(i){
   const el=$id('dbge-'+i)
   if(!el) return
   const open=el.style.display==='flex'
-  $all('#dbg-list [id^="dbge-"]').forEach(e=>e.style.display='none')
-  if(!open) el.style.display='flex'
+  $all('#dbg-list [id^="dbge-"]').forEach(e=>{ e.style.display='none'; e.style.flexDirection='' })
+  if(!open){
+    el.style.display='flex'
+    el.style.flexDirection='column'
+    // Scroll para que el panel sea visible
+    setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),50)
+  }
 }
 
 function dbgSaveRow(i, idVal, idField){
@@ -3707,29 +3669,20 @@ async function openApariencia(){
   const chev=$id('pass-chev')
   if(chev) chev.style.transform=''
   updateToggleKnob()
-  updateAparienciaTemaLabel()
 }
 function updateToggleKnob(){
   const isLight=cfgGet('theme','dark')==='light'
   $all('.theme-toggle-input').forEach(tog=>{
     tog.checked=isLight
-    const knob=tog.nextElementSibling?.querySelector('.theme-toggle-knob')
-    if(knob){
-      const trackH=tog.nextElementSibling?.offsetHeight||22
-      const knobSize=trackH-4
-      knob.style.transform=isLight?`translateX(${knobSize}px)`:'translateX(0)'
-      const track=tog.nextElementSibling
-      if(track) track.style.background=isLight?'var(--orange)':'var(--border2)'
-    }
   })
-  updateAparienciaTemaLabel()
-}
-function updateAparienciaTemaLabel(){
-  const isLight=cfgGet('theme','dark')==='light'
-  const lbl=$id('apariencia-tema-label')
+  $all('.theme-toggle-knob').forEach(knob=>{
+    knob.style.transform=isLight?'translateX(20px)':'translateX(0)'
+    const track=knob.parentElement
+    if(track) track.style.background=isLight?'var(--orange)':'var(--border2)'
+  })
+  // Label en pantalla Personalizar
+  const lbl=$id('apariencia-theme-label')
   if(lbl) lbl.textContent=isLight?'Claro':'Oscuro'
-  const kmLbl=$id('km-theme-label')
-  if(kmLbl) kmLbl.textContent=isLight?'Claro':'Oscuro'
 }
 function saveCfgName(){
   const val=$id('cfg-name').value.trim()
@@ -3804,6 +3757,129 @@ function adjInv(id,delta){
   const newQty=Math.max(0,(parseInt(p.cantidad)||0)+delta)
   gsUpdateBg(SH_INV,{...p,cantidad:newQty})
   renderInventario()
+}
+
+// ── Material utilizado — autocompletado + descuento inventario ────
+// Lista de materiales seleccionados (registro principal)
+let _matInvSel=[] // [{id, nombre, cantidad, costo}]
+// Lista para modal de nueva reparación
+let _matInvSelModal=[]
+
+function acMaterialInv(el){
+  const q=el.value.trim().toLowerCase()
+  const list=$id('ac-mat-inv')
+  const items=(DB[SH_INV]||[]).filter(p=>p.cantidad>0&&(!q||p.nombre.toLowerCase().includes(q)))
+  if(!items.length){list.classList.remove('open');return}
+  list.innerHTML=items.map(p=>`<div class="ac-item" onclick="selMaterialInv('${escQ(p.id)}','${escQ(p.nombre)}',${numF(p.costo)})">
+    <span class="ac-ico">📦</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:600">${p.nombre}</div>
+      <div style="font-size:0.68rem;color:var(--text3)">${p.categoria||''} · Stock: ${p.cantidad} · ${f$(p.costo||0)} c/u</div>
+    </div></div>`).join('')
+  closeOtherAC('ac-mat-inv')
+  list.classList.add('open')
+}
+
+function selMaterialInv(id, nombre, costo){
+  const ya=_matInvSel.find(x=>x.id===id)
+  if(ya){ ya.cantidad++; ya.costoTotal=ya.cantidad*ya.costo }
+  else _matInvSel.push({id, nombre, cantidad:1, costo, costoTotal:costo})
+  $id('inp-material-inv').value=''
+  $id('ac-mat-inv')?.classList.remove('open')
+  renderMatInvSel()
+}
+
+function renderMatInvSel(){
+  const cont=$id('mat-inv-seleccionados'); if(!cont)return
+  cont.innerHTML=_matInvSel.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px">
+      <span style="font-size:0.8rem;flex:1;font-weight:600">📦 ${p.nombre}</span>
+      <button onclick="adjMatInvSel(${i},-1)" style="width:22px;height:22px;border:1px solid var(--border);border-radius:5px;background:var(--card);color:var(--text);cursor:pointer;font-size:0.8rem">−</button>
+      <span style="font-size:0.82rem;font-weight:700;min-width:16px;text-align:center">${p.cantidad}</span>
+      <button onclick="adjMatInvSel(${i},+1)" style="width:22px;height:22px;border:1px solid var(--border);border-radius:5px;background:var(--card);color:var(--text);cursor:pointer;font-size:0.8rem">+</button>
+      <span style="font-size:0.75rem;color:var(--orange);font-weight:700;min-width:50px;text-align:right">${f$(p.cantidad*p.costo)}</span>
+      <button onclick="delMatInvSel(${i})" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:0.8rem">✕</button>
+    </div>`).join('')
+  // Actualizar campo de material con el costo total de inventario
+  const totalMat=_matInvSel.reduce((s,p)=>s+p.cantidad*p.costo,0)
+  const matField=$id('inp-mat')
+  if(matField&&totalMat>0) { matField.value=totalMat.toFixed(2); calcT() }
+}
+
+function adjMatInvSel(i, delta){
+  if(!_matInvSel[i])return
+  _matInvSel[i].cantidad=Math.max(1,_matInvSel[i].cantidad+delta)
+  renderMatInvSel()
+}
+function delMatInvSel(i){
+  _matInvSel.splice(i,1)
+  renderMatInvSel()
+  if(!_matInvSel.length){ const m=$id('inp-mat'); if(m){m.value='';calcT()} }
+}
+
+// Descontar del inventario todos los materiales seleccionados
+function descontarMatInv(lista){
+  lista.forEach(p=>{
+    const inv=DB[SH_INV].find(x=>x.id===p.id)
+    if(!inv)return
+    const newQty=Math.max(0,(parseInt(inv.cantidad)||0)-p.cantidad)
+    const updated={...inv,cantidad:newQty}
+    const idx=DB[SH_INV].findIndex(x=>x.id===p.id)
+    if(idx!==-1) DB[SH_INV][idx]=updated
+    gsUpdateBg(SH_INV,updated)
+  })
+  if(lista.length) renderInventario()
+}
+
+// Modal version
+function acMaterialInvModal(el){
+  const q=el.value.trim().toLowerCase()
+  const list=$id('ac-modal-mat-inv')
+  const items=(DB[SH_INV]||[]).filter(p=>p.cantidad>0&&(!q||p.nombre.toLowerCase().includes(q)))
+  if(!items.length){list.classList.remove('open');return}
+  list.innerHTML=items.map(p=>`<div class="ac-item" onclick="selMaterialInvModal('${escQ(p.id)}','${escQ(p.nombre)}',${numF(p.costo)})">
+    <span class="ac-ico">📦</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:600">${p.nombre}</div>
+      <div style="font-size:0.68rem;color:var(--text3)">${p.categoria||''} · Stock: ${p.cantidad} · ${f$(p.costo||0)} c/u</div>
+    </div></div>`).join('')
+  closeOtherAC('ac-modal-mat-inv')
+  list.classList.add('open')
+}
+
+function selMaterialInvModal(id, nombre, costo){
+  const ya=_matInvSelModal.find(x=>x.id===id)
+  if(ya){ ya.cantidad++; ya.costoTotal=ya.cantidad*ya.costo }
+  else _matInvSelModal.push({id, nombre, cantidad:1, costo, costoTotal:costo})
+  $id('modal-material-inv').value=''
+  $id('ac-modal-mat-inv')?.classList.remove('open')
+  renderMatInvSelModal()
+}
+
+function renderMatInvSelModal(){
+  const cont=$id('modal-mat-inv-seleccionados'); if(!cont)return
+  cont.innerHTML=_matInvSelModal.map((p,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px">
+      <span style="font-size:0.8rem;flex:1;font-weight:600">📦 ${p.nombre}</span>
+      <button onclick="adjMatInvSelModal(${i},-1)" style="width:22px;height:22px;border:1px solid var(--border);border-radius:5px;background:var(--card);color:var(--text);cursor:pointer;font-size:0.8rem">−</button>
+      <span style="font-size:0.82rem;font-weight:700;min-width:16px;text-align:center">${p.cantidad}</span>
+      <button onclick="adjMatInvSelModal(${i},+1)" style="width:22px;height:22px;border:1px solid var(--border);border-radius:5px;background:var(--card);color:var(--text);cursor:pointer;font-size:0.8rem">+</button>
+      <span style="font-size:0.75rem;color:var(--orange);font-weight:700;min-width:50px;text-align:right">${f$(p.cantidad*p.costo)}</span>
+      <button onclick="delMatInvSelModal(${i})" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:0.8rem">✕</button>
+    </div>`).join('')
+  const totalMat=_matInvSelModal.reduce((s,p)=>s+p.cantidad*p.costo,0)
+  const matField=$id('inp-mmat')
+  if(matField&&totalMat>0) { matField.value=totalMat.toFixed(2); calcTM() }
+}
+function adjMatInvSelModal(i, delta){
+  if(!_matInvSelModal[i])return
+  _matInvSelModal[i].cantidad=Math.max(1,_matInvSelModal[i].cantidad+delta)
+  renderMatInvSelModal()
+}
+function delMatInvSelModal(i){
+  _matInvSelModal.splice(i,1)
+  renderMatInvSelModal()
+  if(!_matInvSelModal.length){ const m=$id('inp-mmat'); if(m){m.value='';calcTM()} }
 }
 function delInv(id){
   if(!confirm('¿Eliminar esta pieza del inventario?'))return
@@ -4385,19 +4461,18 @@ function acFinDesc(el){
   const q=el.value.trim().toLowerCase()
   const list=$id('ac-fin-desc')
   const gas=(DB[SH_GAS]||[]).filter(g=>g.tipo===_finTipo)
-  const seen=new Set()
-  const fil=gas.filter(g=>{
-    if(seen.has(g.desc)) return false
-    seen.add(g.desc)
-    return !q||g.desc.toLowerCase().includes(q)
-  }).slice(-10).reverse()
+  const seen=new Map()
+  gas.forEach(g=>{
+    if(!seen.has(g.desc)||seen.get(g.desc).monto<g.monto) seen.set(g.desc,g)
+  })
+  const fil=[...seen.values()].filter(g=>!q||g.desc.toLowerCase().includes(q)).slice(-10).reverse()
   if(!fil.length){list.classList.remove('open');return}
   list.innerHTML=fil.map(g=>`<div class="ac-item"
     onclick="selFinDesc('${escQ(g.desc)}','${escQ(g.cat||'')}',${numF(g.monto)})">
     <span class="ac-ico">${g.tipo==='gasto'?'💸':'💵'}</span>
     <div style="flex:1;min-width:0">
       <div style="font-weight:600">${g.desc}</div>
-      <div style="font-size:0.68rem;color:var(--text3)">${g.cat||''} · <span style="color:var(--orange);font-weight:700">${f$(g.monto)}</span></div>
+      <div style="font-size:0.68rem;color:var(--text3)">${g.cat||''}${g.monto?' · '+f$(g.monto):''}</div>
     </div></div>`).join('')
   closeOtherAC('ac-fin-desc')
   list.classList.add('open')
@@ -4433,19 +4508,24 @@ function regFinanza(){
   const monto=parseFloat($id('fin-monto')?.value||0)
   if(!desc){showToast('⚠️ Ingresa una descripción','error');return}
   if(!monto||monto<=0){showToast('⚠️ Ingresa un monto válido','error');return}
+  // Guardar concepto incluyendo monto para autocompletado
   const row={id:gid(),tipo:_finTipo,desc,cat,monto,fecha:new Date().toISOString()}
   gsAppendBg(SH_GAS,row)
   // Limpiar campos
-  ;['fin-desc','fin-cat','fin-monto'].forEach(id=>{const el=$id(id);if(el)el.value=''})
+  clearFinForm()
   showToast(_finTipo==='gasto'?'💸 Gasto registrado':'💵 Ingreso registrado','success')
 }
 
-function _clearFinForm(){
+function clearFinForm(){
   ;['fin-desc','fin-cat','fin-monto'].forEach(id=>{const el=$id(id);if(el)el.value=''})
+  $id('ac-fin-desc')?.classList.remove('open')
+  $id('ac-fin-cat')?.classList.remove('open')
 }
 
 function showFinTab(tab){
   const isReg=tab==='reg'
+  // Si salimos del tab de registro sin haber guardado, limpiar el formulario
+  if(!isReg) clearFinForm()
   $id('fin-vista-reg').style.display=isReg?'block':'none'
   const vc=$id('fin-vista-cortes'); if(vc){vc.style.display=isReg?'none':'flex';vc.style.flexDirection='column'}
   $id('fin-tab-reg').classList.toggle('active',isReg)
@@ -4490,8 +4570,183 @@ function _finRowsForRange(desde, hasta){
 }
 
 function _finResumenHTML(rows){
+  const ingresos=rows.filter(r=>r.tipo==='ingreso').reduce((s,r)=>s+r.monto,0)
+  const gastos=rows.filter(r=>r.tipo==='gasto').reduce((s,r)=>s+r.monto,0)
+  const util=ingresos-gastos
+  // Update summary cards
+  $set('fin-res-ing',f$(ingresos))
+  $set('fin-res-gas',f$(gastos))
+  $set('fin-res-util',f$(util))
+  const uc=$id('fin-res-util-card')
+  if(uc){
+    const pos=util>=0
+    uc.style.background=pos?'var(--og)':'rgba(239,68,68,.08)'
+    uc.style.borderColor=pos?'var(--icon-border)':'rgba(239,68,68,.25)'
+    $id('fin-res-util').style.color=pos?'var(--orange)':'var(--red)'
+    uc.querySelector('div').style.color=pos?'var(--orange)':'var(--red)'
+  }
+}
+
+function delFinanza(id){
+  if(!id||!confirm('¿Eliminar este movimiento?')) return
+  gsDeleteBg(SH_GAS,id)
+  renderFinCorte()
+  showToast('🗑 Movimiento eliminado','error')
+}
+
+function renderFinCorte(){
+  const cont=$id('fin-corte-cont'); if(!cont) return
+  const now=new Date(), hoy=_hoyKey()
+  if(_finCorteTab==='dia'){
+    _renderFinCorteDia(now, hoy, cont)
+  } else if(_finCorteTab==='sem'){
+    _renderFinCorteSem(now, hoy, cont)
+  } else {
+    _renderFinCorteMes(now, hoy, cont)
+  }
+}
+
+function _renderFinCorteDia(now, hoy, cont){
+  const year=now.getFullYear(), month=now.getMonth()
+  const firstDay=new Date(year,month,1)
+  let calStart=new Date(firstDay)
+  calStart.setDate(calStart.getDate()-calStart.getDay())
+  const semanas=[]
+  let cur=new Date(calStart)
+  const lastDay=new Date(year,month+1,0)
+  while(cur<=lastDay){
+    const sem=[]
+    for(let d=0;d<7;d++){
+      const key=`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`
+      const inMonth=cur.getMonth()===month&&cur.getFullYear()===year
+      const rows=inMonth?_finRowsForRange(key,key):[]
+      const ing=rows.filter(r=>r.tipo==='ingreso').reduce((s,r)=>s+r.monto,0)
+      const gas=rows.filter(r=>r.tipo==='gasto').reduce((s,r)=>s+r.monto,0)
+      sem.push({key,day:cur.getDate(),inMonth,esHoy:key===hoy,rows,ing,gas,hasData:rows.length>0})
+      cur.setDate(cur.getDate()+1)
+    }
+    semanas.push(sem)
+  }
+  const rowsHoy=_finRowsForRange(hoy,hoy)
+  _finResumenHTML(rowsHoy)
+  const DIAS=['D','L','M','M','J','V','S']
+  cont.innerHTML=`
+    <div style="margin-bottom:6px">
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px">
+        ${DIAS.map(d=>`<div style="text-align:center;font-size:0.55rem;font-weight:700;color:var(--text3);padding:2px 0">${d}</div>`).join('')}
+      </div>
+      ${semanas.map(sem=>`
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px">
+          ${sem.map(d=>{
+            if(!d.inMonth) return `<div style="height:42px"></div>`
+            const bg=d.esHoy?'var(--orange)':d.hasData?'var(--og)':'var(--card)'
+            const col=d.esHoy?'#fff':d.hasData?'var(--orange)':'var(--text3)'
+            const bor=d.esHoy?'none':`1px solid ${d.hasData?'var(--icon-border)':'var(--border)'}`
+            return `<div onclick="finDiaClick('${d.key}')" style="height:42px;border-radius:var(--r-sm);background:${bg};border:${bor};display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:${d.hasData?'pointer':'default'};transition:background .15s">
+              <span style="font-size:0.7rem;font-weight:${d.esHoy?800:600};color:${col};line-height:1">${d.day}</span>
+              ${d.hasData?`<span style="font-size:0.38rem;font-weight:700;color:${d.esHoy?'rgba(255,255,255,.9)':'var(--green)'};line-height:1.2">+${d.ing.toLocaleString('es-MX',{maximumFractionDigits:0})}</span>`:''}
+              ${d.gas>0?`<span style="font-size:0.38rem;font-weight:700;color:${d.esHoy?'rgba(255,255,255,.8)':'var(--red)'};line-height:1.2">-${d.gas.toLocaleString('es-MX',{maximumFractionDigits:0})}</span>`:''}
+            </div>`
+          }).join('')}
+        </div>`).join('')}
+    </div>
+    <div id="fin-dia-det">
+      ${rowsHoy.length?_finDetalleHTML(rowsHoy):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">📅</div><div class="et">Sin movimientos hoy</div></div>`}
+    </div>`
+  window.finDiaClick=function(key){
+    const rows=_finRowsForRange(key,key)
+    _finResumenHTML(rows)
+    const det=$id('fin-dia-det')
+    if(det) det.innerHTML=rows.length?_finDetalleHTML(rows):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">📅</div><div class="et">Sin movimientos</div></div>`
+  }
+}
+
+function _renderFinCorteSem(now, hoy, cont){
+  const year=now.getFullYear(), month=now.getMonth()
+  const firstDay=new Date(year,month,1)
+  const lastDay=new Date(year,month+1,0)
+  let cur=new Date(firstDay)
+  cur.setDate(cur.getDate()-cur.getDay())
+  const semanas=[]
+  let semNum=1
+  while(cur<=lastDay){
+    const desde=`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`
+    const hastaDate=new Date(cur); hastaDate.setDate(hastaDate.getDate()+6)
+    const hasta=`${hastaDate.getFullYear()}-${String(hastaDate.getMonth()+1).padStart(2,'0')}-${String(hastaDate.getDate()).padStart(2,'0')}`
+    const rows=_finRowsForRange(desde,hasta)
+    const ing=rows.filter(r=>r.tipo==='ingreso').reduce((s,r)=>s+r.monto,0)
+    const gas=rows.filter(r=>r.tipo==='gasto').reduce((s,r)=>s+r.monto,0)
+    const esSemActual=hoy>=desde&&hoy<=hasta
+    const dFmt=new Date(desde+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})
+    const hFmt=new Date(hasta+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})
+    semanas.push({semNum,desde,hasta,dFmt,hFmt,rows,ing,gas,esSemActual,hasData:rows.length>0})
+    cur.setDate(cur.getDate()+7)
+    semNum++
+  }
+  const semActual=semanas.find(s=>s.esSemActual)||semanas[0]
+  _finResumenHTML(semActual?.rows||[])
+  cont.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(${semanas.length},1fr);gap:4px;margin-bottom:8px">
+      ${semanas.map(s=>{
+        const bg=s.esSemActual?'var(--orange)':s.hasData?'var(--og)':'var(--card)'
+        const col=s.esSemActual?'#fff':s.hasData?'var(--orange)':'var(--text3)'
+        const bor=s.esSemActual?'none':`1px solid ${s.hasData?'var(--icon-border)':'var(--border)'}`
+        return `<div onclick="finSemClick('${s.desde}')" style="border-radius:var(--r-sm);background:${bg};border:${bor};padding:7px 3px;text-align:center;cursor:${s.hasData?'pointer':'default'};transition:background .15s">
+          <div style="font-size:0.7rem;font-weight:${s.esSemActual?800:600};color:${col}">Sem ${s.semNum}</div>
+          <div style="font-size:0.5rem;color:${s.esSemActual?'rgba(255,255,255,.75)':'var(--text3)'};margin-top:1px">${s.dFmt}–${s.hFmt}</div>
+          ${s.hasData?`<div style="font-size:0.42rem;font-weight:700;color:${s.esSemActual?'rgba(255,255,255,.9)':'var(--green)'};margin-top:2px">+${s.ing.toLocaleString('es-MX',{maximumFractionDigits:0})}</div>`:''}
+          ${s.gas>0?`<div style="font-size:0.42rem;font-weight:700;color:${s.esSemActual?'rgba(255,255,255,.8)':'var(--red)'}">-${s.gas.toLocaleString('es-MX',{maximumFractionDigits:0})}</div>`:''}
+        </div>`
+      }).join('')}
+    </div>
+    <div id="fin-sem-det">
+      ${semActual?.hasData?_finDetalleHTML(semActual.rows):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">📆</div><div class="et">Sin movimientos esta semana</div></div>`}
+    </div>`
+  window.finSemClick=function(desde){
+    const s=semanas.find(x=>x.desde===desde)
+    if(!s||!s.hasData) return
+    _finResumenHTML(s.rows)
+    $id('fin-sem-det').innerHTML=_finDetalleHTML(s.rows)
+  }
+}
+
+function _renderFinCorteMes(now, hoy, cont){
+  const year=now.getFullYear(), mesActual=now.getMonth()
+  const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+  const meses=Array.from({length:12},(_,m)=>{
+    const rows=_finRowsForRange(`${year}-${String(m+1).padStart(2,'0')}-01`,`${year}-${String(m+1).padStart(2,'0')}-31`)
+    const ing=rows.filter(r=>r.tipo==='ingreso').reduce((s,r)=>s+r.monto,0)
+    const gas=rows.filter(r=>r.tipo==='gasto').reduce((s,r)=>s+r.monto,0)
+    return{m,label:MESES[m],rows,ing,gas,esActual:m===mesActual,hasData:rows.length>0}
+  })
+  const actual=meses[mesActual]
+  _finResumenHTML(actual.rows)
+  cont.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px">
+      ${meses.map(m=>{
+        const bg=m.esActual?'var(--orange)':m.hasData?'var(--og)':'var(--card)'
+        const col=m.esActual?'#fff':m.hasData?'var(--orange)':'var(--text3)'
+        const bor=m.esActual?'none':`1px solid ${m.hasData?'var(--icon-border)':'var(--border)'}`
+        return `<div onclick="finMesClick(${m.m})" style="border-radius:var(--r-sm);background:${bg};border:${bor};padding:8px 4px;text-align:center;cursor:${m.hasData?'pointer':'default'};transition:background .15s">
+          <div style="font-size:0.82rem;font-weight:${m.esActual?800:600};color:${col}">${m.label}</div>
+          ${m.hasData?`<div style="font-size:0.48rem;font-weight:700;color:${m.esActual?'rgba(255,255,255,.9)':'var(--green)'};margin-top:2px">+${m.ing.toLocaleString('es-MX',{maximumFractionDigits:0})}</div>`:`<div style="font-size:0.52rem;color:var(--text3);margin-top:2px">—</div>`}
+          ${m.gas>0?`<div style="font-size:0.48rem;font-weight:700;color:${m.esActual?'rgba(255,255,255,.8)':'var(--red)'}">-${m.gas.toLocaleString('es-MX',{maximumFractionDigits:0})}</div>`:''}
+        </div>`
+      }).join('')}
+    </div>
+    <div id="fin-mes-det">
+      ${actual.hasData?_finDetalleHTML(actual.rows):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">🗓</div><div class="et">Sin movimientos este mes</div></div>`}
+    </div>`
+  window.finMesClick=function(m){
+    const mes=meses[m]
+    if(!mes||!mes.hasData) return
+    _finResumenHTML(mes.rows)
+    $id('fin-mes-det').innerHTML=_finDetalleHTML(mes.rows)
+  }
+}
+
+function _finDetalleHTML(rows){
   if(!rows.length) return `<div class="empty"><div class="ei">💰</div><div class="et">Sin movimientos</div></div>`
-  // Tabla detallada
   return rows.map(r=>{
     const esIng=r.tipo==='ingreso'
     const col=esIng?'var(--green)':'var(--red)'
@@ -4507,173 +4762,6 @@ function _finResumenHTML(rows){
       ${!r._auto?`<div onclick="delFinanza('${r.id||''}')" style="width:28px;height:28px;border-radius:6px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.75rem;flex-shrink:0">🗑</div>`:''}
     </div>`
   }).join('')
-}
-
-function delFinanza(id){
-  if(!id||!confirm('¿Eliminar este movimiento?')) return
-  gsDeleteBg(SH_GAS,id)
-  renderFinCorte()
-  showToast('🗑 Movimiento eliminado','error')
-}
-
-function renderFinCorte(){
-  const cont=$id('fin-corte-cont'); if(!cont) return
-  const now=new Date(), hoy=_hoyKey()
-  const year=now.getFullYear(), month=now.getMonth()
-  if(_finCorteTab==='dia'){
-    _renderFinCorteDia(now,hoy,year,month,cont)
-  } else if(_finCorteTab==='sem'){
-    _renderFinCorteSem(now,hoy,year,month,cont)
-  } else {
-    _renderFinCorteMes(now,hoy,year,month,cont)
-  }
-}
-
-function _renderFinCorteDia(now,hoy,year,month,cont){
-  const firstDay=new Date(year,month,1)
-  let calStart=new Date(firstDay)
-  calStart.setDate(calStart.getDate()-calStart.getDay())
-  const semanas=[]
-  let cur=new Date(calStart)
-  const lastDay=new Date(year,month+1,0)
-  while(cur<=lastDay){
-    const sem=[]
-    for(let d=0;d<7;d++){
-      const key=`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`
-      const inMonth=cur.getMonth()===month&&cur.getFullYear()===year
-      const rows=inMonth?_finRowsForRange(key,key):[]
-      const tot=rows.reduce((s,r)=>s+r.monto*(r.tipo==='ingreso'?1:-1),0)
-      sem.push({key,day:cur.getDate(),inMonth,esHoy:key===hoy,rows,tot})
-      cur.setDate(cur.getDate()+1)
-    }
-    semanas.push(sem)
-  }
-  const DIAS=['D','L','M','M','J','V','S']
-  const rowsHoy=_finRowsForRange(hoy,hoy)
-  _finUpdateResumen(rowsHoy)
-  cont.innerHTML=`
-    <div style="margin-bottom:6px">
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px">
-        ${DIAS.map(d=>`<div style="text-align:center;font-size:0.55rem;font-weight:700;color:var(--text3);padding:2px 0">${d}</div>`).join('')}
-      </div>
-      ${semanas.map(sem=>`
-        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px">
-          ${sem.map(d=>{
-            if(!d.inMonth) return `<div style="height:38px"></div>`
-            const hasData=d.rows.length>0
-            const bg=d.esHoy?'var(--orange)':hasData?'var(--og)':'var(--card)'
-            const col=d.esHoy?'#fff':hasData?'var(--orange)':'var(--text3)'
-            const bor=d.esHoy?'none':`1px solid ${hasData?'var(--icon-border)':'var(--border)'}`
-            return `<div onclick="finCalDiaClick('${d.key}')" style="height:38px;border-radius:var(--r-sm);background:${bg};border:${bor};display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:${hasData?'pointer':'default'};transition:background .15s">
-              <span style="font-size:0.7rem;font-weight:${d.esHoy?800:600};color:${col};line-height:1">${d.day}</span>
-              ${hasData?`<span style="font-size:0.42rem;font-weight:700;color:${d.esHoy?'rgba(255,255,255,.85)':'var(--orange)'};line-height:1.2">${d.rows.length}mov</span>`:''}
-            </div>`
-          }).join('')}
-        </div>`).join('')}
-    </div>
-    <div id="fin-cal-det" style="margin-top:2px">
-      ${rowsHoy.length?_finResumenHTML(rowsHoy):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">📅</div><div class="et">Sin movimientos hoy</div></div>`}
-    </div>`
-  window.finCalDiaClick=function(key){
-    const rows=_finRowsForRange(key,key)
-    if(!rows.length) return
-    _finUpdateResumen(rows)
-    const det=$id('fin-cal-det')
-    if(det) det.innerHTML=_finResumenHTML(rows)
-  }
-}
-
-function _renderFinCorteSem(now,hoy,year,month,cont){
-  const firstDay=new Date(year,month,1)
-  const lastDay=new Date(year,month+1,0)
-  let cur=new Date(firstDay); cur.setDate(cur.getDate()-cur.getDay())
-  const semanas=[]; let semNum=1
-  while(cur<=lastDay){
-    const desde=`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`
-    const hastaDate=new Date(cur); hastaDate.setDate(hastaDate.getDate()+6)
-    const hasta=`${hastaDate.getFullYear()}-${String(hastaDate.getMonth()+1).padStart(2,'0')}-${String(hastaDate.getDate()).padStart(2,'0')}`
-    const rows=_finRowsForRange(desde,hasta)
-    const total=rows.reduce((s,r)=>s+r.monto*(r.tipo==='ingreso'?1:-1),0)
-    const esSemActual=hoy>=desde&&hoy<=hasta
-    const dFmt=new Date(desde+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})
-    const hFmt=new Date(hasta+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'})
-    semanas.push({semNum,desde,hasta,dFmt,hFmt,rows,total,esSemActual,hasData:rows.length>0})
-    cur.setDate(cur.getDate()+7); semNum++
-  }
-  const semActual=semanas.find(s=>s.esSemActual)
-  if(semActual) _finUpdateResumen(semActual.rows)
-  cont.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(${semanas.length},1fr);gap:4px;margin-bottom:8px">
-      ${semanas.map(s=>{
-        const bg=s.esSemActual?'var(--orange)':s.hasData?'var(--og)':'var(--card)'
-        const col=s.esSemActual?'#fff':s.hasData?'var(--orange)':'var(--text3)'
-        const bor=s.esSemActual?'none':`1px solid ${s.hasData?'var(--icon-border)':'var(--border)'}`
-        return `<div onclick="finCalSemClick('${s.desde}')" style="border-radius:var(--r-sm);background:${bg};border:${bor};padding:7px 3px;text-align:center;cursor:${s.hasData?'pointer':'default'};transition:background .15s">
-          <div style="font-size:0.7rem;font-weight:${s.esSemActual?800:600};color:${col}">Sem ${s.semNum}</div>
-          <div style="font-size:0.5rem;color:${s.esSemActual?'rgba(255,255,255,.75)':'var(--text3)'};margin-top:1px">${s.dFmt}</div>
-          <div style="font-size:0.5rem;color:${s.esSemActual?'rgba(255,255,255,.75)':'var(--text3)'}">– ${s.hFmt}</div>
-          ${s.hasData?`<div style="font-size:0.6rem;font-weight:700;color:${s.esSemActual?'rgba(255,255,255,.9)':'var(--orange)'};margin-top:3px">${s.rows.length}mov</div>`:''}
-        </div>`
-      }).join('')}
-    </div>
-    <div id="fin-cal-sem-det">
-      ${semActual?.hasData?_finResumenHTML(semActual.rows):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">📆</div><div class="et">Sin movimientos esta semana</div></div>`}
-    </div>`
-  window.finCalSemClick=function(desde){
-    const s=semanas.find(x=>x.desde===desde)
-    if(!s||!s.hasData) return
-    _finUpdateResumen(s.rows)
-    const det=$id('fin-cal-sem-det')
-    if(det) det.innerHTML=_finResumenHTML(s.rows)
-  }
-}
-
-function _renderFinCorteMes(now,hoy,year,month,cont){
-  const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
-  const meses=Array.from({length:12},(_,m)=>{
-    const rows=_finRowsForRange(`${year}-${String(m+1).padStart(2,'0')}-01`,`${year}-${String(m+1).padStart(2,'0')}-31`)
-    return{m,label:MESES[m],rows,total:rows.reduce((s,r)=>s+(r.tipo==='ingreso'?r.monto:-r.monto),0),esActual:m===month,hasData:rows.length>0}
-  })
-  const actual=meses[month]
-  if(actual) _finUpdateResumen(actual.rows)
-  cont.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px">
-      ${meses.map(m=>{
-        const bg=m.esActual?'var(--orange)':m.hasData?'var(--og)':'var(--card)'
-        const col=m.esActual?'#fff':m.hasData?'var(--orange)':'var(--text3)'
-        const bor=m.esActual?'none':`1px solid ${m.hasData?'var(--icon-border)':'var(--border)'}`
-        return `<div onclick="finCalMesClick(${m.m})" style="border-radius:var(--r-sm);background:${bg};border:${bor};padding:8px 4px;text-align:center;cursor:${m.hasData?'pointer':'default'};transition:background .15s">
-          <div style="font-size:0.82rem;font-weight:${m.esActual?800:600};color:${col}">${m.label}</div>
-          ${m.hasData?`<div style="font-size:0.6rem;font-weight:700;color:${m.esActual?'rgba(255,255,255,.9)':'var(--orange)'};margin-top:2px">${m.rows.length}mov</div>`:`<div style="font-size:0.52rem;color:var(--text3);margin-top:2px">—</div>`}
-        </div>`
-      }).join('')}
-    </div>
-    <div id="fin-cal-mes-det">
-      ${actual.hasData?_finResumenHTML(actual.rows):`<div class="empty" style="padding:20px"><div class="ei" style="font-size:26px">🗓</div><div class="et">Sin movimientos este mes</div></div>`}
-    </div>`
-  window.finCalMesClick=function(m){
-    const mes=meses[m]
-    if(!mes||!mes.hasData) return
-    _finUpdateResumen(mes.rows)
-    $id('fin-cal-mes-det').innerHTML=_finResumenHTML(mes.rows)
-  }
-}
-
-function _finUpdateResumen(rows){
-  const ingresos=rows.filter(r=>r.tipo==='ingreso').reduce((s,r)=>s+r.monto,0)
-  const gastos=rows.filter(r=>r.tipo==='gasto').reduce((s,r)=>s+r.monto,0)
-  const util=ingresos-gastos
-  $set('fin-res-ing',f$(ingresos))
-  $set('fin-res-gas',f$(gastos))
-  $set('fin-res-util',f$(util))
-  const uc=$id('fin-res-util-card')
-  if(uc){
-    const pos=util>=0
-    uc.style.background=pos?'var(--og)':'rgba(239,68,68,.08)'
-    uc.style.borderColor=pos?'var(--icon-border)':'rgba(239,68,68,.25)'
-    $id('fin-res-util').style.color=pos?'var(--orange)':'var(--red)'
-    uc.querySelector('div').style.color=pos?'var(--orange)':'var(--red)'
-  }
 }
 
 function renderFinanzas(){
@@ -4696,7 +4784,7 @@ function showToast(msg,type='success'){
 // ── Service Worker — cachea el HTML para carga instantánea ────────
 if('serviceWorker' in navigator){
   const swCode=`
-const CACHE='tallerpro-v8'
+const CACHE='tallerpro-v7'
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll([location.pathname]))
 )})
@@ -4815,7 +4903,16 @@ function renderClienteActivo(){
       <div style="padding:0 16px 12px">
         ${reps.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
           <div style="flex:1;font-size:0.82rem;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reparacion}</div>
-          <div style="font-size:0.65rem;color:var(--text3);white-space:nowrap;flex-shrink:0">📅 ${fD(r.fecha)}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="font-size:0.6rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">Total</span>
+              <span style="font-size:0.78rem;font-weight:700;color:var(--orange)">${f$(r.total)}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="font-size:0.6rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em">Pendiente</span>
+              <span style="font-size:0.72rem;font-weight:700;color:${saldo<=0?'var(--green)':'var(--red)'}">${saldo<=0?'Al día':f$(saldo)}</span>
+            </div>
+          </div>
         </div>`).join('')}
       </div>
     </div>`
@@ -5134,8 +5231,9 @@ function renderClientesEmp(){
           <input type="number" id="emp-abo-${c.id}" placeholder="Abono $" min="0" step="0.01" inputmode="decimal"
             style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;color:var(--text);font-family:var(--font);font-size:0.85rem;outline:none">
           <button onclick="doAbonoEmp('${c.id}',event)"
-            style="padding:7px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer">💵</button>
+            style="padding:7px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer">💵 Abonar</button>
         </div>
+        ${isDone?`<button class="btn-entregar" onclick="entregar('${c.id}',event)" style="margin-top:8px">🚗 Entregar</button>`:''}
       </div>
     </div>`
   }).join('')
