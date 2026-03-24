@@ -83,6 +83,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,.mc,.tb-back,.tb-sync,.km-btn,.km-item,.dba,.abo-del,.tab-btn,.week-block,.cli-head,.ccard-head,.mcard-head{touch-action:manipulation}
 
 html{font-size:clamp(19px, 2.3vw, 23px)}
 
@@ -1051,8 +1052,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
       <div class="sec-lbl">➕ Nueva pieza</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="field" style="margin:0"><label>Nombre</label><input type="text" id="inv-nombre" placeholder="Ej: Aceite 5W30 1L"></div>
-          <div class="field" style="margin:0"><label>Categoría</label><input type="text" id="inv-cat" placeholder="Ej: Lubricantes"></div>
+          <div class="field" style="margin:0"><label>Nombre</label><input type="text" id="inv-nombre" placeholder="Ej: Aceite 5W30 1L" autocomplete="off"></div>
+          <div class="field" style="margin:0"><label>Categoría</label><input type="text" id="inv-cat" placeholder="Ej: Lubricantes" autocomplete="off"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
           <div class="field" style="margin:0"><label>Stock</label><input type="number" id="inv-qty" placeholder="0" min="0" inputmode="numeric"></div>
@@ -1103,7 +1104,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
         </div>
         <div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
           <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);flex-shrink:0">📞 Teléfono</span>
-          <input type="tel" id="cfg-tel" placeholder="Ej: 844 123 4567" autocomplete="off"
+          <input type="tel" id="cfg-tel" placeholder="Ej: 844 123 4567" autocomplete="off" inputmode="tel"
             style="flex:1;min-width:0;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;color:var(--text);font-size:15px;outline:none;margin:0 8px">
           <button onclick="saveCfgContact()" style="background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);padding:6px 12px;font-weight:700;cursor:pointer;white-space:nowrap;font-size:0.8rem;flex-shrink:0">✅</button>
         </div>
@@ -1535,8 +1536,8 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);color:var(
     </div>
     <div class="modal-body">
       <input type="hidden" id="edit-client-id">
-      <div class="field"><label>Nombre</label><input type="text" id="edit-client-nombre" placeholder="Nombre del cliente"></div>
-      <div class="field"><label>Vehículo</label><input type="text" id="edit-client-vehiculo" placeholder="Marca / Modelo"></div>
+      <div class="field"><label>Nombre</label><input type="text" id="edit-client-nombre" placeholder="Nombre del cliente" autocomplete="off"></div>
+      <div class="field"><label>Vehículo</label><input type="text" id="edit-client-vehiculo" placeholder="Marca / Modelo" autocomplete="off"></div>
       <button onclick="saveClientEdit()" class="btn-reg">✅ Guardar cambios</button>
     </div>
   </div>
@@ -2208,8 +2209,15 @@ function selModalCotRep(desc, precio){
 }
 
 function startAutoSync(){
-  setInterval(()=>{ if(document.visibilityState==='visible'&&_isOnline) autoSync() },1000)
-  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&_isOnline) autoSync() })
+  // Solo sincroniza cuando la pestaña está visible — evita acumulación de requests en background
+  setInterval(()=>{ if(document.visibilityState==='visible'&&_isOnline&&!_polling) autoSync() },1000)
+  // Reconnect inmediato al volver a la pestaña (sin esperar el siguiente tick del interval)
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible'&&_isOnline){
+      _polling=false // liberar si quedó bloqueado mientras estaba oculta
+      setTimeout(()=>autoSync(),200) // pequeño delay para que el browser termine de despertar
+    }
+  })
 }
 
 // ── Indicadores ───────────────────────────────────────────────────
